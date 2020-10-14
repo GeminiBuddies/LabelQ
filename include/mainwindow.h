@@ -4,19 +4,19 @@
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class EntryWindow; }
+namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-class EntryWindow : public QMainWindow
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    EntryWindow(QWidget *parent = nullptr);
-    ~EntryWindow();
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
 
 private:
-    Ui::EntryWindow *ui;
+    Ui::MainWindow *ui;
 
 private slots:
     void changeLanguage();

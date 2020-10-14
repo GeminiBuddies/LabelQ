@@ -1,4 +1,4 @@
-#include "entrywindow.h"
+#include <mainwindow.h>
 
 #include <QApplication>
 #include <QtCore/QTranslator>
@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
 
     QApplication::installTranslator(&translator);
 
-    EntryWindow w;
+    MainWindow w;
     w.show();
 
     return a.exec();
