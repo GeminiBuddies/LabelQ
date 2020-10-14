@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EntryWindow</class>
+ <widget class="QMainWindow" name="EntryWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>entry_window_title</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="buttonEvil">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>30</y>
+      <width>89</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>entry_window_button_evil_text</string>
+    </property>
+   </widget>
+   <widget class="QTextBrowser" name="textBrowser">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>30</y>
+      <width>601</width>
+      <height>431</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuA">
+    <property name="title">
+     <string>entry_window_menu_A_title</string>
+    </property>
+    <addaction name="menuAItem1"/>
+   </widget>
+   <widget class="QMenu" name="menuB">
+    <property name="title">
+     <string>entry_window_menu_B_title</string>
+    </property>
+   </widget>
+   <addaction name="menuA"/>
+   <addaction name="menuB"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="menuAItem1">
+   <property name="text">
+    <string>entry_window_menu_A_item1_title</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
