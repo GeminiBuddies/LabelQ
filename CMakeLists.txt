@@ -4,7 +4,7 @@ project(labelq LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # prepend and append functions
@@ -54,6 +54,10 @@ add_custom_command(
 )
 
 # qt linguist call
+if (WIN32)
+  set(GUI_EXEC_WIN32 WIN32)
+endif()
+
 qt5_create_translation(QM_FILES_INTERMEDIATE ${CMAKE_SOURCE_DIR} ${INTERMEDIATE_TS_FILEPATH})
 qt5_add_translation(QM_FILES ${FINAL_TS_FILEPATH})
 
@@ -63,7 +67,7 @@ aux_source_directory(./src SRC)
 file(GLOB HEADERS "include/*.h")
 file(GLOB UIS "ui/*.ui")
 
-add_executable(labelq
+add_executable(labelq ${GUI_EXEC_WIN32}
     main.cpp
     ${SRC}
     ${HEADERS}
