@@ -69,6 +69,7 @@ file(GLOB UIS "ui/*.ui")
 
 add_executable(labelq ${GUI_EXEC_WIN32}
     main.cpp
+    labelq.qrc
     ${SRC}
     ${HEADERS}
     ${UIS}

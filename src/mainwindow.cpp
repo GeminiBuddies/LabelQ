@@ -2,15 +2,11 @@
 #include "../ui/ui_mainwindow.h"
 
 #include <QtCore/QTranslator>
+#include <QScroller>
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-{
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
-
-    QObject::connect(ui->buttonEvil, SIGNAL(clicked()), this, SLOT(changeLanguage()));
-    QObject::connect(ui->menuAItem1, SIGNAL(triggered()), this, SLOT(appendText()));
+    customUiSetup();
 }
 
 MainWindow::~MainWindow() {
@@ -25,5 +21,18 @@ void MainWindow::changeLanguage() {
 }
 
 void MainWindow::appendText() {
-    ui->textBrowser->append(tr("text_to_append"));
+
+}
+
+void MainWindow::customUiSetup() {
+    ui->mainSplitter->setStretchFactor(0, 1);
+    ui->mainSplitter->setStretchFactor(1, 0);
+    ui->label->setPixmap(QPixmap(":/images/example.png"));
+
+    QScroller::grabGesture(ui->scrollArea, QScroller::RightMouseButtonGesture);
+    auto scroller = QScroller::scroller(ui->scrollArea);
+    auto props = scroller->scrollerProperties();
+    props.setScrollMetric(QScrollerProperties::HorizontalOvershootPolicy, QScrollerProperties::OvershootAlwaysOff);
+    props.setScrollMetric(QScrollerProperties::VerticalOvershootPolicy, QScrollerProperties::OvershootAlwaysOff);
+    scroller->setScrollerProperties(props);
 }
