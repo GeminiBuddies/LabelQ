@@ -1,5 +1,4 @@
-#ifndef ENTRYWINDOW_H
-#define ENTRYWINDOW_H
+#pragma once
 
 #include <QMainWindow>
 
@@ -17,9 +16,19 @@ public:
 private:
     Ui::MainWindow *ui;
 
+protected:
+    void showEvent(QShowEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
+
+private:
+    QPixmap pic;
+    int percentage;
+    void zoom(bool in);
+
 private slots:
-    void changeLanguage();
-    void appendText();
+    void zoomIn();
+    void zoomOut();
+
+    void adjustWorkAreaMargin();
     void customUiSetup();
 };
-#endif // ENTRYWINDOW_H

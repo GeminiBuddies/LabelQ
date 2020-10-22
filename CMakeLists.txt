@@ -62,8 +62,7 @@ qt5_create_translation(QM_FILES_INTERMEDIATE ${CMAKE_SOURCE_DIR} ${INTERMEDIATE_
 qt5_add_translation(QM_FILES ${FINAL_TS_FILEPATH})
 
 # make labelq
-aux_source_directory(./src SRC)
-
+file(GLOB_RECURSE SRC "src/*.cpp")
 file(GLOB HEADERS "include/*.h")
 file(GLOB UIS "ui/*.ui")
 
