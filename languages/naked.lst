@@ -1,1 +1,14 @@
- This file contains a complete list of keys localizable strings
+    This file contains a complete list of keys localizable strings
+
+    Menu
+entry_window_title
+entryWindow_menuProject
+entryWindow_actionNew
+entryWindow_actionOpen
+entryWindow_actionSave
+entryWindow_actionSaveAs
+entryWindow_actionExit
+entryWindow_menuHelp
+entryWindow_actionAbout
+    Entry window widgets
+entryWindow_textTable_textHeader

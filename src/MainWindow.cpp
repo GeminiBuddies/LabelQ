@@ -1,6 +1,7 @@
 #include <MainWindow.h>
 #include "../ui/ui_MainWindow.h"
 
+#include <QMessageBox>
 #include <QtCore/QTranslator>
 #include <QScroller>
 
@@ -89,6 +90,7 @@ void MainWindow::customUiSetup() {
     QObject::connect(ui->mainSplitter, SIGNAL(splitterMoved(int, int)), this, SLOT(adjustWorkAreaMargin()));
     QObject::connect(ui->scrollArea, SIGNAL(zoomIn()), this, SLOT(zoomIn()));
     QObject::connect(ui->scrollArea, SIGNAL(zoomOut()), this, SLOT(zoomOut()));
+    QObject::connect(ui->textTable, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(x(int, int)));
 
     QScroller::grabGesture(ui->scrollArea, QScroller::RightMouseButtonGesture);
     auto scroller = QScroller::scroller(ui->scrollArea);
@@ -97,4 +99,28 @@ void MainWindow::customUiSetup() {
     props.setScrollMetric(QScrollerProperties::VerticalOvershootPolicy, QScrollerProperties::OvershootAlwaysOff);
     props.setScrollMetric(QScrollerProperties::DecelerationFactor, 2.0);
     scroller->setScrollerProperties(props);
+
+    ui->textTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+    ui->textTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+    ui->textTable->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+    ui->textTable->setRowCount(64);
+    for (int i = 0; i < 64; ++i) {
+        auto header = new QTableWidgetItem();
+        auto content = new QTableWidgetItem();
+
+        header->setText(QString::number(i));
+        content->setText(QString::number(1ull << (unsigned long long)i));
+
+        ui->textTable->setVerticalHeaderItem(i, header);
+        ui->textTable->setItem(i, 0, content);
+    }
+
+    delete ui->textTable->takeItem(42, 0);
+    delete ui->textTable->takeVerticalHeaderItem(42);
+    ui->textTable->removeRow(42);
+}
+
+void MainWindow::x(int r, int c) {
+    QMessageBox::information(this, "", QString("Row %1, Column %2").arg(r).arg(c));
 }

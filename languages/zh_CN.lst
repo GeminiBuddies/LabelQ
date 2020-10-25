@@ -1,3 +1,12 @@
+    Menu
 entry_window_title 主窗口
-entry_window_button_evil_text 不对劲
-text_to_append 添加的字符串
+entryWindow_menuProject 项目(&amp;P)
+entryWindow_actionNew 新建(&amp;N)...
+entryWindow_actionOpen 打开(&amp;O)...
+entryWindow_actionSave 保存(&amp;S)
+entryWindow_actionSaveAs 另存为(&amp;A)...
+entryWindow_actionExit 退出(&amp;X)
+entryWindow_menuHelp 帮助(&amp;H)
+entryWindow_actionAbout 关于(&amp;A)...
+    Entry window widgets
+entryWindow_textTable_textHeader 翻译

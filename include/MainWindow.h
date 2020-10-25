@@ -31,4 +31,6 @@ private slots:
 
     void adjustWorkAreaMargin();
     void customUiSetup();
+
+    void x(int r, int c);
 };

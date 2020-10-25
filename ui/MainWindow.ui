@@ -38,8 +38,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>317</width>
-          <height>558</height>
+          <width>303</width>
+          <height>557</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -100,7 +100,84 @@
         </layout>
        </widget>
       </widget>
-      <widget class="QTableWidget" name="tableWidget"/>
+      <widget class="QSplitter" name="inputAreaSplitter">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="handleWidth">
+        <number>4</number>
+       </property>
+       <widget class="QTableWidget" name="textTable">
+        <property name="sizeAdjustPolicy">
+         <enum>QAbstractScrollArea::AdjustToContents</enum>
+        </property>
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+        <property name="dragEnabled">
+         <bool>false</bool>
+        </property>
+        <property name="dragDropMode">
+         <enum>QAbstractItemView::NoDragDrop</enum>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::ExtendedSelection</enum>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+        <property name="horizontalScrollMode">
+         <enum>QAbstractItemView::ScrollPerPixel</enum>
+        </property>
+        <property name="showGrid">
+         <bool>true</bool>
+        </property>
+        <property name="gridStyle">
+         <enum>Qt::SolidLine</enum>
+        </property>
+        <property name="sortingEnabled">
+         <bool>false</bool>
+        </property>
+        <attribute name="horizontalHeaderMinimumSectionSize">
+         <number>25</number>
+        </attribute>
+        <attribute name="horizontalHeaderStretchLastSection">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="verticalHeaderVisible">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="verticalHeaderCascadingSectionResizes">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="verticalHeaderMinimumSectionSize">
+         <number>20</number>
+        </attribute>
+        <attribute name="verticalHeaderDefaultSectionSize">
+         <number>20</number>
+        </attribute>
+        <attribute name="verticalHeaderStretchLastSection">
+         <bool>false</bool>
+        </attribute>
+        <column>
+         <property name="text">
+          <string>entryWindow_textTable_textHeader</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string/>
+         </property>
+        </column>
+       </widget>
+       <widget class="QPlainTextEdit" name="plainTextEdit">
+        <property name="font">
+         <font>
+          <family>Microsoft YaHei UI</family>
+         </font>
+        </property>
+       </widget>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -111,14 +188,19 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuA">
+   <widget class="QMenu" name="menuProject">
     <property name="title">
-     <string>entry_window_menu_A_title</string>
+     <string>entryWindow_menuProject</string>
     </property>
-    <addaction name="menuAItem1"/>
+    <addaction name="actionNew"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSaveAs"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuB">
     <property name="title">
@@ -130,13 +212,33 @@
      <string>entry_window_menu_C_title</string>
     </property>
    </widget>
-   <addaction name="menuA"/>
+   <addaction name="menuProject"/>
    <addaction name="menuB"/>
    <addaction name="menuC"/>
   </widget>
-  <action name="menuAItem1">
+  <action name="actionNew">
    <property name="text">
-    <string>entry_window_menu_A_item1_title</string>
+    <string>entryWindow_actionNew</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>entryWindow_actionOpen</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>entryWindow_actionSave</string>
+   </property>
+  </action>
+  <action name="actionSaveAs">
+   <property name="text">
+    <string>entryWindow_actionSaveAs</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>entryWindow_actionExit</string>
    </property>
   </action>
  </widget>

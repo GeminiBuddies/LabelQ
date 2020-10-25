@@ -1,3 +1,12 @@
+    Menu
 entry_window_title Entry Window
-entry_window_button_evil_text Evil Button
-text_to_append This is text &#10; TO BE APPENDED!!!
+entryWindow_menuProject &amp;Project
+entryWindow_actionNew &amp;New...
+entryWindow_actionOpen &amp;Open...
+entryWindow_actionSave &amp;Save
+entryWindow_actionSaveAs Save &amp;As...
+entryWindow_actionExit E&amp;xit
+entryWindow_menuHelp &amp;Help
+entryWindow_actionAbout &amp;About...
+    Entry window widgets
+entryWindow_textTable_textHeader Translation
