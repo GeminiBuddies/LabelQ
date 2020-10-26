@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QMainWindow>
+#include <model/Model.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -33,4 +34,13 @@ private slots:
     void customUiSetup();
 
     void x(int r, int c);
+
+// Project and Page management
+private:
+    Project *_project;
+    int _currentPageIndex;
+    Page *_currentPage;
+
+    void replaceProject(Project *newProject);
+    void setCurrentPage(int index);
 };

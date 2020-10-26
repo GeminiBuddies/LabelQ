@@ -2,3 +2,4 @@
 
 class Page;
 class Project;
+struct Label;

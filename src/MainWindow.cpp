@@ -1,6 +1,8 @@
 #include <MainWindow.h>
 #include "../ui/ui_MainWindow.h"
 
+#include <model/Project.h>
+
 #include <QMessageBox>
 #include <QtCore/QTranslator>
 #include <QScroller>
@@ -10,6 +12,9 @@ using namespace std;
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
     customUiSetup();
+
+    _project = nullptr;
+    replaceProject(nullptr);
 }
 
 MainWindow::~MainWindow() {
@@ -28,7 +33,7 @@ void MainWindow::zoom(bool in) {
     ui->workArea->hide();
 
     auto newSize = pic.size() * percentage / 100;
-    ui->menuB->setTitle(QString("%1, %2").arg(newSize.width()).arg(newSize.height()));
+    // ui->menuB->setTitle(QString("%1, %2").arg(newSize.width()).arg(newSize.height()));
     ui->workArea->setPixmap(pic.scaled(newSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 
     // to fix an unknown bug that workArea->width/height() return wrong value when zooming in
@@ -90,7 +95,6 @@ void MainWindow::customUiSetup() {
     QObject::connect(ui->mainSplitter, SIGNAL(splitterMoved(int, int)), this, SLOT(adjustWorkAreaMargin()));
     QObject::connect(ui->scrollArea, SIGNAL(zoomIn()), this, SLOT(zoomIn()));
     QObject::connect(ui->scrollArea, SIGNAL(zoomOut()), this, SLOT(zoomOut()));
-    QObject::connect(ui->textTable, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(x(int, int)));
 
     QScroller::grabGesture(ui->scrollArea, QScroller::RightMouseButtonGesture);
     auto scroller = QScroller::scroller(ui->scrollArea);
@@ -100,10 +104,8 @@ void MainWindow::customUiSetup() {
     props.setScrollMetric(QScrollerProperties::DecelerationFactor, 2.0);
     scroller->setScrollerProperties(props);
 
-    ui->textTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
-    ui->textTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
-    ui->textTable->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
+    /*
     ui->textTable->setRowCount(64);
     for (int i = 0; i < 64; ++i) {
         auto header = new QTableWidgetItem();
@@ -119,8 +121,62 @@ void MainWindow::customUiSetup() {
     delete ui->textTable->takeItem(42, 0);
     delete ui->textTable->takeVerticalHeaderItem(42);
     ui->textTable->removeRow(42);
+     */
 }
 
 void MainWindow::x(int r, int c) {
     QMessageBox::information(this, "", QString("Row %1, Column %2").arg(r).arg(c));
+}
+
+void MainWindow::replaceProject(Project *newProject) {
+    // close the old project
+    auto oldProject = _project;
+    if (oldProject != nullptr) {
+        if (oldProject->dirty()) {
+            auto result = QMessageBox::question(this, tr("entryWindow_confirmExitTitle"), tr("entryWindow_confirmExitContent"), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+
+            if (result == QMessageBox::Yes) {
+                oldProject->save();
+            } else if (result == QMessageBox::No) {
+                // do nothing here
+            } else {
+                return;
+            }
+        }
+
+        int pageCount = oldProject->pageCount();
+        for (int i = 0; i < pageCount; ++i) {
+            delete ui->pageList->takeItem(i);
+        }
+    }
+
+    // get the new one
+    _project = newProject;
+
+    // set menuItems
+    if (_project == nullptr || !_project->canSave()) {
+        ui->actionSave->setEnabled(false);
+        ui->actionSaveAs->setEnabled(false);
+    } else {
+        ui->actionSave->setEnabled(true);
+        ui->actionSaveAs->setEnabled(true);
+    }
+
+    if (_project == nullptr) {
+        ui->pageList->setEnabled(false);
+    } else {
+        ui->pageList->setEnabled(true);
+    }
+
+    setCurrentPage(-1);
+}
+
+void MainWindow::setCurrentPage(int index) {
+    if (_project == nullptr || index < 0 || index >= _project->pageCount()) {
+        _currentPage = nullptr;
+        _currentPageIndex = -1;
+
+    }
+
+    ui->translationEditArea->setPage(_currentPage);
 }

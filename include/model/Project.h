@@ -6,18 +6,24 @@
 #include <QVector>
 
 class Project {
-private:
+protected:
     QVector<Page*> _pages;
 
-    Project();
-
 public:
-    ~Project();
+    virtual ~Project();
 
-    Page* addPage(const QString &imagePath);
-    Page* getPage(int at);
+    virtual bool dirty();
+    virtual void save();
+
+    virtual Page* page(int at);
+    virtual int pageCount();
+    virtual bool pageExists(Page *page);
+
+    virtual bool canModifyPages();
+    virtual bool canSave();
 
 public:
     static Project* fromFile(const QString &path);
-    static Project* create();
+    static Project* tutorial();
+    static Project* empty();
 };

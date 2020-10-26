@@ -1,9 +1,21 @@
 #include <model/Page.h>
 
-QString Page::path() const {
-    return _path;
+void Page::addLabel(Label &&label) {
+    _labels.push_back(label);
 }
 
-void Page::setPath(const QString &value) {
-    _path = value;
+void Page::addLabel(const Label &label) {
+    _labels.push_back(label);
+}
+
+Label Page::label(int at) {
+    return _labels.at(at);
+}
+
+void Page::removeLabel(int at) {
+    _labels.remove(at);
+}
+
+int Page::labelCount() {
+    return _labels.count();
 }
