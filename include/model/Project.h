@@ -3,14 +3,17 @@
 #include "Model.h"
 #include "Page.h"
 
+#include <QObject>
 #include <QVector>
 
-class Project {
+class Project : public QObject {
+    Q_OBJECT
+
 protected:
     QVector<Page*> _pages;
 
 public:
-    virtual ~Project();
+    ~Project() override;
 
     virtual bool dirty();
     virtual void save();
@@ -21,6 +24,9 @@ public:
 
     virtual bool canModifyPages();
     virtual bool canSave();
+
+signals:
+    void pageModified();
 
 public:
     static Project* fromFile(const QString &path);

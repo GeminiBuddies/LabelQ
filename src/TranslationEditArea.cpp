@@ -2,7 +2,20 @@
 
 #include <model/Page.h>
 
+#include <QKeyEvent>
 #include <QHeaderView>
+
+QTableWidgetWithKeySignal::QTableWidgetWithKeySignal(QWidget *parent) : QTableWidget(parent) {
+
+}
+
+void QTableWidgetWithKeySignal::keyPressEvent(QKeyEvent *event) {
+    if ((event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace) && event->modifiers() == Qt::NoModifier) {
+        emit deleteKeyPressed();
+    } else {
+        QTableWidget::keyPressEvent(event);
+    }
+}
 
 TranslationEditArea::TranslationEditArea(QWidget *parent) : QWidget(parent) {
     verticalLayout = new QVBoxLayout(this);
@@ -12,7 +25,7 @@ TranslationEditArea::TranslationEditArea(QWidget *parent) : QWidget(parent) {
     splitter = new QSplitter(this);
     splitter->setOrientation(Qt::Vertical);
 
-    translationTable = new QTableWidget(splitter);
+    translationTable = new QTableWidgetWithKeySignal(splitter);
     translationTable->setColumnCount(2);
     translationTable->setHorizontalHeaderItem(0, new QTableWidgetItem(tr("entryWindow_textTable_textHeader")));
     translationTable->setHorizontalHeaderItem(1, new QTableWidgetItem(""));
@@ -21,16 +34,14 @@ TranslationEditArea::TranslationEditArea(QWidget *parent) : QWidget(parent) {
     translationTable->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
     translationTable->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
-    translationTable->setRowCount(2);
-    translationTable->setItem(0, 0, new QTableWidgetItem("111111111111111111111111111111111111111111111111"));
-    translationTable->setItem(1, 0, new QTableWidgetItem("22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222"));
-
     translationText = new QTextEdit(splitter);
 
     splitter->addWidget(translationTable);
     splitter->addWidget(translationText);
 
     verticalLayout->addWidget(splitter);
+
+    QObject::connect(translationTable, SIGNAL(itemSelectionChanged()), this, SLOT(tableSelectionChanged()));
 
     setPage(nullptr);
 }
@@ -40,6 +51,18 @@ TranslationEditArea::~TranslationEditArea() {}
 void TranslationEditArea::setPage(Page *page) {
     _page = page;
     reloadPage();
+}
+
+void TranslationEditArea::tableSelectionChanged() {
+    auto selected = translationTable->selectedItems();
+
+    if (selected.count() != 1) {
+        translationText->setText("");
+        translationText->setEnabled(false);
+    } else {
+        selected[0]->row();
+        translationText
+    }
 }
 
 void TranslationEditArea::reloadPage() {

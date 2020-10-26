@@ -63,7 +63,7 @@ qt5_add_translation(QM_FILES ${FINAL_TS_FILEPATH})
 
 # make labelq
 file(GLOB_RECURSE SRC "src/*.cpp")
-file(GLOB HEADERS "include/*.h")
+file(GLOB_RECURSE HEADERS "include/*.h")
 file(GLOB UIS "ui/*.ui")
 
 add_executable(labelq ${GUI_EXEC_WIN32}

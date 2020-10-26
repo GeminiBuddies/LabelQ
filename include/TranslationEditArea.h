@@ -8,13 +8,27 @@
 #include <QTableWidget>
 #include <QTextEdit>
 
+class QTableWidgetWithKeySignal : public QTableWidget {
+    Q_OBJECT
+
+public:
+    explicit QTableWidgetWithKeySignal(QWidget *parent);
+    ~QTableWidgetWithKeySignal() override = default;
+
+protected:
+    void keyPressEvent(QKeyEvent *event) override;
+
+signals:
+    void deleteKeyPressed();
+};
+
 class TranslationEditArea : public QWidget {
     Q_OBJECT
 
 private:
     QVBoxLayout *verticalLayout;
     QSplitter *splitter;
-    QTableWidget *translationTable;
+    QTableWidgetWithKeySignal *translationTable;
     QTextEdit *translationText;
 
     Page *_page;
@@ -24,6 +38,9 @@ public:
     ~TranslationEditArea() override;
 
     void setPage(Page *page);
+
+private slots:
+    void tableSelectionChanged();
 
 public slots:
     void reloadPage();

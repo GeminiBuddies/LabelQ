@@ -3,17 +3,20 @@
 #include "Model.h"
 #include "Label.h"
 
+#include <QBitArray>
+#include <QObject>
 #include <QString>
 #include <QPixmap>
 
-class Page {
+class Page : public QObject {
+    Q_OBJECT
+
 private:
     friend class Project;
 
 protected:
     QVector<Label> _labels;
 
-    // unfortunately model classes aren't QObject so Q_PROPERTY is not safe here...
 public:
     virtual bool dirty() = 0;
 
@@ -24,4 +27,9 @@ public:
     virtual Label label(int at);
     virtual void removeLabel(int at);
     virtual int labelCount();
+
+signals:
+    void labelSelectionModified(QBitArray selection);
+    void labelRemoved(QBitArray removed);
+    void labelAdded();
 };

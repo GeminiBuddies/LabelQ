@@ -50,3 +50,7 @@ Project *Project::empty() {
     static Project emptyProject;
     return &emptyProject;
 }
+
+class TutorialProject {
+
+};
