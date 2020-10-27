@@ -31,17 +31,27 @@ private:
     QTableWidgetWithKeySignal *translationTable;
     QTextEdit *translationText;
 
-    Page *_page;
+    Page *page;
 
 public:
     explicit TranslationEditArea(QWidget *parent = nullptr);
     ~TranslationEditArea() override;
 
-    void setPage(Page *page);
+private:
+    bool processingExternalSignal;
 
 private slots:
     void tableSelectionChanged();
 
+signals:
+    void labelDeleted(QBitArray *deleted);
+    void labelContentUpdated(int index);
+    void labelSelectionUpdated(QBitArray *selected);
+
 public slots:
-    void reloadPage();
+    void setPage(Page *newPage);
+    void onLabelAppended(QWidget *sender);
+    void onLabelDeleted(QWidget *sender, QBitArray *deleted);
+    void onLabelContentUpdated(QWidget *sender, int index);
+    void onLabelSelectionUpdated(QWidget *sender, QBitArray *selected);
 };

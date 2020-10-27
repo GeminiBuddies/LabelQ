@@ -28,8 +28,5 @@ public:
     virtual void removeLabel(int at);
     virtual int labelCount();
 
-signals:
-    void labelSelectionModified(QBitArray selection);
-    void labelRemoved(QBitArray removed);
-    void labelAdded();
+
 };

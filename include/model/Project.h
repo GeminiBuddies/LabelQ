@@ -25,9 +25,6 @@ public:
     virtual bool canModifyPages();
     virtual bool canSave();
 
-signals:
-    void pageModified();
-
 public:
     static Project* fromFile(const QString &path);
     static Project* tutorial();

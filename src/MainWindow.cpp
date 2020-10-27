@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->setupUi(this);
     customUiSetup();
 
-    _project = nullptr;
+    project = nullptr;
     replaceProject(nullptr);
 }
 
@@ -130,7 +130,7 @@ void MainWindow::x(int r, int c) {
 
 void MainWindow::replaceProject(Project *newProject) {
     // close the old project
-    auto oldProject = _project;
+    auto oldProject = project;
     if (oldProject != nullptr) {
         if (oldProject->dirty()) {
             auto result = QMessageBox::question(this, tr("entryWindow_confirmExitTitle"), tr("entryWindow_confirmExitContent"), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
@@ -151,10 +151,10 @@ void MainWindow::replaceProject(Project *newProject) {
     }
 
     // get the new one
-    _project = newProject;
+    project = newProject;
 
     // set menuItems
-    if (_project == nullptr || !_project->canSave()) {
+    if (project == nullptr || !project->canSave()) {
         ui->actionSave->setEnabled(false);
         ui->actionSaveAs->setEnabled(false);
     } else {
@@ -162,7 +162,7 @@ void MainWindow::replaceProject(Project *newProject) {
         ui->actionSaveAs->setEnabled(true);
     }
 
-    if (_project == nullptr) {
+    if (project == nullptr) {
         ui->pageList->setEnabled(false);
     } else {
         ui->pageList->setEnabled(true);
@@ -172,11 +172,11 @@ void MainWindow::replaceProject(Project *newProject) {
 }
 
 void MainWindow::setCurrentPage(int index) {
-    if (_project == nullptr || index < 0 || index >= _project->pageCount()) {
-        _currentPage = nullptr;
-        _currentPageIndex = -1;
+    if (project == nullptr || index < 0 || index >= project->pageCount()) {
+        currentPage = nullptr;
+        currentPageIndex = -1;
 
     }
 
-    ui->translationEditArea->setPage(_currentPage);
+    ui->translationEditArea->setPage(currentPage);
 }

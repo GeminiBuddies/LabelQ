@@ -37,10 +37,13 @@ private slots:
 
 // Project and Page management
 private:
-    Project *_project;
-    int _currentPageIndex;
-    Page *_currentPage;
+    Project *project;
+    int currentPageIndex;
+    Page *currentPage;
 
     void replaceProject(Project *newProject);
     void setCurrentPage(int index);
+
+signals:
+    void currentPageChanged(Page *newPage);
 };

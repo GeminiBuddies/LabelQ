@@ -44,40 +44,34 @@ TranslationEditArea::TranslationEditArea(QWidget *parent) : QWidget(parent) {
     QObject::connect(translationTable, SIGNAL(itemSelectionChanged()), this, SLOT(tableSelectionChanged()));
 
     setPage(nullptr);
+    processingExternalSignal = false;
 }
 
 TranslationEditArea::~TranslationEditArea() {}
 
-void TranslationEditArea::setPage(Page *page) {
-    _page = page;
-    reloadPage();
-}
+void TranslationEditArea::setPage(Page *newPage) {
+    page = newPage;
 
-void TranslationEditArea::tableSelectionChanged() {
-    auto selected = translationTable->selectedItems();
+    auto expectedR = page == nullptr ? 0 : page->labelCount();
+    auto currentR = translationTable->rowCount();
 
-    if (selected.count() != 1) {
-        translationText->setText("");
-        translationText->setEnabled(false);
+    if (expectedR >= currentR) {
+        translationTable->setRowCount(expectedR);
+
+        for (int i = currentR; i < expectedR; ++i) {
+            translationTable->setItem(i, 0, new QTableWidgetItem);
+        }
     } else {
-        selected[0]->row();
-        translationText
+        for (int i = currentR - 1; i >= expectedR; --i) {
+            delete translationTable->takeItem(i, 0);
+        }
+
+        translationTable->setRowCount(expectedR);
     }
-}
-
-void TranslationEditArea::reloadPage() {
-    // very slow, very stupid, but it works
-    auto r = translationTable->rowCount();
-
-    for (int i = 0; i < r; ++i) {
-        delete translationTable->takeItem(i, 0);
-    }
-
-    translationTable->setRowCount(0);
 
     translationText->setText("");
 
-    if (_page == nullptr) {
+    if (newPage == nullptr) {
         translationTable->setEnabled(false);
         translationText->setEnabled(false);
         return;
@@ -86,9 +80,72 @@ void TranslationEditArea::reloadPage() {
     translationTable->setEnabled(true);
     translationText->setEnabled(true);
 
-    auto len = _page->labelCount();
-    translationTable->setRowCount(len);
+    for (int i = 0; i < expectedR; ++i) {
+        translationTable->item(i, 0)->setText(newPage->label(i).translation);
+    }
+}
+
+void TranslationEditArea::tableSelectionChanged() {
+    if (processingExternalSignal) return;
+
+    auto selected = translationTable->selectedItems();
+    auto selectedCount = selected.count();
+
+    if (selectedCount != 1) {
+        translationText->setText("");
+        translationText->setEnabled(false);
+    }
+
+    QBitArray b(page->labelCount(), false);
+    for (int i = 0; i < selectedCount; ++i) {
+        b.setBit(selected.at(i)->row());
+    }
+
+    emit labelSelectionUpdated(&b);
+}
+
+void TranslationEditArea::onLabelAppended(QWidget *sender) {
+    if (sender == this) {
+        return;
+    }
+}
+
+void TranslationEditArea::onLabelDeleted(QWidget *sender, QBitArray *deleted) {
+    if (sender == this) {
+        return;
+    }
+}
+
+void TranslationEditArea::onLabelContentUpdated(QWidget *sender, int index) {
+    if (sender == this) {
+        return;
+    }
+}
+
+void TranslationEditArea::onLabelSelectionUpdated(QWidget *sender, QBitArray *selected) {
+    if (sender == this) {
+        return;
+    }
+
+    processingExternalSignal = true;
+    translationTable->setSelectionMode(QAbstractItemView::MultiSelection);
+
+    translationTable->clearSelection();
+
+    int len = page->labelCount();
+    int cnt = 0;
     for (int i = 0; i < len; ++i) {
-        translationTable->setItem(i, 0, new QTableWidgetItem(_page->label(i).translation));
+        if (selected->testBit(i)) {
+            translationTable->selectRow(i);
+            ++cnt;
+        }
+    }
+
+    translationTable->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    processingExternalSignal = false;
+
+    if (cnt != 1) {
+        translationText->setText("");
+        translationText->setEnabled(false);
     }
 }
