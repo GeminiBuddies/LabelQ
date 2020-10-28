@@ -24,11 +24,9 @@ protected:
 private:
     QPixmap pic;
     int percentage;
-    void zoom(bool in);
 
 private slots:
-    void zoomIn();
-    void zoomOut();
+    void zoom(bool in);
 
     void adjustWorkAreaMargin();
     void customUiSetup();
@@ -40,8 +38,9 @@ private:
     Project *project;
     int currentPageIndex;
     Page *currentPage;
+    PageOperator *op;
 
-    void replaceProject(Project *newProject);
+    bool replaceProject(Project *newProject);
     void setCurrentPage(int index);
 
 signals:

@@ -44,15 +44,26 @@ TranslationEditArea::TranslationEditArea(QWidget *parent) : QWidget(parent) {
 
     QObject::connect(translationTable, SIGNAL(itemSelectionChanged()), this, SLOT(tableSelectionChanged()));
 
+    op = nullptr;
+
     processingExternalSignal = false;
+    suppressExternalSignal = false;
 }
 
 TranslationEditArea::~TranslationEditArea() {}
 
 void TranslationEditArea::setPageOperator(PageOperator *op) {
+    if (this->op != nullptr) {
+        return;
+    }
+
     this->op = op;
 
     QObject::connect(op, SIGNAL(newPageSet()), this, SLOT(onNewPage()));
+    QObject::connect(op, SIGNAL(labelAppended()), this, SLOT(onLabelAppended()));
+    QObject::connect(op, SIGNAL(labelDeleted(QBitArray)), this, SLOT(onLabelDeleted(QBitArray)));
+    QObject::connect(op, SIGNAL(labelContentUpdated(int)), this, SLOT(onLabelContentUpdated(int)));
+    QObject::connect(op, SIGNAL(labelSelectionUpdated(QBitArray)), this, SLOT(onLabelSelectionUpdated(QBitArray)));
 }
 
 void TranslationEditArea::onNewPage() {
@@ -98,60 +109,63 @@ void TranslationEditArea::tableSelectionChanged() {
     auto selectedCount = selected.count();
 
     if (selectedCount != 1) {
-        translationText->setText("");
         translationText->setEnabled(false);
+        translationText->setText("");
     }
 
-    QBitArray b(page->labelCount(), false);
+    QBitArray b(op->page()->labelCount(), false);
     for (int i = 0; i < selectedCount; ++i) {
         b.setBit(selected.at(i)->row());
     }
 
-    emit labelSelectionUpdated(&b);
+    suppressExternalSignal = true;
+    op->setSelection(b);
+    suppressExternalSignal = false;
 }
 
-void TranslationEditArea::onLabelAppended(QWidget *sender) {
-    if (sender == this) {
+void TranslationEditArea::onLabelAppended() {
+    if (suppressExternalSignal) {
         return;
     }
 }
 
-void TranslationEditArea::onLabelDeleted(QWidget *sender, QBitArray *deleted) {
-    if (sender == this) {
+void TranslationEditArea::onLabelDeleted(QBitArray deleted) {
+    if (suppressExternalSignal) {
         return;
     }
 }
 
-void TranslationEditArea::onLabelContentUpdated(QWidget *sender, int index) {
-    if (sender == this) {
+void TranslationEditArea::onLabelContentUpdated(int index) {
+    if (suppressExternalSignal) {
         return;
     }
 }
 
-void TranslationEditArea::onLabelSelectionUpdated(QWidget *sender, QBitArray *selected) {
-    if (sender == this) {
+void TranslationEditArea::onLabelSelectionUpdated(QBitArray selected) {
+    if (suppressExternalSignal) {
         return;
     }
 
     processingExternalSignal = true;
-    translationTable->setSelectionMode(QAbstractItemView::MultiSelection);
 
+    translationTable->setSelectionMode(QAbstractItemView::MultiSelection);
     translationTable->clearSelection();
 
-    int len = page->labelCount();
+    int len = op->page()->labelCount();
     int cnt = 0;
     for (int i = 0; i < len; ++i) {
-        if (selected->testBit(i)) {
+        if (selected.testBit(i)) {
             translationTable->selectRow(i);
             ++cnt;
         }
     }
 
     translationTable->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    processingExternalSignal = false;
 
     if (cnt != 1) {
         translationText->setText("");
         translationText->setEnabled(false);
     }
+
+    processingExternalSignal = false;
 }

@@ -16,7 +16,13 @@ Page* PageOperator::page() {
 }
 
 int PageOperator::appendLabel(const QPoint &position) {
+    auto oldCount = currentPage->labelCount();
     currentPage->addLabel(std::move(Label(position, "")));
+    auto newCount = currentPage->labelCount();
+
+    if (newCount > oldCount) {
+        emit labelAppended();
+    }
 
     return currentPage->labelCount();
 }
@@ -34,7 +40,10 @@ void PageOperator::deleteLabel(const QBitArray &deleted) {
 }
 
 void PageOperator::setLabelContent(int index, const QString &content) {
+    // TODO: check here
+    (*currentPage)[index].translation = content;
 
+    emit labelContentUpdated(index);
 }
 
 void PageOperator::setSelection(const QBitArray &selected) {

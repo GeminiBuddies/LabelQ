@@ -8,6 +8,8 @@
 #include <QTableWidget>
 #include <QTextEdit>
 
+#include <QBitArray>
+
 class QTableWidgetWithKeySignal : public QTableWidget {
     Q_OBJECT
 
@@ -46,16 +48,11 @@ private:
 private slots:
     void tableSelectionChanged();
 
-signals:
-    void labelDeleted(QBitArray *deleted);
-    void labelContentUpdated(int index);
-    void labelSelectionUpdated(QBitArray *selected);
-
 public slots:
     void onNewPage();
 
-    void onLabelAppended(QWidget *sender);
-    void onLabelDeleted(QWidget *sender, QBitArray *deleted);
-    void onLabelContentUpdated(QWidget *sender, int index);
-    void onLabelSelectionUpdated(QWidget *sender, QBitArray *selected);
+    void onLabelAppended();
+    void onLabelDeleted(QBitArray deleted);
+    void onLabelContentUpdated(int index);
+    void onLabelSelectionUpdated(QBitArray selected);
 };

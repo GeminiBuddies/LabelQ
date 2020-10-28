@@ -14,6 +14,5 @@ protected:
     void wheelEvent(QWheelEvent *event) override;
 
 signals:
-    void zoomIn();
-    void zoomOut();
+    void zoom(bool in);
 };

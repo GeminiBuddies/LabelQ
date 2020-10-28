@@ -15,7 +15,7 @@ private:
     friend class Project;
 
 protected:
-    QVector<Label> _labels;
+    QVector<Label> labels;
 
 public:
     virtual bool dirty() = 0;
@@ -28,5 +28,5 @@ public:
     virtual void removeLabel(int at);
     virtual int labelCount();
 
-
+    virtual Label& operator[](int at);
 };

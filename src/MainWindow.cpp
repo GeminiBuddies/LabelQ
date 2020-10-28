@@ -2,6 +2,7 @@
 #include "../ui/ui_MainWindow.h"
 
 #include <model/Project.h>
+#include <model/PageOperator.h>
 
 #include <QMessageBox>
 #include <QtCore/QTranslator>
@@ -14,10 +15,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     customUiSetup();
 
     project = nullptr;
+    currentPage = nullptr;
+    currentPageIndex = -1;
+    op = new PageOperator();
+
+    ui->translationEditArea->setPageOperator(op);
+
     replaceProject(nullptr);
 }
 
 MainWindow::~MainWindow() {
+    delete op;
     delete ui;
 }
 
@@ -42,14 +50,6 @@ void MainWindow::zoom(bool in) {
     ui->workArea->show();
 
     adjustWorkAreaMargin();
-}
-
-void MainWindow::zoomIn() {
-    zoom(true);
-}
-
-void MainWindow::zoomOut() {
-    zoom(false);
 }
 
 void MainWindow::showEvent(QShowEvent *event) {
@@ -93,8 +93,7 @@ void MainWindow::customUiSetup() {
     // ui->label->setText("WHY?");
 
     QObject::connect(ui->mainSplitter, SIGNAL(splitterMoved(int, int)), this, SLOT(adjustWorkAreaMargin()));
-    QObject::connect(ui->scrollArea, SIGNAL(zoomIn()), this, SLOT(zoomIn()));
-    QObject::connect(ui->scrollArea, SIGNAL(zoomOut()), this, SLOT(zoomOut()));
+    QObject::connect(ui->scrollArea, SIGNAL(zoom(bool)), this, SLOT(zoom(bool)));
 
     QScroller::grabGesture(ui->scrollArea, QScroller::RightMouseButtonGesture);
     auto scroller = QScroller::scroller(ui->scrollArea);
@@ -128,7 +127,7 @@ void MainWindow::x(int r, int c) {
     QMessageBox::information(this, "", QString("Row %1, Column %2").arg(r).arg(c));
 }
 
-void MainWindow::replaceProject(Project *newProject) {
+bool MainWindow::replaceProject(Project *newProject) {
     // close the old project
     auto oldProject = project;
     if (oldProject != nullptr) {
@@ -140,7 +139,7 @@ void MainWindow::replaceProject(Project *newProject) {
             } else if (result == QMessageBox::No) {
                 // do nothing here
             } else {
-                return;
+                return false;
             }
         }
 
@@ -168,15 +167,23 @@ void MainWindow::replaceProject(Project *newProject) {
         ui->pageList->setEnabled(true);
     }
 
-    setCurrentPage(-1);
+    if (project != nullptr && project->pageCount() > 0) {
+        setCurrentPage(0);
+    } else {
+        setCurrentPage(-1);
+    }
+
+    return true;
 }
 
 void MainWindow::setCurrentPage(int index) {
     if (project == nullptr || index < 0 || index >= project->pageCount()) {
         currentPage = nullptr;
         currentPageIndex = -1;
-
+    } else {
+        currentPage = project->page(index);
+        currentPageIndex = index;
     }
 
-    ui->translationEditArea->onNewPage(currentPage);
+    op->setPage(currentPage);
 }

@@ -6,12 +6,7 @@ ZoomScrollArea::~ZoomScrollArea() = default;
 
 void ZoomScrollArea::wheelEvent(QWheelEvent *event) {
     if (event->modifiers() == Qt::ControlModifier) {
-        if (event->angleDelta().y() < 0) {
-            emit zoomOut();
-        } else {
-            emit zoomIn();
-        }
-
+        emit zoom(event->angleDelta().y() > 0);
         event->accept();
     } else {
         QScrollArea::wheelEvent(event);
