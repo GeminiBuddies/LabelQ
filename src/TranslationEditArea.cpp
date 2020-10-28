@@ -1,6 +1,7 @@
 #include <TranslationEditArea.h>
 
 #include <model/Page.h>
+#include <model/PageOperator.h>
 
 #include <QKeyEvent>
 #include <QHeaderView>
@@ -43,16 +44,21 @@ TranslationEditArea::TranslationEditArea(QWidget *parent) : QWidget(parent) {
 
     QObject::connect(translationTable, SIGNAL(itemSelectionChanged()), this, SLOT(tableSelectionChanged()));
 
-    setPage(nullptr);
     processingExternalSignal = false;
 }
 
 TranslationEditArea::~TranslationEditArea() {}
 
-void TranslationEditArea::setPage(Page *newPage) {
-    page = newPage;
+void TranslationEditArea::setPageOperator(PageOperator *op) {
+    this->op = op;
 
-    auto expectedR = page == nullptr ? 0 : page->labelCount();
+    QObject::connect(op, SIGNAL(newPageSet()), this, SLOT(onNewPage()));
+}
+
+void TranslationEditArea::onNewPage() {
+    auto newPage = op->page();
+
+    auto expectedR = newPage == nullptr ? 0 : newPage->labelCount();
     auto currentR = translationTable->rowCount();
 
     if (expectedR >= currentR) {

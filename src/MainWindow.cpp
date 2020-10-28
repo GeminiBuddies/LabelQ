@@ -178,5 +178,5 @@ void MainWindow::setCurrentPage(int index) {
 
     }
 
-    ui->translationEditArea->setPage(currentPage);
+    ui->translationEditArea->onNewPage(currentPage);
 }

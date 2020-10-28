@@ -31,14 +31,17 @@ private:
     QTableWidgetWithKeySignal *translationTable;
     QTextEdit *translationText;
 
-    Page *page;
+    PageOperator *op;
 
 public:
     explicit TranslationEditArea(QWidget *parent = nullptr);
     ~TranslationEditArea() override;
 
+    void setPageOperator(PageOperator *op);
+
 private:
     bool processingExternalSignal;
+    bool suppressExternalSignal;
 
 private slots:
     void tableSelectionChanged();
@@ -49,7 +52,8 @@ signals:
     void labelSelectionUpdated(QBitArray *selected);
 
 public slots:
-    void setPage(Page *newPage);
+    void onNewPage();
+
     void onLabelAppended(QWidget *sender);
     void onLabelDeleted(QWidget *sender, QBitArray *deleted);
     void onLabelContentUpdated(QWidget *sender, int index);
