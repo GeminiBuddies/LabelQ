@@ -6,11 +6,7 @@ TutorialProject::TutorialProject() {
     pages.append(new InMemoryPage("page1", QPixmap(":/images/example.png")));
 }
 
-TutorialProject::~TutorialProject() {
-    for (auto p: pages) {
-        delete p;
-    }
-}
+TutorialProject::~TutorialProject() { }
 
 void TutorialProject::clear() {
     for (auto p: pages) {

@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->translationEditArea->setPageOperator(op);
     ui->workArea->setPageOperator(op);
 
-    replaceProject(Project::tutorial());
+    replaceProject(nullptr);
 }
 
 MainWindow::~MainWindow() {
@@ -45,6 +45,8 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
 void MainWindow::adjustWorkAreaMargin() {
     auto vpH = ui->scrollArea->viewport()->width();
     auto vpV = ui->scrollArea->viewport()->height();
+
+    // "-2" here is necessary
     auto marginH = max({(vpH - ui->workArea->width() - 2) / 2, vpH / 12, 64 });
     auto marginV = max({(vpV - ui->workArea->height() - 2) / 2, vpV / 12, 64 });
 
@@ -77,6 +79,10 @@ void MainWindow::customUiSetup() {
     props.setScrollMetric(QScrollerProperties::VerticalOvershootPolicy, QScrollerProperties::OvershootAlwaysOff);
     props.setScrollMetric(QScrollerProperties::DecelerationFactor, 2.0);
     scroller->setScrollerProperties(props);
+
+    ui->workArea->setContainerWidget(ui->scrollArea);
+
+    QObject::connect(ui->actionShowTutorial, SIGNAL(triggered()), this, SLOT(showTutorial()));
 }
 
 void MainWindow::x(int r, int c) {
@@ -139,6 +145,10 @@ bool MainWindow::replaceProject(Project *newProject) {
     }
 
     return true;
+}
+
+void MainWindow::showTutorial() {
+    replaceProject(Project::tutorial());
 }
 
 void MainWindow::setCurrentPage(int index) {

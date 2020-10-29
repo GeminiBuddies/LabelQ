@@ -2,29 +2,30 @@
 
 #include <model/PageOperator.h>
 
+#include <cmath>
+
 WorkArea::WorkArea(QWidget *parent) : QLabel(parent) {
     currentZoomLevelIndex = 0;
     op = nullptr;
 }
 
-Page *WorkArea::page() const {
-    return _currentPage;
+void WorkArea::setContainerWidget(QWidget *widget) {
+    containerWidget = widget;
 }
 
-void WorkArea::setPage(Page *page) {
-    _currentPage = page;
-}
-
-void WorkArea::setZoomLevelIndex(int newIndex) {
-    if (this->isHidden()) {
-        return;
-    }
-
+void WorkArea::setZoomLevelIndex(int newIndex, bool forced) {
     if (newIndex < MinimumZoomLevelIndex || newIndex > MaximumZoomLevelIndex || newIndex == currentZoomLevelIndex) {
-        return;
+        if (!forced) return;
+
+        newIndex = std::max(MinimumZoomLevelIndex, newIndex);
+        newIndex = std::min(MaximumZoomLevelIndex, newIndex);
     }
 
     currentZoomLevelIndex = newIndex;
+
+    if (this->isHidden()) {
+        return;
+    }
 
     // hide it first to avoid flickering
     this->hide();
@@ -38,6 +39,26 @@ void WorkArea::setZoomLevelIndex(int newIndex) {
     this->show();
 
     emit sizeChanged();
+}
+
+void WorkArea::setPreferredZoomLevel() {
+    // setZoomLevelIndex(0);
+
+    if (this->isHidden()) {
+        setZoomLevelIndex(0);
+        return;
+    }
+
+    auto parentSize = containerWidget->size();
+    auto preferredZoomVertical = 5.0 / 6.0 * parentSize.height() / pic.height();
+    auto preferredZoomHorizontal = 5.0 / 6.0 * parentSize.width() / pic.width();
+    auto preferredZoom = std::max(preferredZoomVertical, preferredZoomHorizontal);
+    preferredZoom = std::floor(std::min(preferredZoom, zoomLevel(MaximumZoomLevelIndex) / 100.0) * 100);
+
+    auto preferredZoomLevel = (int)preferredZoom;
+    auto preferredIndex = std::lower_bound(ZoomLevels, ZoomLevels + ZoomLevelCount, preferredZoomLevel) - ZoomLevels + MinimumZoomLevelIndex;
+
+    setZoomLevelIndex(preferredIndex, true);
 }
 
 void WorkArea::zoom(bool in) {
@@ -72,7 +93,7 @@ void WorkArea::onNewPage() {
         this->setPixmap(pic);
     }
 
-    this->setZoomLevelIndex(0);
+    setPreferredZoomLevel();
 }
 
 void WorkArea::onLabelAppended() {

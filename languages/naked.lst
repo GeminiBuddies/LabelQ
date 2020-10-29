@@ -7,7 +7,7 @@ mainWindow_actionNew
 mainWindow_actionOpen
 mainWindow_actionSave
 mainWindow_actionSaveAs
-mainWindow_actionManagePictures
+mainWindow_actionShowTutorial
 mainWindow_actionExit
 mainWindow_menuHelp
 mainWindow_actionAbout

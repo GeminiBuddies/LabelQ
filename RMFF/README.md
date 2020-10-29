@@ -2,6 +2,8 @@
 
 > Yet another manga translation utility.
 
+> Fast, simple, cross-platform
+
 ## Acknowledgment
 
 My most sincere gratitude and respect to:
