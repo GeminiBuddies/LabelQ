@@ -2,14 +2,15 @@
 
     Menu
 entry_window_title
-entryWindow_menuProject
-entryWindow_actionNew
-entryWindow_actionOpen
-entryWindow_actionSave
-entryWindow_actionSaveAs
-entryWindow_actionManagePictures
-entryWindow_actionExit
-entryWindow_menuHelp
-entryWindow_actionAbout
+mainWindow_menuProject
+mainWindow_actionNew
+mainWindow_actionOpen
+mainWindow_actionSave
+mainWindow_actionSaveAs
+mainWindow_actionManagePictures
+mainWindow_actionExit
+mainWindow_menuHelp
+mainWindow_actionAbout
+mainWindow_actionFeedback
     Entry window widgets
-entryWindow_textTable_textHeader
+mainWindow_textTable_textHeader

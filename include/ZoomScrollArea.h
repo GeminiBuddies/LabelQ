@@ -12,7 +12,9 @@ public:
 
 protected:
     void wheelEvent(QWheelEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 
 signals:
     void zoom(bool in);
+    void zoomReset();
 };

@@ -134,7 +134,7 @@
    </property>
    <widget class="QMenu" name="menuProject">
     <property name="title">
-     <string>entryWindow_menuProject</string>
+     <string>mainWindow_menuProject</string>
     </property>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
@@ -147,46 +147,53 @@
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
-     <string>entryWindow_menuHelp</string>
+     <string>mainWindow_menuHelp</string>
     </property>
     <addaction name="actionAbout"/>
+    <addaction name="separator"/>
+    <addaction name="actionFeedback"/>
    </widget>
    <addaction name="menuProject"/>
    <addaction name="menuHelp"/>
   </widget>
   <action name="actionNew">
    <property name="text">
-    <string>entryWindow_actionNew</string>
+    <string>mainWindow_actionNew</string>
    </property>
   </action>
   <action name="actionOpen">
    <property name="text">
-    <string>entryWindow_actionOpen</string>
+    <string>mainWindow_actionOpen</string>
    </property>
   </action>
   <action name="actionSave">
    <property name="text">
-    <string>entryWindow_actionSave</string>
+    <string>mainWindow_actionSave</string>
    </property>
   </action>
   <action name="actionSaveAs">
    <property name="text">
-    <string>entryWindow_actionSaveAs</string>
+    <string>mainWindow_actionSaveAs</string>
    </property>
   </action>
   <action name="actionManagePictures">
    <property name="text">
-    <string>entryWindow_actionManagePictures</string>
+    <string>mainWindow_actionManagePictures</string>
    </property>
   </action>
   <action name="actionExit">
    <property name="text">
-    <string>entryWindow_actionExit</string>
+    <string>mainWindow_actionExit</string>
    </property>
   </action>
   <action name="actionAbout">
    <property name="text">
-    <string>entryWindow_actionAbout</string>
+    <string>mainWindow_actionAbout</string>
+   </property>
+  </action>
+  <action name="actionFeedback">
+   <property name="text">
+    <string>mainWindow_actionFeedback</string>
    </property>
   </action>
  </widget>

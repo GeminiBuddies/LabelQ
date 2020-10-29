@@ -20,36 +20,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     op = new PageOperator();
 
     ui->translationEditArea->setPageOperator(op);
+    ui->workArea->setPageOperator(op);
 
-    replaceProject(nullptr);
+    replaceProject(Project::tutorial());
 }
 
 MainWindow::~MainWindow() {
     delete op;
     delete ui;
-}
-
-void MainWindow::zoom(bool in) {
-    auto delta = in ? 5 : -5;
-    auto dest = percentage + delta;
-
-    if (dest < 25 || dest > 200) return;
-
-    percentage = dest;
-
-    // hide it first to avoid flickering
-    ui->workArea->hide();
-
-    auto newSize = pic.size() * percentage / 100;
-    // ui->menuB->setTitle(QString("%1, %2").arg(newSize.width()).arg(newSize.height()));
-    ui->workArea->setPixmap(pic.scaled(newSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-
-    // to fix an unknown bug that workArea->width/height() return wrong value when zooming in
-    ui->workArea->setFixedSize(newSize);
-
-    ui->workArea->show();
-
-    adjustWorkAreaMargin();
 }
 
 void MainWindow::showEvent(QShowEvent *event) {
@@ -87,13 +65,10 @@ void MainWindow::customUiSetup() {
     ui->mainSplitter->setStretchFactor(0, 1);
     ui->mainSplitter->setStretchFactor(1, 0);
 
-    pic = QPixmap(":/images/example.png");
-    ui->workArea->setPixmap(pic);
-    percentage = 100;
-    // ui->label->setText("WHY?");
-
     QObject::connect(ui->mainSplitter, SIGNAL(splitterMoved(int, int)), this, SLOT(adjustWorkAreaMargin()));
-    QObject::connect(ui->scrollArea, SIGNAL(zoom(bool)), this, SLOT(zoom(bool)));
+    QObject::connect(ui->scrollArea, SIGNAL(zoom(bool)), ui->workArea, SLOT(zoom(bool)));
+    QObject::connect(ui->scrollArea, SIGNAL(zoomReset()), ui->workArea, SLOT(zoomReset()));
+    QObject::connect(ui->workArea, SIGNAL(sizeChanged()), this, SLOT(adjustWorkAreaMargin()));
 
     QScroller::grabGesture(ui->scrollArea, QScroller::RightMouseButtonGesture);
     auto scroller = QScroller::scroller(ui->scrollArea);
@@ -102,25 +77,6 @@ void MainWindow::customUiSetup() {
     props.setScrollMetric(QScrollerProperties::VerticalOvershootPolicy, QScrollerProperties::OvershootAlwaysOff);
     props.setScrollMetric(QScrollerProperties::DecelerationFactor, 2.0);
     scroller->setScrollerProperties(props);
-
-
-    /*
-    ui->textTable->setRowCount(64);
-    for (int i = 0; i < 64; ++i) {
-        auto header = new QTableWidgetItem();
-        auto content = new QTableWidgetItem();
-
-        header->setText(QString::number(i));
-        content->setText(QString::number(1ull << (unsigned long long)i));
-
-        ui->textTable->setVerticalHeaderItem(i, header);
-        ui->textTable->setItem(i, 0, content);
-    }
-
-    delete ui->textTable->takeItem(42, 0);
-    delete ui->textTable->takeVerticalHeaderItem(42);
-    ui->textTable->removeRow(42);
-     */
 }
 
 void MainWindow::x(int r, int c) {
@@ -131,8 +87,8 @@ bool MainWindow::replaceProject(Project *newProject) {
     // close the old project
     auto oldProject = project;
     if (oldProject != nullptr) {
-        if (oldProject->dirty()) {
-            auto result = QMessageBox::question(this, tr("entryWindow_confirmExitTitle"), tr("entryWindow_confirmExitContent"), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+        if (oldProject->canSave() && oldProject->dirty()) {
+            auto result = QMessageBox::question(this, tr("mainWindow_confirmExitTitle"), tr("mainWindow_confirmExitContent"), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
 
             if (result == QMessageBox::Yes) {
                 oldProject->save();
@@ -146,6 +102,10 @@ bool MainWindow::replaceProject(Project *newProject) {
         int pageCount = oldProject->pageCount();
         for (int i = 0; i < pageCount; ++i) {
             delete ui->pageList->takeItem(i);
+        }
+
+        if (oldProject->needDelete()) {
+            delete oldProject;
         }
     }
 
@@ -165,6 +125,11 @@ bool MainWindow::replaceProject(Project *newProject) {
         ui->pageList->setEnabled(false);
     } else {
         ui->pageList->setEnabled(true);
+
+        auto pageCount = project->pageCount();
+        for (int i = 0; i < pageCount; ++i) {
+            ui->pageList->addItem(project->page(i)->name());
+        }
     }
 
     if (project != nullptr && project->pageCount() > 0) {

@@ -23,11 +23,8 @@ protected:
 
 private:
     QPixmap pic;
-    int percentage;
 
 private slots:
-    void zoom(bool in);
-
     void adjustWorkAreaMargin();
     void customUiSetup();
 

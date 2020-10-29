@@ -28,7 +28,7 @@ TranslationEditArea::TranslationEditArea(QWidget *parent) : QWidget(parent) {
 
     translationTable = new QTableWidgetWithKeySignal(splitter);
     translationTable->setColumnCount(2);
-    translationTable->setHorizontalHeaderItem(0, new QTableWidgetItem(tr("entryWindow_textTable_textHeader")));
+    translationTable->setHorizontalHeaderItem(0, new QTableWidgetItem(tr("mainWindow_textTable_textHeader")));
     translationTable->setHorizontalHeaderItem(1, new QTableWidgetItem(""));
     translationTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
     translationTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);

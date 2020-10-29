@@ -4,13 +4,10 @@
 #include "Label.h"
 
 #include <QBitArray>
-#include <QObject>
 #include <QString>
 #include <QPixmap>
 
-class Page : public QObject {
-    Q_OBJECT
-
+class Page {
 private:
     friend class Project;
 
@@ -18,8 +15,11 @@ protected:
     QVector<Label> labels;
 
 public:
+    virtual ~Page() = default;
+
     virtual bool dirty() = 0;
 
+    virtual QString name() = 0;
     virtual QPixmap pixmap() = 0;
 
     virtual void addLabel(Label &&label);
