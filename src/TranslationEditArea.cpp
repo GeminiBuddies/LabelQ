@@ -127,18 +127,35 @@ void TranslationEditArea::onLabelAppended() {
     if (suppressExternalSignal) {
         return;
     }
+
+    auto newRowCount = op->page()->labelCount();
+    translationTable->setRowCount(newRowCount);
+    translationTable->setItem(newRowCount - 1, 0, new QTableWidgetItem(op->page()->label(newRowCount - 1).translation));
 }
 
 void TranslationEditArea::onLabelDeleted(QBitArray deleted) {
     if (suppressExternalSignal) {
         return;
     }
+
+    auto oldCount = translationTable->rowCount();
+    for (int i = oldCount - 1; i >= 0; --i) {
+        if (deleted.testBit(i)) {
+            delete translationTable->takeItem(i, 0);
+            translationTable->removeRow(i);
+        }
+    }
+
+    // actually unnecessary but ...
+    translationTable->setRowCount(op->page()->labelCount());
 }
 
 void TranslationEditArea::onLabelContentUpdated(int index) {
     if (suppressExternalSignal) {
         return;
     }
+
+    translationTable->item(index, 0)->setText(op->page()->label(index).translation);
 }
 
 void TranslationEditArea::onLabelSelectionUpdated(QBitArray selected) {

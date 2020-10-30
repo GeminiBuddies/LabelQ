@@ -6,6 +6,7 @@
 
 WorkArea::WorkArea(QWidget *parent) : QLabel(parent) {
     currentZoomLevelIndex = 0;
+    containerWidget = nullptr;
     op = nullptr;
 }
 
