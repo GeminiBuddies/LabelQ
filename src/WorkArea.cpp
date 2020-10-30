@@ -8,6 +8,12 @@ WorkArea::WorkArea(QWidget *parent) : QLabel(parent) {
     currentZoomLevelIndex = 0;
     containerWidget = nullptr;
     op = nullptr;
+
+    button = new QPushButton(this);
+    button->setGeometry(100, 100, 40, 40);
+    button->setStyleSheet("QPushButton { border: 2px solid gray; border-radius: 4px; }");
+    button->setFont(QFont("DejaVu Sans Mono", 11));
+    button->setText("42");
 }
 
 void WorkArea::setContainerWidget(QWidget *widget) {
@@ -31,11 +37,15 @@ void WorkArea::setZoomLevelIndex(int newIndex, bool forced) {
     // hide it first to avoid flickering
     this->hide();
 
-    auto newSize = pic.size() * zoomLevel(currentZoomLevelIndex) / 100;
+    auto ratio = zoomLevel(currentZoomLevelIndex) / 100.0;
+    auto newSize = pic.size() * ratio;
     this->setPixmap(pic.scaled(newSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 
     // to fix an unknown bug that workArea->width/height() return wrong value when zooming in
     this->setFixedSize(newSize);
+
+    auto x = std::min(newSize.width(), newSize.height());
+    button->setGeometry(QRect(QPoint(400 * ratio, 300 * ratio), QSize(x, x) * 0.04));
 
     this->show();
 

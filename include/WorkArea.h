@@ -3,6 +3,7 @@
 #include <model/Page.h>
 
 #include <QLabel>
+#include <QPushButton>
 
 class WorkArea : public QLabel {
     Q_OBJECT
@@ -46,6 +47,8 @@ signals:
 private:
     PageOperator *op;
     QPixmap pic;
+
+    QPushButton *button;
 
 public:
     void setPageOperator(PageOperator *op);
