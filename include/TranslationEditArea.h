@@ -45,8 +45,11 @@ private:
     bool processingExternalSignal;
     bool suppressExternalSignal;
 
+    int selectedLabel;
+
 private slots:
     void tableSelectionChanged();
+    void textEdited();
 
 public slots:
     void onNewPage();

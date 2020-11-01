@@ -27,13 +27,21 @@ TranslationEditArea::TranslationEditArea(QWidget *parent) : QWidget(parent) {
     splitter->setOrientation(Qt::Vertical);
 
     translationTable = new QTableWidgetWithKeySignal(splitter);
+
     translationTable->setColumnCount(2);
     translationTable->setHorizontalHeaderItem(0, new QTableWidgetItem(tr("mainWindow_textTable_textHeader")));
     translationTable->setHorizontalHeaderItem(1, new QTableWidgetItem(""));
     translationTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
     translationTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
     translationTable->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+
     translationTable->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    translationTable->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+
+    translationTable->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    translationTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+    translationTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     translationText = new QTextEdit(splitter);
 
@@ -43,11 +51,13 @@ TranslationEditArea::TranslationEditArea(QWidget *parent) : QWidget(parent) {
     verticalLayout->addWidget(splitter);
 
     QObject::connect(translationTable, SIGNAL(itemSelectionChanged()), this, SLOT(tableSelectionChanged()));
+    QObject::connect(translationText, SIGNAL(textChanged()), this, SLOT(textEdited()));
 
     op = nullptr;
 
     processingExternalSignal = false;
     suppressExternalSignal = false;
+    selectedLabel = -1;
 }
 
 TranslationEditArea::~TranslationEditArea() {}
@@ -86,20 +96,22 @@ void TranslationEditArea::onNewPage() {
         translationTable->setRowCount(expectedR);
     }
 
+    translationText->setEnabled(false);
     translationText->setText("");
+    selectedLabel = -1;
 
     if (newPage == nullptr) {
         translationTable->setEnabled(false);
-        translationText->setEnabled(false);
         return;
     }
 
     translationTable->setEnabled(true);
-    translationText->setEnabled(true);
 
     for (int i = 0; i < expectedR; ++i) {
         translationTable->item(i, 0)->setText(newPage->label(i).translation);
     }
+
+    translationTable->clearSelection();
 }
 
 void TranslationEditArea::tableSelectionChanged() {
@@ -109,8 +121,18 @@ void TranslationEditArea::tableSelectionChanged() {
     auto selectedCount = selected.count();
 
     if (selectedCount != 1) {
+        selectedLabel = -1;
+
         translationText->setEnabled(false);
         translationText->setText("");
+    } else {
+        selectedLabel = -1;
+
+        translationText->setEnabled(true);
+        translationText->setText(selected[0]->text());
+        translationText->setFocus();
+
+        selectedLabel = selected[0]->row();
     }
 
     QBitArray b(op->page()->labelCount(), false);
@@ -121,6 +143,14 @@ void TranslationEditArea::tableSelectionChanged() {
     suppressExternalSignal = true;
     op->setSelection(b);
     suppressExternalSignal = false;
+}
+
+void TranslationEditArea::textEdited() {
+    if (selectedLabel < 0 || processingExternalSignal) {
+        return;
+    }
+
+    translationTable->item(selectedLabel, 0)->setText(translationText->toPlainText());
 }
 
 void TranslationEditArea::onLabelAppended() {
