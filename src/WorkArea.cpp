@@ -97,11 +97,54 @@ void WorkArea::zoomReset() {
     setZoomLevel(0);
 }
 
-void WorkArea::mousePressEvent(QMouseEvent *ev) {
-    auto pos = ev->pos();
+void WorkArea::markLabelWidgetAsSelected(QPushButton *widget) {
+    widget->setStyleSheet("QPushButton { border: 2px solid gray; border-radius: 4px; background-color: red; color: white; }");
+}
 
-    auto w = addLabelWidget(pos);
-    w->show();
+void WorkArea::markLabelWidgetAsUnselected(QPushButton *widget) {
+    widget->setStyleSheet("QPushButton { border: 2px solid gray; border-radius: 4px; background-color: yellow; }");
+}
+
+QPushButton* WorkArea::getFreeLabelWidget() {
+    QPushButton *rv;
+
+    if (unusedLabelWidgets.count() > 0) {
+        rv = unusedLabelWidgets.pop();
+    } else {
+        rv = new QPushButton(this);
+        rv->installEventFilter(this);
+    }
+
+    markLabelWidgetAsUnselected(rv);
+    rv->setFont(f);
+    rv->setGeometry(0, 0, currentLabelWidgetSize, currentLabelWidgetSize);
+
+    return rv;
+}
+
+QPushButton* WorkArea::addLabelWidget(const QPoint &position) {
+    auto realPosition = position / currentZoomLevel();
+
+    suppressExternalSignal = true;
+    op->appendLabel(realPosition);
+    suppressExternalSignal = false;
+
+    auto rv = getFreeLabelWidget();
+    labelWidgets.append(rv);
+
+    rv->move(position);
+    rv->setText(QString::number(labelWidgets.count()));
+    rv->show();
+
+    return rv;
+}
+
+void WorkArea::mousePressEvent(QMouseEvent *ev) {
+    if (ev->button() != Qt::LeftButton || ev->modifiers() != Qt::NoModifier) {
+        return;
+    }
+
+    addLabelWidget(ev->pos());
 }
 
 // this function handles label widget click event
@@ -142,6 +185,24 @@ void WorkArea::onNewPage() {
         this->setPixmap(pic);
     }
 
+    auto oldLabelCount = labelWidgets.count();
+    auto newLabelCount = newPage == nullptr ? 0 : newPage->labelCount();
+
+    for (int i = oldLabelCount; i < newLabelCount; ++i) {
+        auto rv = getFreeLabelWidget();
+        labelWidgets.append(rv);
+        rv->setText(QString::number(i + 1));
+        rv->show();
+    }
+
+    for (int i = oldLabelCount - 1; i >= newLabelCount; --i) {
+        auto w = labelWidgets[i];
+        labelWidgets.remove(i);
+
+        w->setVisible(false);
+        unusedLabelWidgets.push(w);
+    }
+
     setPreferredZoomLevel();
 }
 
@@ -158,7 +219,7 @@ void WorkArea::onLabelDeleted(QBitArray deleted) {
             auto w = labelWidgets[i];
             labelWidgets.removeAt(i);
 
-            w->hide();
+            w->setVisible(false);
             unusedLabelWidgets.push(w);
         }
     }
@@ -170,41 +231,17 @@ void WorkArea::onLabelDeleted(QBitArray deleted) {
 }
 
 void WorkArea::onLabelSelectionUpdated(QBitArray selected) {
-
-}
-
-void WorkArea::markLabelWidgetAsSelected(QPushButton *widget) {
-    widget->setStyleSheet("QPushButton { border: 2px solid red; border-radius: 4px; }");
-}
-
-void WorkArea::markLabelWidgetAsUnselected(QPushButton *widget) {
-    widget->setStyleSheet("QPushButton { border: 2px solid gray; border-radius: 4px; }");
-}
-
-QPushButton* WorkArea::addLabelWidget(const QPoint &position) {
-    QPushButton *rv;
-
-    if (unusedLabelWidgets.count() > 0) {
-        rv = unusedLabelWidgets.pop();
-    } else {
-        rv = new QPushButton(this);
-        rv->installEventFilter(this);
+    if (suppressExternalSignal) {
+        return;
     }
 
-    auto realPosition = position / currentZoomLevel();
+    auto count = selected.count();
 
-    suppressExternalSignal = true;
-    op->appendLabel(realPosition);
-    suppressExternalSignal = false;
-
-    markLabelWidgetAsUnselected(rv);
-    rv->setFont(f);
-    rv->setGeometry(position.x(), position.y(), currentLabelWidgetSize, currentLabelWidgetSize);
-
-    labelWidgets.append(rv);
-
-    rv->setText(QString::number(labelWidgets.count()));
-
-    return rv;
+    for (int i = 0; i < count; ++i) {
+        if (selected.testBit(i)) {
+            markLabelWidgetAsSelected(labelWidgets[i]);
+        } else {
+            markLabelWidgetAsUnselected(labelWidgets[i]);
+        }
+    }
 }
-

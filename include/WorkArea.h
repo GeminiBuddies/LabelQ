@@ -65,6 +65,7 @@ private:
 
     static void markLabelWidgetAsSelected(QPushButton *widget);
     static void markLabelWidgetAsUnselected(QPushButton *widget);
+    QPushButton* getFreeLabelWidget();
     QPushButton* addLabelWidget(const QPoint &position);
 
 protected:
