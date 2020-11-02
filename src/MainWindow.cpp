@@ -83,6 +83,7 @@ void MainWindow::customUiSetup() {
     ui->workArea->setContainerWidget(ui->scrollArea);
 
     QObject::connect(ui->actionShowTutorial, SIGNAL(triggered()), this, SLOT(showTutorial()));
+    QObject::connect(ui->pageList, SIGNAL(itemSelectionChanged()), this, SLOT(pageListSelectionItemChanged()));
 }
 
 void MainWindow::x(int r, int c) {
@@ -145,6 +146,17 @@ bool MainWindow::replaceProject(Project *newProject) {
     }
 
     return true;
+}
+
+void MainWindow::pageListSelectionItemChanged() {
+    auto selection = ui->pageList->selectionModel()->selectedIndexes();
+
+    if (selection.length() == 0) {
+        setCurrentPage(-1);
+    } else {
+        auto index = selection[0].row();
+        setCurrentPage(index);
+    }
 }
 
 void MainWindow::showTutorial() {

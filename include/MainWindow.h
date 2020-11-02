@@ -40,9 +40,9 @@ private:
     bool replaceProject(Project *newProject);
     void setCurrentPage(int index);
 
+private slots:
+    void pageListSelectionItemChanged();
+
 public slots:
     void showTutorial();
-
-signals:
-    void currentPageChanged(Page *newPage);
 };

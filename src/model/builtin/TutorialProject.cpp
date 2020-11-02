@@ -4,6 +4,7 @@
 
 TutorialProject::TutorialProject() {
     pages.append(new InMemoryPage("page1", QPixmap(":/images/example.png")));
+    pages.append(new InMemoryPage("page2", QPixmap(":/images/example.png")));
 }
 
 TutorialProject::~TutorialProject() { }
