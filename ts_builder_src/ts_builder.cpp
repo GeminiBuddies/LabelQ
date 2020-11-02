@@ -11,6 +11,17 @@
 using namespace std;
 namespace fs = std::filesystem;
 
+string escapeXML(const string &content) {
+    auto str = content;
+    str = regex_replace(str, regex("&"), "&amp;");
+    str = regex_replace(str, regex("<"), "&lt;");
+    str = regex_replace(str, regex(">"), "&gt;");
+    str = regex_replace(str, regex("\""), "&quot;");
+    str = regex_replace(str, regex("'"), "&apos;");
+
+    return str;
+}
+
 int main(int argc, char **argv) {
     vector<string> inputs, outputs;
 
@@ -55,7 +66,7 @@ int main(int argc, char **argv) {
                 if (delimiter == string::npos) {
                     translations[line] = "";
                 } else {
-                    translations[line.substr(0, delimiter)] = line.substr(delimiter + 1);
+                    translations[line.substr(0, delimiter)] = escapeXML(line.substr(delimiter + 1));
                 }
             }
 
