@@ -11,6 +11,9 @@ mainWindow_actionShowTutorial
 mainWindow_actionExit
 mainWindow_menuHelp
 mainWindow_actionAbout
+mainWindow_actionAboutQt
 mainWindow_actionFeedback
     Entry window widgets
 mainWindow_textTable_textHeader
+mainWindow_aboutTitle
+mainWindow_aboutContent

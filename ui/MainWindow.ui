@@ -38,8 +38,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>317</width>
-          <height>558</height>
+          <width>303</width>
+          <height>557</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -95,7 +95,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuProject">
@@ -116,6 +116,7 @@
      <string>mainWindow_menuHelp</string>
     </property>
     <addaction name="actionAbout"/>
+    <addaction name="actionAboutQt"/>
     <addaction name="separator"/>
     <addaction name="actionFeedback"/>
    </widget>
@@ -160,6 +161,11 @@
   <action name="actionFeedback">
    <property name="text">
     <string>mainWindow_actionFeedback</string>
+   </property>
+  </action>
+  <action name="actionAboutQt">
+   <property name="text">
+    <string>mainWindow_actionAboutQt</string>
    </property>
   </action>
  </widget>

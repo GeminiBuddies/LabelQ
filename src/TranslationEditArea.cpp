@@ -150,7 +150,13 @@ void TranslationEditArea::textEdited() {
         return;
     }
 
-    translationTable->item(selectedLabel, 0)->setText(translationText->toPlainText());
+    auto text = translationText->toPlainText();
+
+    translationTable->item(selectedLabel, 0)->setText(text);
+
+    suppressExternalSignal = true;
+    op->setLabelContent(selectedLabel, text);
+    suppressExternalSignal = false;
 }
 
 void TranslationEditArea::onLabelAppended() {

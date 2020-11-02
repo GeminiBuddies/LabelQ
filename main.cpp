@@ -7,8 +7,8 @@ int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
     QTranslator translator;
-    // translator.load(QString("labelq_") + "en_US");
-    translator.load(QString("labelq_") + "zh_CN");
+    translator.load(QString("labelq_") + "en_US");
+    // translator.load(QString("labelq_") + "zh_CN");
 
     QApplication::installTranslator(&translator);
 

@@ -1,12 +1,14 @@
 #include <MainWindow.h>
 #include "../ui/ui_MainWindow.h"
 
+#include <Definitions.h>
 #include <model/Project.h>
 #include <model/PageOperator.h>
 
 #include <QMessageBox>
 #include <QtCore/QTranslator>
 #include <QScroller>
+#include <QDate>
 
 using namespace std;
 
@@ -83,7 +85,27 @@ void MainWindow::customUiSetup() {
     ui->workArea->setContainerWidget(ui->scrollArea);
 
     QObject::connect(ui->actionShowTutorial, SIGNAL(triggered()), this, SLOT(showTutorial()));
+    QObject::connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(showAboutMessage()));
+    QObject::connect(ui->actionAboutQt, SIGNAL(triggered()), this, SLOT(showAboutQtMessage()));
     QObject::connect(ui->pageList, SIGNAL(itemSelectionChanged()), this, SLOT(pageListSelectionItemChanged()));
+}
+
+void MainWindow::showAboutMessage() {
+    // args
+    // %0: version
+    // %1: startYear
+    // %2: endYear
+
+    auto content = tr("mainWindow_aboutContent")
+            .arg(LABELQ_VERSION)
+            .arg(2020)
+            .arg(QDate::currentDate().year())
+            ;
+    QMessageBox::about(this, tr("mainWindow_aboutTitle"), content);
+}
+
+void MainWindow::showAboutQtMessage() {
+    QMessageBox::aboutQt(this);
 }
 
 void MainWindow::x(int r, int c) {
@@ -107,7 +129,7 @@ bool MainWindow::replaceProject(Project *newProject) {
         }
 
         int pageCount = oldProject->pageCount();
-        for (int i = 0; i < pageCount; ++i) {
+        for (int i = pageCount - 1; i >= 0; --i) {
             delete ui->pageList->takeItem(i);
         }
 
@@ -140,7 +162,9 @@ bool MainWindow::replaceProject(Project *newProject) {
     }
 
     if (project != nullptr && project->pageCount() > 0) {
-        setCurrentPage(0);
+        ui->pageList->item(0)->setSelected(true);
+        // this statement contains
+        //   setCurrentPage(0);
     } else {
         setCurrentPage(-1);
     }

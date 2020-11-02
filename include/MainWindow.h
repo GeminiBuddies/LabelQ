@@ -28,6 +28,8 @@ private slots:
     void adjustWorkAreaMargin();
     void customUiSetup();
 
+    void showAboutMessage();
+    void showAboutQtMessage();
     void x(int r, int c);
 
 // Project and Page management

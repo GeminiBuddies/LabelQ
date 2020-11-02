@@ -1,0 +1,12 @@
+#pragma once
+
+#define __STR(x) #x
+#define STR(x) __STR(x)
+
+#ifndef LABELQ_VERSION
+# define LABELQ_VERSION_MAJOR 0
+# define LABELQ_VERSION_MINOR 1
+# define LABELQ_VERSION_PATCH 0
+#endif
+
+#define LABELQ_VERSION STR(LABELQ_VERSION_MAJOR) "." STR(LABELQ_VERSION_MINOR) "." STR(LABELQ_VERSION_PATCH)
