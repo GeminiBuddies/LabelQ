@@ -60,16 +60,23 @@ private:
 
     QVector<QPushButton*> labelWidgets;
     QStack<QPushButton*> unusedLabelWidgets;
-    QFont f;
     int currentLabelWidgetSize;
+    QFont labelFont;
+
+    QBitArray labelSelection;
 
     static void markLabelWidgetAsSelected(QPushButton *widget);
     static void markLabelWidgetAsUnselected(QPushButton *widget);
     QPushButton* getFreeLabelWidget();
     QPushButton* addLabelWidget(const QPoint &position);
 
+    void clearSelection();
+    void select(int index);
+    void unselect(int index);
+
 protected:
     void mousePressEvent(QMouseEvent *ev) override;
+    void keyPressEvent(QKeyEvent *ev) override;
     bool eventFilter(QObject *obj, QEvent *ev) override;
 
 public:

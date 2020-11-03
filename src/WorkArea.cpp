@@ -8,13 +8,13 @@
 
 #include <cmath>
 
-WorkArea::WorkArea(QWidget *parent) : QLabel(parent), f("DejaVu Sans Mono") {
+WorkArea::WorkArea(QWidget *parent) : QLabel(parent), labelFont("DejaVu Sans Mono") {
     currentZoomLevelIndex = 0;
     containerWidget = nullptr;
     op = nullptr;
     suppressExternalSignal = false;
 
-    f.setBold(true);
+    labelFont.setBold(true);
 }
 
 void WorkArea::setContainerWidget(QWidget *widget) {
@@ -51,7 +51,7 @@ void WorkArea::setZoomLevel(int newIndex, bool forced) {
 
     auto x = std::min(newSize.width(), newSize.height());
     currentLabelWidgetSize = (int) (x * LabelWidgetSizeRatio);
-    f.setPointSizeF(x * LabelWidgetFontSizeRation);
+    labelFont.setPointSizeF(x * LabelWidgetFontSizeRation);
 
     auto labelCount = op->page()->labelCount();
     auto labelSize = (int) (x * LabelWidgetSizeRatio);
@@ -60,7 +60,7 @@ void WorkArea::setZoomLevel(int newIndex, bool forced) {
         auto label = op->page()->label(i);
 
         w->setGeometry(QRect(label.position * ratio, QSize(labelSize, labelSize)));
-        w->setFont(f);
+        w->setFont(labelFont);
     }
 
     this->show();
@@ -116,7 +116,7 @@ QPushButton* WorkArea::getFreeLabelWidget() {
     }
 
     markLabelWidgetAsUnselected(rv);
-    rv->setFont(f);
+    rv->setFont(labelFont);
     rv->setGeometry(0, 0, currentLabelWidgetSize, currentLabelWidgetSize);
 
     return rv;
@@ -147,6 +147,13 @@ void WorkArea::mousePressEvent(QMouseEvent *ev) {
     }
 }
 
+void WorkArea::keyPressEvent(QKeyEvent *ev) {
+    if ((ev->key() == Qt::Key_Delete || ev->key() == Qt::Key_Backspace) && ev->modifiers() == Qt::NoModifier) {
+
+    } else {
+        QLabel::keyPressEvent(ev);
+    }
+}
 // this function handles label widget click event
 bool WorkArea::eventFilter(QObject *obj, QEvent *ev) {
     if (ev->type() == QEvent::MouseButtonPress) {
