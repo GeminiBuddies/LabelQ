@@ -11,8 +11,9 @@ public:
     ~ZoomScrollArea() override;
 
 protected:
-    void wheelEvent(QWheelEvent *event) override;
-    void keyPressEvent(QKeyEvent *event) override;
+    void wheelEvent(QWheelEvent *ev) override;
+    void mousePressEvent(QMouseEvent *ev) override;
+    void keyPressEvent(QKeyEvent *ev) override;
 
 signals:
     void zoom(bool in);

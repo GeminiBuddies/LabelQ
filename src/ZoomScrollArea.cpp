@@ -4,18 +4,27 @@ ZoomScrollArea::ZoomScrollArea(QWidget *parent) : QScrollArea(parent) {}
 
 ZoomScrollArea::~ZoomScrollArea() = default;
 
-void ZoomScrollArea::wheelEvent(QWheelEvent *event) {
-    if (event->modifiers() == Qt::ControlModifier) {
-        emit zoom(event->angleDelta().y() > 0);
-        event->accept();
+void ZoomScrollArea::wheelEvent(QWheelEvent *ev) {
+    if (ev->modifiers() == Qt::ControlModifier) {
+        emit zoom(ev->angleDelta().y() > 0);
+        ev->accept();
     } else {
-        QScrollArea::wheelEvent(event);
+        QScrollArea::wheelEvent(ev);
     }
 }
 
-void ZoomScrollArea::keyPressEvent(QKeyEvent *event) {
-    while (event->modifiers() == Qt::ControlModifier) {
-        auto key = event->key();
+void ZoomScrollArea::mousePressEvent(QMouseEvent *ev) {
+    if (ev->button() == Qt::MidButton && ev->modifiers() == Qt::ControlModifier) {
+        emit zoomReset();
+        ev->accept();
+    } else {
+        QScrollArea::mousePressEvent(ev);
+    }
+}
+
+void ZoomScrollArea::keyPressEvent(QKeyEvent *ev) {
+    while (ev->modifiers() == Qt::ControlModifier) {
+        auto key = ev->key();
 
         if (key == Qt::Key_Equal) {
             emit zoom(true);
@@ -27,9 +36,9 @@ void ZoomScrollArea::keyPressEvent(QKeyEvent *event) {
             break;
         }
 
-        event->accept();
+        ev->accept();
         return;
     }
 
-    QScrollArea::keyPressEvent(event);
+    QScrollArea::keyPressEvent(ev);
 }

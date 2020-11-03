@@ -140,11 +140,11 @@ QPushButton* WorkArea::addLabelWidget(const QPoint &position) {
 }
 
 void WorkArea::mousePressEvent(QMouseEvent *ev) {
-    if (ev->button() != Qt::LeftButton || ev->modifiers() != Qt::NoModifier) {
-        return;
+    if (ev->button() == Qt::LeftButton && ev->modifiers() == Qt::NoModifier) {
+        addLabelWidget(ev->pos());
+    } else {
+        QLabel::mousePressEvent(ev);
     }
-
-    addLabelWidget(ev->pos());
 }
 
 // this function handles label widget click event
@@ -152,10 +152,12 @@ bool WorkArea::eventFilter(QObject *obj, QEvent *ev) {
     if (ev->type() == QEvent::MouseButtonPress) {
         auto index = labelWidgets.indexOf((QPushButton*)obj);
 
-        if (index >= 0) {
-            QMessageBox::information(this, "", QString::number(index));
-            return true;
+        if (index < 0) {
+            return false;
         }
+
+        QMessageBox::information(this, "", QString::number(index));
+        return true;
     }
 
     return false;
