@@ -125,6 +125,8 @@ QPushButton* WorkArea::getFreeLabelWidget() {
 QPushButton* WorkArea::addLabelWidget(const QPoint &position) {
     auto realPosition = position / currentZoomLevel();
 
+    labelSelection.resize(labelSelection.count() + 1);
+
     suppressExternalSignal = true;
     op->appendLabel(realPosition);
     suppressExternalSignal = false;
@@ -139,8 +141,82 @@ QPushButton* WorkArea::addLabelWidget(const QPoint &position) {
     return rv;
 }
 
+void WorkArea::clearSelection(bool notify) {
+    auto len = labelWidgets.count();
+
+    labelSelection.clear();
+    labelSelection.resize(len);
+
+    for (int i = 0; i < len; ++i) {
+        markLabelWidgetAsUnselected(labelWidgets[i]);
+    }
+
+    if (notify) {
+        suppressExternalSignal = true;
+        op->setSelection(labelSelection);
+        suppressExternalSignal = false;
+    }
+}
+
+void WorkArea::select(int index) {
+    if (!labelSelection.testBit(index)) {
+        labelSelection.setBit(index);
+        markLabelWidgetAsSelected(labelWidgets[index]);
+
+        suppressExternalSignal = true;
+        op->setSelection(labelSelection);
+        suppressExternalSignal = false;
+    }
+}
+
+void WorkArea::unselect(int index) {
+    if (labelSelection.testBit(index)) {
+        labelSelection.clearBit(index);
+        markLabelWidgetAsUnselected(labelWidgets[index]);
+
+        suppressExternalSignal = true;
+        op->setSelection(labelSelection);
+        suppressExternalSignal = false;
+    }
+}
+
+void WorkArea::toggle(int index) {
+    if (labelSelection.testBit(index)) {
+        labelSelection.clearBit(index);
+        markLabelWidgetAsUnselected(labelWidgets[index]);
+    } else {
+        labelSelection.setBit(index);
+        markLabelWidgetAsSelected(labelWidgets[index]);
+    }
+
+    suppressExternalSignal = true;
+    op->setSelection(labelSelection);
+    suppressExternalSignal = false;
+}
+
+void WorkArea::setSelection(const QBitArray &selected, bool notify) {
+    auto count = selected.count();
+
+    for (int i = 0; i < count; ++i) {
+        if (selected.testBit(i)) {
+            markLabelWidgetAsSelected(labelWidgets[i]);
+        } else {
+            markLabelWidgetAsUnselected(labelWidgets[i]);
+        }
+    }
+
+    labelSelection = selected;
+
+    if (notify) {
+        suppressExternalSignal = true;
+        op->setSelection(selected);
+        suppressExternalSignal = false;
+    }
+}
+
 void WorkArea::mousePressEvent(QMouseEvent *ev) {
     if (ev->button() == Qt::LeftButton && ev->modifiers() == Qt::NoModifier) {
+        clearSelection();
         addLabelWidget(ev->pos());
     } else {
         QLabel::mousePressEvent(ev);
@@ -154,17 +230,29 @@ void WorkArea::keyPressEvent(QKeyEvent *ev) {
         QLabel::keyPressEvent(ev);
     }
 }
+
 // this function handles label widget click event
 bool WorkArea::eventFilter(QObject *obj, QEvent *ev) {
     if (ev->type() == QEvent::MouseButtonPress) {
         auto index = labelWidgets.indexOf((QPushButton*)obj);
+        auto mev = dynamic_cast<QMouseEvent*>(ev);
 
         if (index < 0) {
             return false;
         }
 
-        QMessageBox::information(this, "", QString::number(index));
-        return true;
+        if (mev->button() == Qt::LeftButton) {
+            if (mev->modifiers() == Qt::NoModifier) {
+                clearSelection(false);
+                select(index);
+            } else if (mev->modifiers() == Qt::ControlModifier) {
+                toggle(index);
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     return false;
@@ -215,7 +303,12 @@ void WorkArea::onNewPage() {
     setPreferredZoomLevel();
 }
 
-// void WorkArea::onLabelAppended() {}
+/*
+void WorkArea::onLabelAppended() {
+    clearSelection(false);
+    labelSelection.resize(labelSelection.count() + 1);
+}
+ */
 
 void WorkArea::onLabelDeleted(QBitArray deleted) {
     if (suppressExternalSignal) {
@@ -237,6 +330,9 @@ void WorkArea::onLabelDeleted(QBitArray deleted) {
     for (int i = 0; i < newCount; ++i) {
         labelWidgets[i]->setText(QString::number(i));
     }
+
+    clearSelection(false);
+    labelSelection.resize(newCount);
 }
 
 void WorkArea::onLabelSelectionUpdated(QBitArray selected) {
@@ -244,13 +340,5 @@ void WorkArea::onLabelSelectionUpdated(QBitArray selected) {
         return;
     }
 
-    auto count = selected.count();
-
-    for (int i = 0; i < count; ++i) {
-        if (selected.testBit(i)) {
-            markLabelWidgetAsSelected(labelWidgets[i]);
-        } else {
-            markLabelWidgetAsUnselected(labelWidgets[i]);
-        }
-    }
+    setSelection(selected, false);
 }

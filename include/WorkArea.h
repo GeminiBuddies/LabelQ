@@ -70,9 +70,11 @@ private:
     QPushButton* getFreeLabelWidget();
     QPushButton* addLabelWidget(const QPoint &position);
 
-    void clearSelection();
+    void clearSelection(bool notify = true);
     void select(int index);
     void unselect(int index);
+    void toggle(int index);
+    void setSelection(const QBitArray &selected, bool notify = true);
 
 protected:
     void mousePressEvent(QMouseEvent *ev) override;
