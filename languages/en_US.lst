@@ -14,4 +14,4 @@ mainWindow_actionFeedback &Feedback...
     Entry window widgets
 mainWindow_textTable_textHeader Translation
 mainWindow_aboutTitle About
-mainWindow_aboutContent <br/>LabelQ %1<br/><br/>Copyright © %2 - %3 <a href="https://github.com/GeminiLab">GitHub/GeminiLab</a><br/>This software is open-source under <a href="https://github.com/GeminiLab/LabelQ/blob/dev/LICENSE">MIT LICENSE</a>.  <a href="https://github.com/GeminiLab/LabelQ">Repo address</a>
+mainWindow_aboutContent <br/>LabelQ %1<br/><br/>Copyright © %2 - %3 GeminiLab<br/>This software is open-source under <a href="https://github.com/GeminiLab/LabelQ/blob/dev/LICENSE">MIT LICENSE</a>.<br/><br/><a href="https://github.com/GeminiLab">GeminiLab on GitHub</a><br/><a href="https://github.com/GeminiLab/LabelQ">LabelQ repo address</a>
