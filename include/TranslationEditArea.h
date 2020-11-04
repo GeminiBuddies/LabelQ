@@ -47,9 +47,14 @@ private:
 
     int selectedLabel;
 
+    void configTextEdit();
+
+    void deleteLabel(const QBitArray &deleted, bool notify = true);
+
 private slots:
     void tableSelectionChanged();
     void textEdited();
+    void deleteKeyPressed();
 
 public slots:
     void onNewPage();

@@ -118,6 +118,7 @@ QPushButton* WorkArea::getFreeLabelWidget() {
     markLabelWidgetAsUnselected(rv);
     rv->setFont(labelFont);
     rv->setGeometry(0, 0, currentLabelWidgetSize, currentLabelWidgetSize);
+    rv->setToolTip("");
 
     return rv;
 }
@@ -214,6 +215,10 @@ void WorkArea::setSelection(const QBitArray &selected, bool notify) {
     }
 }
 
+void WorkArea::updateToolTip(int index) {
+    labelWidgets[index]->setToolTip(op->page()->label(index).translation);
+}
+
 void WorkArea::mousePressEvent(QMouseEvent *ev) {
     if (ev->button() == Qt::LeftButton && ev->modifiers() == Qt::NoModifier) {
         clearSelection();
@@ -268,6 +273,7 @@ void WorkArea::setPageOperator(PageOperator *op) {
     QObject::connect(op, SIGNAL(newPageSet()), this, SLOT(onNewPage()));
     // QObject::connect(op, SIGNAL(labelAppended()), this, SLOT(onLabelAppended()));
     QObject::connect(op, SIGNAL(labelDeleted(QBitArray)), this, SLOT(onLabelDeleted(QBitArray)));
+    QObject::connect(op, SIGNAL(labelContentUpdated(int)), this, SLOT(onLabelContentUpdated(int)));
     QObject::connect(op, SIGNAL(labelSelectionUpdated(QBitArray)), this, SLOT(onLabelSelectionUpdated(QBitArray)));
 }
 
@@ -300,6 +306,10 @@ void WorkArea::onNewPage() {
         unusedLabelWidgets.push(w);
     }
 
+    for (int i = 0; i < newLabelCount; ++i) {
+        updateToolTip(i);
+    }
+
     setPreferredZoomLevel();
 }
 
@@ -328,11 +338,15 @@ void WorkArea::onLabelDeleted(QBitArray deleted) {
 
     auto newCount = labelWidgets.count();
     for (int i = 0; i < newCount; ++i) {
-        labelWidgets[i]->setText(QString::number(i));
+        labelWidgets[i]->setText(QString::number(i + 1));
     }
 
     clearSelection(false);
     labelSelection.resize(newCount);
+}
+
+void WorkArea::onLabelContentUpdated(int index) {
+    updateToolTip(index);
 }
 
 void WorkArea::onLabelSelectionUpdated(QBitArray selected) {

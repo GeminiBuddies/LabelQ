@@ -51,6 +51,7 @@ TranslationEditArea::TranslationEditArea(QWidget *parent) : QWidget(parent) {
     verticalLayout->addWidget(splitter);
 
     QObject::connect(translationTable, SIGNAL(itemSelectionChanged()), this, SLOT(tableSelectionChanged()));
+    QObject::connect(translationTable, SIGNAL(deleteKeyPressed()), this, SLOT(deleteKeyPressed()));
     QObject::connect(translationText, SIGNAL(textChanged()), this, SLOT(textEdited()));
 
     op = nullptr;
@@ -117,6 +118,22 @@ void TranslationEditArea::onNewPage() {
 void TranslationEditArea::tableSelectionChanged() {
     if (processingExternalSignal) return;
 
+    configTextEdit();
+
+    auto selected = translationTable->selectedItems();
+    auto selectedCount = selected.count();
+
+    QBitArray b(op->page()->labelCount(), false);
+    for (int i = 0; i < selectedCount; ++i) {
+        b.setBit(selected.at(i)->row());
+    }
+
+    suppressExternalSignal = true;
+    op->setSelection(b);
+    suppressExternalSignal = false;
+}
+
+void TranslationEditArea::configTextEdit() {
     auto selected = translationTable->selectedItems();
     auto selectedCount = selected.count();
 
@@ -134,15 +151,28 @@ void TranslationEditArea::tableSelectionChanged() {
 
         selectedLabel = selected[0]->row();
     }
+}
 
-    QBitArray b(op->page()->labelCount(), false);
-    for (int i = 0; i < selectedCount; ++i) {
-        b.setBit(selected.at(i)->row());
+void TranslationEditArea::deleteLabel(const QBitArray &deleted, bool notify) {
+    auto oldCount = translationTable->rowCount();
+    auto deletedCount = 0;
+    for (int i = oldCount - 1; i >= 0; --i) {
+        if (deleted.testBit(i)) {
+            delete translationTable->takeItem(i, 0);
+            translationTable->removeRow(i);
+
+            ++deletedCount;
+        }
     }
 
-    suppressExternalSignal = true;
-    op->setSelection(b);
-    suppressExternalSignal = false;
+    // actually unnecessary but ...
+    translationTable->setRowCount(oldCount - deletedCount);
+
+    if (notify) {
+        suppressExternalSignal = true;
+        op->deleteLabel(deleted);
+        suppressExternalSignal = false;
+    }
 }
 
 void TranslationEditArea::textEdited() {
@@ -157,6 +187,18 @@ void TranslationEditArea::textEdited() {
     suppressExternalSignal = true;
     op->setLabelContent(selectedLabel, text);
     suppressExternalSignal = false;
+}
+
+void TranslationEditArea::deleteKeyPressed() {
+    auto selected = translationTable->selectedItems();
+    auto selectedCount = selected.count();
+
+    QBitArray b(op->page()->labelCount(), false);
+    for (int i = 0; i < selectedCount; ++i) {
+        b.setBit(selected.at(i)->row());
+    }
+
+    deleteLabel(b);
 }
 
 void TranslationEditArea::onLabelAppended() {
@@ -174,16 +216,7 @@ void TranslationEditArea::onLabelDeleted(QBitArray deleted) {
         return;
     }
 
-    auto oldCount = translationTable->rowCount();
-    for (int i = oldCount - 1; i >= 0; --i) {
-        if (deleted.testBit(i)) {
-            delete translationTable->takeItem(i, 0);
-            translationTable->removeRow(i);
-        }
-    }
-
-    // actually unnecessary but ...
-    translationTable->setRowCount(op->page()->labelCount());
+    deleteLabel(deleted, false);
 }
 
 void TranslationEditArea::onLabelContentUpdated(int index) {
@@ -215,10 +248,7 @@ void TranslationEditArea::onLabelSelectionUpdated(QBitArray selected) {
 
     translationTable->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
-    if (cnt != 1) {
-        translationText->setText("");
-        translationText->setEnabled(false);
-    }
+    configTextEdit();
 
     processingExternalSignal = false;
 }

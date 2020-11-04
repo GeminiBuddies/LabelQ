@@ -76,6 +76,8 @@ private:
     void toggle(int index);
     void setSelection(const QBitArray &selected, bool notify = true);
 
+    void updateToolTip(int index);
+
 protected:
     void mousePressEvent(QMouseEvent *ev) override;
     void keyPressEvent(QKeyEvent *ev) override;
@@ -90,5 +92,6 @@ public slots:
     // as WorkArea is the only component able to add label now
     // void onLabelAppended();
     void onLabelDeleted(QBitArray deleted);
+    void onLabelContentUpdated(int index);
     void onLabelSelectionUpdated(QBitArray selected);
 };
