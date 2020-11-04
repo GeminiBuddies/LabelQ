@@ -70,6 +70,8 @@ private:
     QPushButton* getFreeLabelWidget();
     QPushButton* addLabelWidget(const QPoint &position);
 
+    void deleteLabel(const QBitArray &deleted, bool notify = true);
+
     void clearSelection(bool notify = true);
     void select(int index);
     void unselect(int index);

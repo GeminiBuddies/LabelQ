@@ -142,6 +142,33 @@ QPushButton* WorkArea::addLabelWidget(const QPoint &position) {
     return rv;
 }
 
+void WorkArea::deleteLabel(const QBitArray &deleted, bool notify) {
+    auto oldCount = labelWidgets.count();
+    for (int i = oldCount - 1; i >= 0; --i) {
+        if (deleted.testBit(i)) {
+            auto w = labelWidgets[i];
+            labelWidgets.removeAt(i);
+
+            w->setVisible(false);
+            unusedLabelWidgets.push(w);
+        }
+    }
+
+    auto newCount = labelWidgets.count();
+    for (int i = 0; i < newCount; ++i) {
+        labelWidgets[i]->setText(QString::number(i + 1));
+    }
+
+    clearSelection(false);
+    labelSelection.resize(newCount);
+
+    if (notify) {
+        suppressExternalSignal = true;
+        op->deleteLabel(deleted);
+        suppressExternalSignal = false;
+    }
+}
+
 void WorkArea::clearSelection(bool notify) {
     auto len = labelWidgets.count();
 
@@ -255,6 +282,17 @@ bool WorkArea::eventFilter(QObject *obj, QEvent *ev) {
             } else {
                 return false;
             }
+        } else if (mev->button() == Qt::RightButton) {
+            if (mev->modifiers() == Qt::NoModifier) {
+                QBitArray d(labelWidgets.count());
+                d.setBit(index);
+                deleteLabel(d);
+            } else if (mev->modifiers() == Qt::ControlModifier) {
+                // maybe ctrl + right button can be used to delete all selected labels, just like backspace and delete
+                return false;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
@@ -325,24 +363,7 @@ void WorkArea::onLabelDeleted(QBitArray deleted) {
         return;
     }
 
-    auto oldCount = labelWidgets.count();
-    for (int i = oldCount - 1; i >= 0; --i) {
-        if (deleted.testBit(i)) {
-            auto w = labelWidgets[i];
-            labelWidgets.removeAt(i);
-
-            w->setVisible(false);
-            unusedLabelWidgets.push(w);
-        }
-    }
-
-    auto newCount = labelWidgets.count();
-    for (int i = 0; i < newCount; ++i) {
-        labelWidgets[i]->setText(QString::number(i + 1));
-    }
-
-    clearSelection(false);
-    labelSelection.resize(newCount);
+    deleteLabel(deleted, false);
 }
 
 void WorkArea::onLabelContentUpdated(int index) {
