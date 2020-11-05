@@ -249,7 +249,7 @@ void WorkArea::updateToolTip(int index) {
 void WorkArea::mousePressEvent(QMouseEvent *ev) {
     if (ev->button() == Qt::LeftButton && ev->modifiers() == Qt::NoModifier) {
         clearSelection();
-        addLabelWidget(ev->pos());
+        addLabelWidget(ev->pos() - QPoint(currentLabelWidgetSize / 2, currentLabelWidgetSize / 2));
     } else {
         QLabel::mousePressEvent(ev);
     }
