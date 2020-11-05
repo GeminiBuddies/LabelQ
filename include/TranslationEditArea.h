@@ -7,6 +7,7 @@
 #include <QSplitter>
 #include <QTableWidget>
 #include <QTextEdit>
+#include <QListWidget>
 
 #include <QBitArray>
 
@@ -42,7 +43,7 @@ public:
     void setPageOperator(PageOperator *op);
 
 private:
-    bool processingExternalSignal;
+    bool suppressUIEvents;
     bool suppressExternalSignal;
 
     int selectedLabel;
@@ -53,6 +54,7 @@ private:
 
 private slots:
     void tableSelectionChanged();
+    void tableItemDoubleClicked(QTableWidgetItem *item);
     void textEdited();
     void deleteKeyPressed();
 
@@ -63,4 +65,5 @@ public slots:
     void onLabelDeleted(QBitArray deleted);
     void onLabelContentUpdated(int index);
     void onLabelSelectionUpdated(QBitArray selected);
+    void onLabelDoubleClicked(int index);
 };

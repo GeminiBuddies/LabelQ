@@ -53,10 +53,11 @@ TranslationEditArea::TranslationEditArea(QWidget *parent) : QWidget(parent) {
     QObject::connect(translationTable, SIGNAL(itemSelectionChanged()), this, SLOT(tableSelectionChanged()));
     QObject::connect(translationTable, SIGNAL(deleteKeyPressed()), this, SLOT(deleteKeyPressed()));
     QObject::connect(translationText, SIGNAL(textChanged()), this, SLOT(textEdited()));
+    QObject::connect(translationTable, SIGNAL(itemDoubleClicked(QTableWidgetItem*)), this, SLOT(tableItemDoubleClicked(QTableWidgetItem*)));
 
     op = nullptr;
 
-    processingExternalSignal = false;
+    suppressUIEvents = false;
     suppressExternalSignal = false;
     selectedLabel = -1;
 }
@@ -75,6 +76,7 @@ void TranslationEditArea::setPageOperator(PageOperator *op) {
     QObject::connect(op, SIGNAL(labelDeleted(QBitArray)), this, SLOT(onLabelDeleted(QBitArray)));
     QObject::connect(op, SIGNAL(labelContentUpdated(int)), this, SLOT(onLabelContentUpdated(int)));
     QObject::connect(op, SIGNAL(labelSelectionUpdated(QBitArray)), this, SLOT(onLabelSelectionUpdated(QBitArray)));
+    QObject::connect(op, SIGNAL(labelDoubleClicked(int)), this, SLOT(onLabelDoubleClicked(int)));
 }
 
 void TranslationEditArea::onNewPage() {
@@ -115,24 +117,6 @@ void TranslationEditArea::onNewPage() {
     translationTable->clearSelection();
 }
 
-void TranslationEditArea::tableSelectionChanged() {
-    if (processingExternalSignal) return;
-
-    configTextEdit();
-
-    auto selected = translationTable->selectedItems();
-    auto selectedCount = selected.count();
-
-    QBitArray b(op->page()->labelCount(), false);
-    for (int i = 0; i < selectedCount; ++i) {
-        b.setBit(selected.at(i)->row());
-    }
-
-    suppressExternalSignal = true;
-    op->setSelection(b);
-    suppressExternalSignal = false;
-}
-
 void TranslationEditArea::configTextEdit() {
     auto selected = translationTable->selectedItems();
     auto selectedCount = selected.count();
@@ -147,23 +131,27 @@ void TranslationEditArea::configTextEdit() {
 
         translationText->setEnabled(true);
         translationText->setText(selected[0]->text());
-        translationText->setFocus();
 
         selectedLabel = selected[0]->row();
     }
 }
 
 void TranslationEditArea::deleteLabel(const QBitArray &deleted, bool notify) {
+    suppressUIEvents = true;
+
     auto oldCount = translationTable->rowCount();
     auto deletedCount = 0;
     for (int i = oldCount - 1; i >= 0; --i) {
         if (deleted.testBit(i)) {
             delete translationTable->takeItem(i, 0);
             translationTable->removeRow(i);
-
             ++deletedCount;
         }
     }
+
+    translationTable->clearSelection();
+
+    suppressUIEvents = false;
 
     // actually unnecessary but ...
     translationTable->setRowCount(oldCount - deletedCount);
@@ -175,8 +163,32 @@ void TranslationEditArea::deleteLabel(const QBitArray &deleted, bool notify) {
     }
 }
 
+void TranslationEditArea::tableSelectionChanged() {
+    if (suppressUIEvents) {
+        return;
+    }
+
+    configTextEdit();
+
+    auto selected = translationTable->selectedItems();
+    auto selectedCount = selected.count();
+
+    QBitArray b(op->page()->labelCount(), false);
+    for (int i = 0; i < selectedCount; ++i) {
+        b.setBit(selected.at(i)->row());
+    }
+
+    suppressExternalSignal = true;
+    op->setLabelSelection(b);
+    suppressExternalSignal = false;
+}
+
+void TranslationEditArea::tableItemDoubleClicked(QTableWidgetItem *item) {
+    op->doubleClickLabel(translationTable->currentRow());
+}
+
 void TranslationEditArea::textEdited() {
-    if (selectedLabel < 0 || processingExternalSignal) {
+    if (selectedLabel < 0 || suppressUIEvents) {
         return;
     }
 
@@ -232,7 +244,7 @@ void TranslationEditArea::onLabelSelectionUpdated(QBitArray selected) {
         return;
     }
 
-    processingExternalSignal = true;
+    suppressUIEvents = true;
 
     translationTable->setSelectionMode(QAbstractItemView::MultiSelection);
     translationTable->clearSelection();
@@ -250,5 +262,9 @@ void TranslationEditArea::onLabelSelectionUpdated(QBitArray selected) {
 
     configTextEdit();
 
-    processingExternalSignal = false;
+    suppressUIEvents = false;
+}
+
+void TranslationEditArea::onLabelDoubleClicked(int index) {
+    translationText->setFocus();
 }

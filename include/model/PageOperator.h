@@ -19,6 +19,7 @@ signals:
     void labelDeleted(QBitArray deleted);
     void labelContentUpdated(int index);
     void labelSelectionUpdated(QBitArray selected);
+    void labelDoubleClicked(int index);
 
 public:
     PageOperator();
@@ -28,5 +29,6 @@ public:
     int appendLabel(const QPoint &position);
     void deleteLabel(const QBitArray& deleted);
     void setLabelContent(int index, const QString &content);
-    void setSelection(const QBitArray &selected);
+    void setLabelSelection(const QBitArray &selected);
+    void doubleClickLabel(int index);
 };

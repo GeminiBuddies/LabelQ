@@ -181,7 +181,7 @@ void WorkArea::clearSelection(bool notify) {
 
     if (notify) {
         suppressExternalSignal = true;
-        op->setSelection(labelSelection);
+        op->setLabelSelection(labelSelection);
         suppressExternalSignal = false;
     }
 }
@@ -192,7 +192,7 @@ void WorkArea::select(int index) {
         markLabelWidgetAsSelected(labelWidgets[index]);
 
         suppressExternalSignal = true;
-        op->setSelection(labelSelection);
+        op->setLabelSelection(labelSelection);
         suppressExternalSignal = false;
     }
 }
@@ -203,7 +203,7 @@ void WorkArea::unselect(int index) {
         markLabelWidgetAsUnselected(labelWidgets[index]);
 
         suppressExternalSignal = true;
-        op->setSelection(labelSelection);
+        op->setLabelSelection(labelSelection);
         suppressExternalSignal = false;
     }
 }
@@ -218,7 +218,7 @@ void WorkArea::toggle(int index) {
     }
 
     suppressExternalSignal = true;
-    op->setSelection(labelSelection);
+    op->setLabelSelection(labelSelection);
     suppressExternalSignal = false;
 }
 
@@ -237,7 +237,7 @@ void WorkArea::setSelection(const QBitArray &selected, bool notify) {
 
     if (notify) {
         suppressExternalSignal = true;
-        op->setSelection(selected);
+        op->setLabelSelection(selected);
         suppressExternalSignal = false;
     }
 }
@@ -257,7 +257,8 @@ void WorkArea::mousePressEvent(QMouseEvent *ev) {
 
 void WorkArea::keyPressEvent(QKeyEvent *ev) {
     if ((ev->key() == Qt::Key_Delete || ev->key() == Qt::Key_Backspace) && ev->modifiers() == Qt::NoModifier) {
-
+        // copy to avoid bugs
+        deleteLabel(QBitArray(labelSelection));
     } else {
         QLabel::keyPressEvent(ev);
     }
@@ -265,13 +266,14 @@ void WorkArea::keyPressEvent(QKeyEvent *ev) {
 
 // this function handles label widget click event
 bool WorkArea::eventFilter(QObject *obj, QEvent *ev) {
-    if (ev->type() == QEvent::MouseButtonPress) {
-        auto index = labelWidgets.indexOf((QPushButton*)obj);
-        auto mev = dynamic_cast<QMouseEvent*>(ev);
+    auto index = labelWidgets.indexOf((QPushButton*)obj);
 
-        if (index < 0) {
-            return false;
-        }
+    if (index < 0) {
+        return false;
+    }
+
+    if (ev->type() == QEvent::MouseButtonPress) {
+        auto mev = dynamic_cast<QMouseEvent*>(ev);
 
         if (mev->button() == Qt::LeftButton) {
             if (mev->modifiers() == Qt::NoModifier) {
@@ -296,6 +298,18 @@ bool WorkArea::eventFilter(QObject *obj, QEvent *ev) {
         } else {
             return false;
         }
+
+        return true;
+    } else if (ev->type() == QEvent::MouseButtonDblClick) {
+        auto mev = dynamic_cast<QMouseEvent*>(ev);
+
+        if (mev->button() == Qt::LeftButton && mev->modifiers() == Qt::NoModifier) {
+            op->doubleClickLabel(index);
+        } else {
+            return false;
+        }
+
+        return true;
     }
 
     return false;

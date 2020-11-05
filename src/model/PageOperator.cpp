@@ -46,6 +46,10 @@ void PageOperator::setLabelContent(int index, const QString &content) {
     emit labelContentUpdated(index);
 }
 
-void PageOperator::setSelection(const QBitArray &selected) {
+void PageOperator::setLabelSelection(const QBitArray &selected) {
     emit labelSelectionUpdated(selected);
+}
+
+void PageOperator::doubleClickLabel(int index) {
+    emit labelDoubleClicked(index);
 }
