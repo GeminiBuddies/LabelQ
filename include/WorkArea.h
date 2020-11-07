@@ -12,8 +12,8 @@ class WorkArea : public QLabel {
 
 // constants
 private:
-    const double LabelWidgetSizeRatio = 0.035;
-    const double LabelWidgetFontSizeRation = 0.0175;
+    static constexpr double LabelWidgetSizeRatio = 0.032;
+    static constexpr double LabelWidgetFontSizeRation = LabelWidgetSizeRatio / 2.0;
 
     // preferred WorkArea H/W / Container H/W
     static constexpr double WorkAreaPreferredSizeRatio = 0.75;
