@@ -96,7 +96,8 @@ void MainWindow::showAboutMessage() {
     // %1: startYear
     // %2: endYear
 
-    auto content = tr("mainWindow_aboutContent")
+    auto content =
+            tr("mainWindow_aboutContent")
             .arg(LABELQ_VERSION)
             .arg(2020)
             .arg(QDate::currentDate().year())

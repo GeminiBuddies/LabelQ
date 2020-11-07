@@ -15,6 +15,9 @@ private:
     const double LabelWidgetSizeRatio = 0.035;
     const double LabelWidgetFontSizeRation = 0.0175;
 
+    // preferred WorkArea H/W / Container H/W
+    static constexpr double WorkAreaPreferredSizeRatio = 0.75;
+
 private:
     QWidget *containerWidget;
 
@@ -26,9 +29,9 @@ public:
 
     // zoom management
 private:
-    static constexpr int MinimumZoomLevelIndex = -15;
-    static constexpr int MaximumZoomLevelIndex = 15;
-    static constexpr int ZoomLevelCount = MaximumZoomLevelIndex - MinimumZoomLevelIndex + 1;
+    static constexpr int ZoomLevelMinimumIndex = -15;
+    static constexpr int ZoomLevelMaximumIndex = 15;
+    static constexpr int ZoomLevelCount = ZoomLevelMaximumIndex - ZoomLevelMinimumIndex + 1;
     static constexpr double ZoomLevels[ZoomLevelCount] = {
         0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95,
         1.00,
@@ -36,7 +39,7 @@ private:
     };
 
     static constexpr double zoomLevel(int index) {
-        return ZoomLevels[index - MinimumZoomLevelIndex];
+        return ZoomLevels[index - ZoomLevelMinimumIndex];
     }
 
     int currentZoomLevelIndex;

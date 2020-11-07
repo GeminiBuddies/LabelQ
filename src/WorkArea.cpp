@@ -26,11 +26,11 @@ double WorkArea::currentZoomLevel() const {
 }
 
 void WorkArea::setZoomLevel(int newIndex, bool forced) {
-    if (newIndex < MinimumZoomLevelIndex || newIndex > MaximumZoomLevelIndex || newIndex == currentZoomLevelIndex) {
+    if (newIndex < ZoomLevelMinimumIndex || newIndex > ZoomLevelMaximumIndex || newIndex == currentZoomLevelIndex) {
         if (!forced) return;
 
-        newIndex = std::max(MinimumZoomLevelIndex, newIndex);
-        newIndex = std::min(MaximumZoomLevelIndex, newIndex);
+        newIndex = std::max(ZoomLevelMinimumIndex, newIndex);
+        newIndex = std::min(ZoomLevelMaximumIndex, newIndex);
     }
 
     currentZoomLevelIndex = newIndex;
@@ -71,20 +71,19 @@ void WorkArea::setZoomLevel(int newIndex, bool forced) {
 void WorkArea::setPreferredZoomLevel() {
     // replace following content with:
     // setZoomLevel(0);
-    // to disable
+    // to disable auto-zoom
 
     if (this->isHidden()) {
         setZoomLevel(0);
         return;
     }
 
-    auto parentSize = containerWidget->size();
-    auto preferredZoomVertical = 5.0 / 6.0 * parentSize.height() / pic.height();
-    auto preferredZoomHorizontal = 5.0 / 6.0 * parentSize.width() / pic.width();
-    auto preferredZoom = std::max(preferredZoomVertical, preferredZoomHorizontal);
-    preferredZoom = std::min(preferredZoom, zoomLevel(MaximumZoomLevelIndex));
+    auto containerSize = containerWidget->size();
+    auto preferredZoomVertical = WorkAreaPreferredSizeRatio * containerSize.height() / pic.height();
+    auto preferredZoomHorizontal = WorkAreaPreferredSizeRatio * containerSize.width() / pic.width();
+    auto preferredZoom = std::min(std::max(preferredZoomVertical, preferredZoomHorizontal), zoomLevel(ZoomLevelMaximumIndex));
 
-    auto preferredIndex = std::lower_bound(ZoomLevels, ZoomLevels + ZoomLevelCount, preferredZoom) - ZoomLevels + MinimumZoomLevelIndex;
+    auto preferredIndex = std::lower_bound(ZoomLevels, ZoomLevels + ZoomLevelCount, preferredZoom) - ZoomLevels + ZoomLevelMinimumIndex;
 
     setZoomLevel(preferredIndex, true);
 }

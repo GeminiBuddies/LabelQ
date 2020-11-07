@@ -6,9 +6,7 @@
 #include <QKeyEvent>
 #include <QHeaderView>
 
-QTableWidgetWithKeySignal::QTableWidgetWithKeySignal(QWidget *parent) : QTableWidget(parent) {
-
-}
+QTableWidgetWithKeySignal::QTableWidgetWithKeySignal(QWidget *parent) : QTableWidget(parent) {}
 
 void QTableWidgetWithKeySignal::keyPressEvent(QKeyEvent *event) {
     if ((event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace) && event->modifiers() == Qt::NoModifier) {
