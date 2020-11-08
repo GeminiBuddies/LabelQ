@@ -33,7 +33,8 @@ bool Project::pageExists(Page* page) {
 }
 
 bool Project::canModifyPages() {
-    return false;
+    // TODO: false
+    return true;
 }
 
 bool Project::canSave() {
@@ -42,6 +43,10 @@ bool Project::canSave() {
 
 bool Project::needDelete() {
     return false;
+}
+
+void Project::movePage(int from, int to) {
+    pages.move(from, to);
 }
 
 Project *Project::fromFile(const QString &path) {
@@ -58,3 +63,4 @@ Project *Project::createNew() {
     static Project emptyProject;
     return &emptyProject;
 }
+

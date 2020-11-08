@@ -23,6 +23,8 @@ public:
     virtual bool canSave();
     virtual bool needDelete();
 
+    virtual void movePage(int from, int to);
+
 public:
     static Project* fromFile(const QString &path);
     static Project* tutorial();

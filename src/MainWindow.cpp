@@ -10,6 +10,8 @@
 #include <QScroller>
 #include <QDate>
 
+#include <cassert>
+
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -88,6 +90,13 @@ void MainWindow::customUiSetup() {
     QObject::connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(showAboutMessage()));
     QObject::connect(ui->actionAboutQt, SIGNAL(triggered()), this, SLOT(showAboutQtMessage()));
     QObject::connect(ui->pageList, SIGNAL(itemSelectionChanged()), this, SLOT(pageListSelectionItemChanged()));
+
+    QObject::connect(ui->pageListEdit, SIGNAL(clicked()), this, SLOT(togglePageEditing()));
+    QObject::connect(ui->pageListEditDone, SIGNAL(clicked()), this, SLOT(togglePageEditing()));
+
+    disablePageEditing();
+
+    QObject::connect(ui->pageList->model(), SIGNAL(rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)), this, SLOT(pageListReordered(const QModelIndex &, int, int, const QModelIndex &, int)));
 }
 
 void MainWindow::showAboutMessage() {
@@ -107,10 +116,6 @@ void MainWindow::showAboutMessage() {
 
 void MainWindow::showAboutQtMessage() {
     QMessageBox::aboutQt(this);
-}
-
-void MainWindow::x(int r, int c) {
-    QMessageBox::information(this, "", QString("Row %1, Column %2").arg(r).arg(c));
 }
 
 bool MainWindow::replaceProject(Project *newProject) {
@@ -151,6 +156,7 @@ bool MainWindow::replaceProject(Project *newProject) {
         ui->actionSaveAs->setEnabled(true);
     }
 
+    disablePageEditing();
     if (project == nullptr) {
         ui->pageList->setEnabled(false);
     } else {
@@ -162,30 +168,17 @@ bool MainWindow::replaceProject(Project *newProject) {
         }
     }
 
+    ui->pageListEdit->setVisible(project != nullptr && project->canModifyPages());
+
     if (project != nullptr && project->pageCount() > 0) {
         ui->pageList->item(0)->setSelected(true);
-        // this statement contains
+        // this statement implicitly contains
         //   setCurrentPage(0);
     } else {
         setCurrentPage(-1);
     }
 
     return true;
-}
-
-void MainWindow::pageListSelectionItemChanged() {
-    auto selection = ui->pageList->selectionModel()->selectedIndexes();
-
-    if (selection.length() == 0) {
-        setCurrentPage(-1);
-    } else {
-        auto index = selection[0].row();
-        setCurrentPage(index);
-    }
-}
-
-void MainWindow::showTutorial() {
-    replaceProject(Project::tutorial());
 }
 
 void MainWindow::setCurrentPage(int index) {
@@ -199,3 +192,57 @@ void MainWindow::setCurrentPage(int index) {
 
     op->setPage(currentPage);
 }
+
+void MainWindow::togglePageEditing() {
+    pageEditEnabled = !pageEditEnabled;
+
+    ui->pageListEdit->setVisible(!pageEditEnabled);
+    ui->pageListEditDone->setVisible(pageEditEnabled);
+    ui->pageListAdd->setVisible(pageEditEnabled);
+
+    ui->pageList->setDragEnabled(pageEditEnabled);
+
+    if (pageEditEnabled) {
+        ui->pageList->setSelectionMode(QAbstractItemView::ExtendedSelection);
+        ui->pageList->setDragDropMode(QAbstractItemView::InternalMove);
+        ui->pageList->setDefaultDropAction(Qt::MoveAction);
+    } else {
+        ui->pageList->setSelectionMode(QAbstractItemView::SingleSelection);
+        ui->pageList->setDragDropMode(QAbstractItemView::NoDragDrop);
+        ui->pageList->setDefaultDropAction(Qt::IgnoreAction);
+
+        // when turning off edit, unselect all but the first selection
+        auto selection = ui->pageList->selectionModel()->selectedIndexes();
+        if (selection.size() > 1) {
+            ui->pageList->item(selection[0].row())->setSelected(true);
+        }
+    }
+}
+
+void MainWindow::disablePageEditing() {
+    pageEditEnabled = true;
+    togglePageEditing();
+}
+
+void MainWindow::pageListReordered(const QModelIndex &parent, int start, int end, const QModelIndex &destination, int row) {
+    assert(start == end);
+    assert(start != row);
+
+    project->movePage(start, row > start ? row - 1 : row);
+}
+
+void MainWindow::pageListSelectionItemChanged() {
+    auto selection = ui->pageList->selectionModel()->selectedIndexes();
+
+    if (selection.length() != 1) {
+        setCurrentPage(-1);
+    } else {
+        auto index = selection[0].row();
+        setCurrentPage(index);
+    }
+}
+
+void MainWindow::showTutorial() {
+    replaceProject(Project::tutorial());
+}
+
