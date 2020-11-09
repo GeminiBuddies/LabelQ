@@ -15,8 +15,5 @@ mainWindow_actionAboutQt
 mainWindow_actionFeedback
     Entry window widgets
 mainWindow_textTable_textHeader
-mainWindow_pageListEdit
-mainWindow_pageListEditDone
-mainWindow_pageListAdd
 mainWindow_aboutTitle
 mainWindow_aboutContent

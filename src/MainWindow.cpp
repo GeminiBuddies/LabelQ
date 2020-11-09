@@ -199,6 +199,9 @@ void MainWindow::togglePageEditing() {
     ui->pageListEdit->setVisible(!pageEditEnabled);
     ui->pageListEditDone->setVisible(pageEditEnabled);
     ui->pageListAdd->setVisible(pageEditEnabled);
+    ui->pageListRemove->setVisible(pageEditEnabled);
+    ui->pageListToTop->setVisible(pageEditEnabled);
+    ui->pageListToBottom->setVisible(pageEditEnabled);
 
     ui->pageList->setDragEnabled(pageEditEnabled);
 
@@ -240,6 +243,11 @@ void MainWindow::pageListSelectionItemChanged() {
         auto index = selection[0].row();
         setCurrentPage(index);
     }
+
+    auto anySelected = selection.length() > 0;
+    ui->pageListRemove->setEnabled(anySelected);
+    ui->pageListToTop->setEnabled(anySelected);
+    ui->pageListToBottom->setEnabled(anySelected);
 }
 
 void MainWindow::showTutorial() {

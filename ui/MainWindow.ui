@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>1063</width>
     <height>600</height>
    </rect>
   </property>
@@ -38,7 +38,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>301</width>
+          <width>404</width>
           <height>557</height>
          </rect>
         </property>
@@ -83,23 +83,86 @@
          <item>
           <layout class="QHBoxLayout" name="pageListEditorLayout">
            <item>
-            <widget class="QPushButton" name="pageListEdit">
-             <property name="text">
-              <string>mainWindow_pageListEdit</string>
+            <widget class="QToolButton" name="pageListEdit">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="icon">
+              <iconset resource="../labelq.qrc">
+               <normaloff>:/icons/setting.svg</normaloff>:/icons/setting.svg</iconset>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pageListEditDone">
-             <property name="text">
-              <string>mainWindow_pageListEditDone</string>
+            <widget class="QToolButton" name="pageListEditDone">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="icon">
+              <iconset resource="../labelq.qrc">
+               <normaloff>:/icons/ok.svg</normaloff>:/icons/ok.svg</iconset>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pageListAdd">
-             <property name="text">
-              <string>mainWindow_pageListAdd</string>
+            <widget class="QToolButton" name="pageListAdd">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="icon">
+              <iconset resource="../labelq.qrc">
+               <normaloff>:/icons/plus.svg</normaloff>:/icons/plus.svg</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="pageListRemove">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="icon">
+              <iconset resource="../labelq.qrc">
+               <normaloff>:/icons/minus.svg</normaloff>:/icons/minus.svg</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="pageListToTop">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="icon">
+              <iconset resource="../labelq.qrc">
+               <normaloff>:/icons/to_top.svg</normaloff>:/icons/to_top.svg</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="pageListToBottom">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="icon">
+              <iconset resource="../labelq.qrc">
+               <normaloff>:/icons/to_bottom.svg</normaloff>:/icons/to_bottom.svg</iconset>
              </property>
             </widget>
            </item>
@@ -129,7 +192,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1063</width>
      <height>23</height>
     </rect>
    </property>
@@ -223,6 +286,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../labelq.qrc"/>
+ </resources>
  <connections/>
 </ui>

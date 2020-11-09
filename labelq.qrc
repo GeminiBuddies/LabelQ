@@ -2,4 +2,12 @@
     <qresource prefix="/images">
         <file alias="example.png">resource/example.png</file>
     </qresource>
+    <qresource prefix="/icons">
+        <file alias="ok.svg">resource/icon/essential-regular-05-tick.svg</file>
+        <file alias="plus.svg">resource/icon/essential-regular-11-plus-big.svg</file>
+        <file alias="minus.svg">resource/icon/essential-regular-12-minus-big.svg</file>
+        <file alias="to_bottom.svg">resource/icon/essential-regular-36-download.svg</file>
+        <file alias="to_top.svg">resource/icon/essential-regular-37-upload.svg</file>
+        <file alias="setting.svg">resource/icon/essential-regular-65-cogwheel.svg</file>
+    </qresource>
 </RCC>
