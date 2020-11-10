@@ -16,8 +16,16 @@ bool Project::dirty() {
     return false;
 }
 
+bool Project::canSave() {
+    return false;
+}
+
 void Project::save() {
 
+}
+
+bool Project::needDelete() {
+    return false;
 }
 
 Page *Project::page(int at) {
@@ -32,22 +40,21 @@ bool Project::pageExists(Page* page) {
     return pages.contains(page);
 }
 
-bool Project::canModifyPages() {
-    // TODO: false
+bool Project::canReorderPages() {
     return true;
-}
-
-bool Project::canSave() {
-    return false;
-}
-
-bool Project::needDelete() {
-    return false;
 }
 
 void Project::movePage(int from, int to) {
     pages.move(from, to);
 }
+
+bool Project::canAddAndRemovePages() {
+    return false;
+}
+
+void Project::addPage(const QString &image) { }
+
+void Project::removePage(const QBitArray &removed) { }
 
 Project *Project::fromFile(const QString &path) {
     return nullptr;
@@ -63,4 +70,3 @@ Project *Project::createNew() {
     static Project emptyProject;
     return &emptyProject;
 }
-

@@ -170,7 +170,9 @@ bool MainWindow::replaceProject(Project *newProject) {
         }
     }
 
-    ui->pageListEdit->setVisible(project != nullptr && project->canModifyPages());
+    ui->pageListEdit->setVisible(project != nullptr && project->canReorderPages());
+    ui->pageListAdd->setEnabled(project != nullptr && project->canAddAndRemovePages());
+    ui->pageListRemove->setEnabled(project != nullptr && project->canAddAndRemovePages());
 
     if (project != nullptr && project->pageCount() > 0) {
         ui->pageList->item(0)->setSelected(true);
@@ -295,7 +297,7 @@ void MainWindow::pageListSelectionItemChanged() {
     }
 
     auto anySelected = selection.length() > 0;
-    ui->pageListRemove->setEnabled(anySelected);
+    ui->pageListRemove->setEnabled(anySelected && project != nullptr && project->canAddAndRemovePages());
     ui->pageListToTop->setEnabled(anySelected);
     ui->pageListToBottom->setEnabled(anySelected);
 }

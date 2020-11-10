@@ -12,18 +12,26 @@ protected:
 public:
     virtual ~Project();
 
+    // project life-cycle management
     virtual bool dirty();
+    virtual bool canSave();
     virtual void save();
+    virtual bool needDelete();
 
+    // page management
+    // - get
     virtual Page* page(int at);
     virtual int pageCount();
     virtual bool pageExists(Page *page);
 
-    virtual bool canModifyPages();
-    virtual bool canSave();
-    virtual bool needDelete();
-
+    // - reordering
+    virtual bool canReorderPages();
     virtual void movePage(int from, int to);
+
+    // - adding and removing
+    virtual bool canAddAndRemovePages();
+    virtual void addPage(const QString &image);
+    virtual void removePage(const QBitArray &removed);
 
 public:
     static Project* fromFile(const QString &path);
