@@ -93,6 +93,8 @@ void MainWindow::customUiSetup() {
 
     QObject::connect(ui->pageListEdit, SIGNAL(clicked()), this, SLOT(togglePageEditing()));
     QObject::connect(ui->pageListEditDone, SIGNAL(clicked()), this, SLOT(togglePageEditing()));
+    QObject::connect(ui->pageListToTop, SIGNAL(clicked()), this, SLOT(toTop()));
+    QObject::connect(ui->pageListToBottom, SIGNAL(clicked()), this, SLOT(toBottom()));
 
     disablePageEditing();
 
@@ -193,6 +195,22 @@ void MainWindow::setCurrentPage(int index) {
     op->setPage(currentPage);
 }
 
+QVector<int> MainWindow::getSelectedPages() {
+    auto selection = ui->pageList->selectionModel()->selectedIndexes();
+    QVector<int> selectedRows;
+    for (auto &index: selection) {
+        selectedRows.append(index.row());
+    }
+
+    return selectedRows;
+}
+
+QVector<int> MainWindow::getSortedSelectedPages() {
+    auto selectedRows = getSelectedPages();
+    sort(selectedRows.begin(), selectedRows.end());
+    return selectedRows;
+}
+
 void MainWindow::togglePageEditing() {
     pageEditEnabled = !pageEditEnabled;
 
@@ -227,6 +245,38 @@ void MainWindow::disablePageEditing() {
     togglePageEditing();
 }
 
+void MainWindow::toTop() {
+    auto moved = 0;
+    for (auto row: reversed(getSortedSelectedPages())) {
+        row += moved;
+
+        auto item = ui->pageList->takeItem(row);
+        ui->pageList->insertItem(0, item);
+        project->movePage(row, 0);
+
+        item->setSelected(true);
+
+        ++moved;
+    }
+}
+
+void MainWindow::toBottom() {
+    auto end = ui->pageList->count() - 1;
+
+    auto moved = 0;
+    for (auto row: getSortedSelectedPages()) {
+        row -= moved;
+
+        auto item = ui->pageList->takeItem(row);
+        ui->pageList->insertItem(end, item);
+        project->movePage(row, end);
+
+        item->setSelected(true);
+
+        ++moved;
+    }
+}
+
 void MainWindow::pageListReordered(const QModelIndex &parent, int start, int end, const QModelIndex &destination, int row) {
     assert(start == end);
     assert(start != row);
@@ -253,4 +303,3 @@ void MainWindow::pageListSelectionItemChanged() {
 void MainWindow::showTutorial() {
     replaceProject(Project::tutorial());
 }
-

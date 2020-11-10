@@ -10,3 +10,14 @@
 #endif
 
 #define LABELQ_VERSION STR(LABELQ_VERSION_MAJOR) "." STR(LABELQ_VERSION_MINOR) "." STR(LABELQ_VERSION_PATCH)
+
+template <class T>
+class reversed {
+    T _obj;
+
+public:
+    explicit inline reversed(const T &obj) : _obj(obj) {}
+
+    inline auto begin() { return _obj.rbegin(); }
+    inline auto end() { return _obj.rend(); }
+};

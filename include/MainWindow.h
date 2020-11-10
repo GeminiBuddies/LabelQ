@@ -40,9 +40,15 @@ private:
     bool replaceProject(Project *newProject);
     void setCurrentPage(int index);
 
+    QVector<int> getSelectedPages();
+    QVector<int> getSortedSelectedPages();
+
 private slots:
     void togglePageEditing();
     void disablePageEditing();
+
+    void toTop();
+    void toBottom();
 
     void pageListReordered(const QModelIndex &parent, int start, int end, const QModelIndex &destination, int row);
     void pageListSelectionItemChanged();
