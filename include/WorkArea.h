@@ -1,6 +1,7 @@
 #pragma once
 
 #include <model/Page.h>
+#include <controller/Controller.h>
 
 #include <QLabel>
 #include <QPushButton>

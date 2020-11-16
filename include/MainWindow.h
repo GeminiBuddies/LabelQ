@@ -2,6 +2,7 @@
 
 #include <QMainWindow>
 #include <model/Model.h>
+#include <controller/Controller.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

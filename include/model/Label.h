@@ -1,5 +1,7 @@
 #pragma once
 
+#include "./Model.h"
+
 #include <QPoint>
 #include <QString>
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <model/Model.h>
+#include <controller/Controller.h>
 
 #include <QWidget>
 #include <QVBoxLayout>

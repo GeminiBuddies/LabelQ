@@ -1,7 +1,7 @@
 #include <TranslationEditArea.h>
 
 #include <model/Page.h>
-#include <model/PageOperator.h>
+#include <controller/PageOperator.h>
 
 #include <QKeyEvent>
 #include <QHeaderView>

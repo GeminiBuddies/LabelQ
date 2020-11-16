@@ -3,7 +3,7 @@
 
 #include <Definitions.h>
 #include <model/Project.h>
-#include <model/PageOperator.h>
+#include <controller/PageOperator.h>
 
 #include <QMessageBox>
 #include <QtCore/QTranslator>
@@ -15,6 +15,10 @@
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
+    QIcon icon;
+    icon.addPixmap(QPixmap(":/icons/setting.svg").scaled(128, 128));
+    this->setWindowIcon(icon);
+
     ui->setupUi(this);
     customUiSetup();
 

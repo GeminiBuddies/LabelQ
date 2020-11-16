@@ -1,6 +1,8 @@
 #pragma once
 
-#include "Model.h"
+#include "./Controller.h"
+
+#include <model/Model.h>
 
 #include <QObject>
 #include <QBitArray>
@@ -27,7 +29,7 @@ public:
     void setPage(Page *page);
     Page* page();
     int appendLabel(const QPoint &position);
-    void deleteLabel(const QBitArray& deleted);
+    void deleteLabel(const QBitArray &deleted);
     void setLabelContent(int index, const QString &content);
     void setLabelSelection(const QBitArray &selected);
     void doubleClickLabel(int index);

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Model.h"
-#include "Label.h"
+#include "./Model.h"
+#include "./Label.h"
 
 #include <QBitArray>
 #include <QString>

@@ -1,6 +1,6 @@
 #include <WorkArea.h>
 
-#include <model/PageOperator.h>
+#include <controller/PageOperator.h>
 
 #include <QEvent>
 #include <QMessageBox>

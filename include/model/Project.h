@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Model.h"
-#include "Page.h"
+#include "./Model.h"
+#include "./Page.h"
 
 #include <QVector>
 
