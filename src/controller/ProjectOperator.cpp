@@ -29,4 +29,17 @@ bool ProjectOperator::close() {
     }
 
     currentProject = nullptr;
+    emit projectReplaced();
+
+    return true;
+}
+
+bool ProjectOperator::openProject() {
+
+
+    return false;
+}
+
+bool ProjectOperator::loadTutorialProject() {
+    return false;
 }
