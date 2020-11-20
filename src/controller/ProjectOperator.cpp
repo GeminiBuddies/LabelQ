@@ -35,11 +35,18 @@ bool ProjectOperator::close() {
 }
 
 bool ProjectOperator::openProject() {
+    if (currentProject != nullptr) {
+        return false;
+    }
 
 
-    return false;
+    return true;
 }
 
 bool ProjectOperator::loadTutorialProject() {
+    return loadProject(Project::tutorial());
+}
+
+bool ProjectOperator::loadProject(Project *project) {
     return false;
 }
