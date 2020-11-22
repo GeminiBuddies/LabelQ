@@ -12,33 +12,22 @@ bool ProjectOperator::close() {
         return true;
     }
 
-    if (currentProject->canSave() && currentProject->dirty()) {
-        auto result = dp->askYesNoCancel(tr("mainWindow_confirmExitTitle"), tr("mainWindow_confirmExitContent"));
-
-        if (result == QMessageBox::Yes) {
-
-        } else if (result == QMessageBox::No) {
-            // do nothing here
-        } else {
-            return false;
-        }
+    if (!ensureProjectSaved()) {
+        return false;
     }
 
-    if (currentProject->needDelete()) {
-        delete currentProject;
-    }
-
-    currentProject = nullptr;
+    closeProject();
     emit projectReplaced();
 
     return true;
 }
 
 bool ProjectOperator::openProject() {
-    if (currentProject != nullptr) {
+    if (!ensureProjectSaved()) {
         return false;
     }
 
+    auto path = dp->openFile();
 
     return true;
 }
@@ -49,4 +38,32 @@ bool ProjectOperator::loadTutorialProject() {
 
 bool ProjectOperator::loadProject(Project *project) {
     return false;
+}
+
+bool ProjectOperator::ensureProjectSaved() {
+    if (currentProject == nullptr) {
+        return true;
+    }
+
+    if (currentProject->canSave() && currentProject->dirty()) {
+        auto result = dp->askYesNoCancel(tr("mainWindow_saveChangesTitle"), tr("mainWindow_saveChanges"));
+
+        if (result == QMessageBox::Yes) {
+            currentProject->save();
+        } else if (result == QMessageBox::No) {
+            // do nothing here
+        } else {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void ProjectOperator::closeProject() {
+    if (currentProject->needDelete()) {
+        delete currentProject;
+    }
+
+    currentProject = nullptr;
 }

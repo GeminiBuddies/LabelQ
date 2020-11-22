@@ -30,6 +30,7 @@ private:
     //   b) all changes have been discarded. or
     //   c) no project open
     bool ensureProjectSaved();
+    void closeProject();
 
 signals:
     void projectReplaced();
