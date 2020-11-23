@@ -8,11 +8,13 @@
 class DialogProvider {
     QWidget *parent;
 
+    static QString specifiedOrDefault(const QString &dir);
+
 public:
     explicit DialogProvider(QWidget *parent);
 
-    QString openFolder(const QString& caption = QString(), const QString& dir = QString());
-    QString openFile();
+    QString openFolder(const QString &title = QString(), const QString &dir = QString());
+    QString openFile(const QString &filter = QString(), const QString &title = QString(), const QString &dir = QString());
 
     QMessageBox::StandardButton askYesNoCancel(const QString& title = QString(), const QString& text = QString());
 };

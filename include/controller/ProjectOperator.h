@@ -15,6 +15,8 @@ private:
     Project *currentProject;
 
 public:
+    const QString ImageFilter = "(*.png *.xpm *.jpg)";
+
     explicit ProjectOperator(DialogProvider *dp);
 
     // try close the current project. return false if this action get cancelled by user.

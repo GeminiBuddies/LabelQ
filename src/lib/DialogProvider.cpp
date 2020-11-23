@@ -3,19 +3,20 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 
-DialogProvider::DialogProvider(QWidget *parent) : parent(parent) {}
-
-QString DialogProvider::openFolder(const QString &caption, const QString &dir) {
-    const QString &d = dir.length() > 0 ? dir : QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
-
-    return QFileDialog::getExistingDirectory(parent, caption, dir);
+QString DialogProvider::specifiedOrDefault(const QString &dir) {
+    return dir.length() > 0 ? dir : QStandardPaths::writableLocation(QStandardPaths::HomeLocation) ;
 }
 
-QString DialogProvider::openFile() {
-    return "";
+DialogProvider::DialogProvider(QWidget *parent) : parent(parent) {}
+
+QString DialogProvider::openFolder(const QString &title, const QString &dir) {
+    return QFileDialog::getExistingDirectory(parent, title, specifiedOrDefault(dir));
+}
+
+QString DialogProvider::openFile(const QString &filter, const QString &title, const QString &dir) {
+    return QFileDialog::getOpenFileName(parent, title, specifiedOrDefault(dir), filter);
 }
 
 QMessageBox::StandardButton DialogProvider::askYesNoCancel(const QString &title, const QString& text) {
     return QMessageBox::question(parent, title, text, QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
 }
-

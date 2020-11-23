@@ -3,6 +3,7 @@
 
 #include <Definitions.h>
 #include <model/Project.h>
+#include <controller/ProjectOperator.h>
 #include <controller/PageOperator.h>
 
 #include <QMessageBox>
@@ -25,6 +26,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     project = nullptr;
     currentPage = nullptr;
     currentPageIndex = -1;
+
+    dp = new DialogProvider(this);
+    prop = new ProjectOperator(dp);
     op = new PageOperator();
 
     ui->translationEditArea->setPageOperator(op);
@@ -34,6 +38,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 }
 
 MainWindow::~MainWindow() {
+    delete dp;
+    delete prop;
     delete op;
     delete ui;
 }

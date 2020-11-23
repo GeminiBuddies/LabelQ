@@ -2,6 +2,7 @@
 
 #include <QMainWindow>
 #include <model/Model.h>
+#include <lib/DialogProvider.h>
 #include <controller/Controller.h>
 
 QT_BEGIN_NAMESPACE
@@ -34,6 +35,9 @@ private:
     Project *project;
     int currentPageIndex;
     Page *currentPage;
+
+    DialogProvider *dp;
+    ProjectOperator *prop;
     PageOperator *op;
 
     bool pageEditEnabled;

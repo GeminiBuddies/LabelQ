@@ -27,7 +27,7 @@ bool ProjectOperator::openProject() {
         return false;
     }
 
-    auto path = dp->openFile();
+    auto path = dp->openFile(tr("mainWindow_imageFilterDesc") + " " + ImageFilter);
 
     return true;
 }
