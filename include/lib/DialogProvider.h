@@ -15,6 +15,8 @@ public:
 
     QString openFolder(const QString &title = QString(), const QString &dir = QString());
     QString openFile(const QString &filter = QString(), const QString &title = QString(), const QString &dir = QString());
+    QStringList openFiles(const QString &filter = QString(), const QString &title = QString(), const QString &dir = QString());
+    QString saveFile(const QString &filter = QString(), const QString &title = QString(), const QString &dir = QString());
 
     QMessageBox::StandardButton askYesNoCancel(const QString& title = QString(), const QString& text = QString());
 };

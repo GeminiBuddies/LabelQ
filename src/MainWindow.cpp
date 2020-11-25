@@ -96,6 +96,7 @@ void MainWindow::customUiSetup() {
 
     ui->workArea->setContainerWidget(ui->scrollArea);
 
+    QObject::connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(openProject()));
     QObject::connect(ui->actionShowTutorial, SIGNAL(triggered()), this, SLOT(showTutorial()));
     QObject::connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(showAboutMessage()));
     QObject::connect(ui->actionAboutQt, SIGNAL(triggered()), this, SLOT(showAboutQtMessage()));
@@ -109,6 +110,10 @@ void MainWindow::customUiSetup() {
     disablePageEditing();
 
     QObject::connect(ui->pageList->model(), SIGNAL(rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)), this, SLOT(pageListReordered(const QModelIndex &, int, int, const QModelIndex &, int)));
+}
+
+void MainWindow::openProject() {
+    prop->openProject();
 }
 
 void MainWindow::showAboutMessage() {

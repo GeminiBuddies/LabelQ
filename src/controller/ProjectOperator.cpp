@@ -27,7 +27,23 @@ bool ProjectOperator::openProject() {
         return false;
     }
 
-    auto path = dp->openFile(tr("mainWindow_imageFilterDesc") + " " + ImageFilter);
+    auto projPath = dp->openFile(tr("mainWindow_projectFilterDesc") + " " + ProjectFilter);
+
+    if (projPath.length() <= 0) {
+        return false;
+    }
+
+    auto proj = Project::fromFile(projPath);
+
+    return true;
+}
+
+bool ProjectOperator::newProject() {
+    if (!ensureProjectSaved()) {
+        return false;
+    }
+
+    auto images = dp->openFiles(tr("mainWindow_imageFilterDesc") + " " + ImageFilter);
 
     return true;
 }

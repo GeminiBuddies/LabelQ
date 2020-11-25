@@ -27,6 +27,8 @@ private slots:
     void adjustWorkAreaMargin();
     void customUiSetup();
 
+    void openProject();
+
     void showAboutMessage();
     void showAboutQtMessage();
 

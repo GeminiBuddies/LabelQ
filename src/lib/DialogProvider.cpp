@@ -17,6 +17,14 @@ QString DialogProvider::openFile(const QString &filter, const QString &title, co
     return QFileDialog::getOpenFileName(parent, title, specifiedOrDefault(dir), filter);
 }
 
+QStringList DialogProvider::openFiles(const QString &filter, const QString &title, const QString &dir) {
+    return QFileDialog::getOpenFileNames(parent, title, specifiedOrDefault(dir), filter);
+}
+
+QString DialogProvider::saveFile(const QString &filter, const QString &title, const QString &dir) {
+    return QFileDialog::getSaveFileName(parent, title, specifiedOrDefault(dir), filter);
+}
+
 QMessageBox::StandardButton DialogProvider::askYesNoCancel(const QString &title, const QString& text) {
     return QMessageBox::question(parent, title, text, QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
 }

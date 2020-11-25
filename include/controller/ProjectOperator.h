@@ -15,6 +15,7 @@ private:
     Project *currentProject;
 
 public:
+    const QString ProjectFilter = "(*.lbq)";
     const QString ImageFilter = "(*.png *.xpm *.jpg)";
 
     explicit ProjectOperator(DialogProvider *dp);
@@ -22,6 +23,7 @@ public:
     // try close the current project. return false if this action get cancelled by user.
     bool close();
     bool openProject();
+    bool newProject();
     bool loadTutorialProject();
 
 private:
