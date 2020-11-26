@@ -45,6 +45,18 @@ bool ProjectOperator::newProject() {
 
     auto images = dp->openFiles(tr("mainWindow_imageFilterDesc") + " " + ImageFilter);
 
+    if (images.length() <= 0) {
+        return false;
+    }
+
+    auto projDir = QFileInfo(images[0]).absoluteDir();
+    if (std::any_of(images.begin(), images.end(), [projDir](QString &p){ return QFileInfo(p).absoluteDir() != projDir; })) {
+        dp->warning(tr("mainWindow_LabelQ"), tr("mainWindow_imagesMustBeInTheSameDir"));
+        return false;
+    }
+
+
+
     return true;
 }
 

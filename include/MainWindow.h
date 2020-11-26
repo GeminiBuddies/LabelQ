@@ -28,6 +28,7 @@ private slots:
     void customUiSetup();
 
     void openProject();
+    void newProject();
 
     void showAboutMessage();
     void showAboutQtMessage();

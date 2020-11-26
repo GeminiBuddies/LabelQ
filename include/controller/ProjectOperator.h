@@ -22,8 +22,8 @@ public:
 
     // try close the current project. return false if this action get cancelled by user.
     bool close();
-    bool openProject();
     bool newProject();
+    bool openProject();
     bool loadTutorialProject();
 
 private:

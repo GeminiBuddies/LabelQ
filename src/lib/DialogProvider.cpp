@@ -28,3 +28,7 @@ QString DialogProvider::saveFile(const QString &filter, const QString &title, co
 QMessageBox::StandardButton DialogProvider::askYesNoCancel(const QString &title, const QString& text) {
     return QMessageBox::question(parent, title, text, QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
 }
+
+void DialogProvider::warning(const QString &title, const QString& text) {
+    QMessageBox::warning(parent, title, text);
+}
