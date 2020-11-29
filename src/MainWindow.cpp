@@ -144,7 +144,7 @@ bool MainWindow::replaceProject(Project *newProject) {
     // close the old project
     auto oldProject = project;
     if (oldProject != nullptr) {
-        if (oldProject->canSave() && oldProject->dirty()) {
+        if (oldProject->canSave() && oldProject->isDirty()) {
             auto result = QMessageBox::question(this, tr("mainWindow_confirmExitTitle"), tr("mainWindow_confirmExitContent"), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
 
             if (result == QMessageBox::Yes) {

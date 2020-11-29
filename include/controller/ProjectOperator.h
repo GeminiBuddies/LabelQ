@@ -6,6 +6,7 @@
 #include <lib/DialogProvider.h>
 
 #include <QObject>
+#include <QBitArray>
 
 class ProjectOperator : QObject {
     Q_OBJECT
@@ -38,4 +39,6 @@ private:
 
 signals:
     void projectReplaced();
+
+    void pageSelectionUpdated(const QBitArray &selected);
 };

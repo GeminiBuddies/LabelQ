@@ -13,7 +13,7 @@ public:
     virtual ~Project();
 
     // project life-cycle management
-    virtual bool dirty();
+    virtual bool isDirty();
     virtual bool canSave();
     virtual void save();
     virtual bool needDelete();
@@ -30,7 +30,7 @@ public:
 
     // - adding and removing
     virtual bool canAddAndRemovePages();
-    virtual void addPage(const QString &image);
+    virtual void addPage(Page *page);
     virtual void removePage(const QBitArray &removed);
 
 public:

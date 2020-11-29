@@ -73,7 +73,7 @@ bool ProjectOperator::ensureProjectSaved() {
         return true;
     }
 
-    if (currentProject->canSave() && currentProject->dirty()) {
+    if (currentProject->canSave() && currentProject->isDirty()) {
         auto result = dp->askYesNoCancel(tr("mainWindow_saveChangesTitle"), tr("mainWindow_saveChanges"));
 
         if (result == QMessageBox::Yes) {

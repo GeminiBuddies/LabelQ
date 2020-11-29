@@ -40,9 +40,7 @@ void PageOperator::deleteLabel(const QBitArray &deleted) {
 }
 
 void PageOperator::setLabelContent(int index, const QString &content) {
-    // TODO: check here
-    (*currentPage)[index].translation = content;
-
+    currentPage->updateLabelContent(index, content);
     emit labelContentUpdated(index);
 }
 

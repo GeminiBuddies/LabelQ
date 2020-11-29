@@ -6,10 +6,6 @@ InMemoryPage::InMemoryPage(const QString &name, const QPixmap &pixmap) {
     this->pic = pixmap;
 }
 
-bool InMemoryPage::dirty() {
-    return false;
-}
-
 QString InMemoryPage::name() {
     return nameStr;
 }
@@ -20,4 +16,12 @@ QPixmap InMemoryPage::pixmap() {
 
 void InMemoryPage::clear() {
     labels.clear();
+}
+
+void InMemoryPage::preDisplay() { }
+
+void InMemoryPage::postHidden() { }
+
+bool InMemoryPage::isDirty() {
+    return false;
 }

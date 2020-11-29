@@ -13,20 +13,25 @@ private:
 
 protected:
     QVector<Label> labels;
+    bool dirty = false;
 
 public:
     virtual ~Page() = default;
 
-    virtual bool dirty() = 0;
-
     virtual QString name() = 0;
     virtual QPixmap pixmap() = 0;
+
+    virtual void preDisplay() = 0;
+    virtual void postHidden() = 0;
+
+    virtual bool isDirty();
 
     virtual void addLabel(Label &&label);
     virtual void addLabel(const Label &label);
     virtual Label label(int at);
     virtual void removeLabel(int at);
     virtual int labelCount();
+    virtual void updateLabelContent(int at, const QString &content);
 
     virtual Label& operator[](int at);
 };

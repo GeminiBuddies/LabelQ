@@ -1,6 +1,7 @@
 #include <model/Project.h>
 
 #include <model/builtin/TutorialProject.h>
+#include <model/builtin/RealProject.h>
 
 Project::~Project() {
     for (auto p: pages) {
@@ -8,9 +9,9 @@ Project::~Project() {
     }
 }
 
-bool Project::dirty() {
+bool Project::isDirty() {
     for (auto p: pages) {
-        if (p->dirty()) return true;
+        if (p->isDirty()) return true;
     }
 
     return false;
@@ -52,12 +53,16 @@ bool Project::canAddAndRemovePages() {
     return false;
 }
 
-void Project::addPage(const QString &image) { }
+void Project::addPage(Page *page) {
+    pages.append(page);
+}
 
-void Project::removePage(const QBitArray &removed) { }
+void Project::removePage(const QBitArray &removed) {
+
+}
 
 Project *Project::fromFile(const QString &path) {
-    return nullptr;
+    return RealProject::fromFile(path);
 }
 
 Project *Project::tutorial() {
