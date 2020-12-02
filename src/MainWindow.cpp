@@ -3,6 +3,7 @@
 
 #include <Definitions.h>
 #include <model/Project.h>
+#include <lib/IconLoader.h>
 #include <controller/ProjectOperator.h>
 #include <controller/PageOperator.h>
 
@@ -16,9 +17,7 @@
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
-    QIcon icon;
-    icon.addPixmap(QPixmap(":/icons/setting.svg").scaled(128, 128));
-    this->setWindowIcon(icon);
+    this->setWindowIcon(loadIconFromFile(":/icons/setting.svg"));
 
     ui->setupUi(this);
     customUiSetup();

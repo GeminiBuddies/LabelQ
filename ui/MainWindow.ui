@@ -81,6 +81,9 @@
        <widget class="QWidget" name="verticalLayoutWidget">
         <layout class="QVBoxLayout" name="pageListLayout">
          <item>
+          <widget class="PageListEditArea" name="widget" native="true"/>
+         </item>
+         <item>
           <layout class="QHBoxLayout" name="pageListEditorLayout">
            <item>
             <widget class="QToolButton" name="pageListEdit">
@@ -283,6 +286,12 @@
    <class>TranslationEditArea</class>
    <extends>QWidget</extends>
    <header>include/TranslationEditArea.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PageListEditArea</class>
+   <extends>QWidget</extends>
+   <header>include/PageListEditArea.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
