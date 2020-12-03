@@ -8,6 +8,8 @@
 #include <QToolButton>
 #include <QListWidget>
 
+#include <controller/ProjectOperator.h>
+
 class PageListEditArea : public QWidget {
     Q_OBJECT
 

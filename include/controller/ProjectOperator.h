@@ -39,8 +39,14 @@ private:
 
 signals:
     void projectReplaced();
+    void pageSelectionUpdated(Page *currentPage);
 
-    void pageSelectionUpdated(const QBitArray &selected);
+private:
+    int currentPageIndex;
 
+public:
+    void setPageSelection(int index);
 
+public:
+    Project *project();
 };

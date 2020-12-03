@@ -94,3 +94,17 @@ void ProjectOperator::closeProject() {
 
     currentProject = nullptr;
 }
+
+void ProjectOperator::setPageSelection(int index) {
+    if (index < 0 || index >= currentProject->pageCount()) {
+        currentPageIndex = index;
+        emit pageSelectionUpdated(currentProject->page(index));
+    } else {
+        currentPageIndex = -1;
+        emit pageSelectionUpdated(nullptr);
+    }
+}
+
+Project *ProjectOperator::project() {
+    return currentProject;
+}

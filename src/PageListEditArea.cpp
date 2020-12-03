@@ -1,6 +1,7 @@
 #include <PageListEditArea.h>
 
 #include <lib/IconLoader.h>
+#include <model/Project.h>
 
 PageListEditArea::PageListEditArea(QWidget *parent) : QWidget(parent) {
     pageListLayout = new QVBoxLayout(this);
@@ -58,6 +59,8 @@ PageListEditArea::PageListEditArea(QWidget *parent) : QWidget(parent) {
 
     QObject::connect(pageListEdit, SIGNAL(clicked()), this, SLOT(togglePageEditing()));
     QObject::connect(pageListEditDone, SIGNAL(clicked()), this, SLOT(togglePageEditing()));
+
+    QObject::connect(pageList, SIGNAL(itemSelectionChanged()), this, SLOT(pageListSelectionItemChanged()));
 
     op = nullptr;
     disablePageEditing();
@@ -125,5 +128,17 @@ void PageListEditArea::pageListReordered(const QModelIndex &parent, int start, i
 }
 
 void PageListEditArea::pageListSelectionItemChanged() {
+    auto selection = pageList->selectionModel()->selectedIndexes();
 
+    if (selection.length() != 1) {
+        op->setPageSelection(-1);
+    } else {
+        auto index = selection[0].row();
+        op->setPageSelection(index);
+    }
+
+    auto anySelected = selection.length() > 0;
+    pageListRemove->setEnabled(anySelected && op->project() != nullptr && op->project()->canAddAndRemovePages());
+    pageListToTop->setEnabled(anySelected);
+    pageListToBottom->setEnabled(anySelected);
 }
