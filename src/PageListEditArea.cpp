@@ -56,4 +56,74 @@ PageListEditArea::PageListEditArea(QWidget *parent) : QWidget(parent) {
 
     pageListLayout->addWidget(pageList);
 
+    QObject::connect(pageListEdit, SIGNAL(clicked()), this, SLOT(togglePageEditing()));
+    QObject::connect(pageListEditDone, SIGNAL(clicked()), this, SLOT(togglePageEditing()));
+
+    op = nullptr;
+    disablePageEditing();
+
+    // useless, just to suppress linter warning
+    pageEditEnabled = false;
+}
+
+bool PageListEditArea::replaceProject(Project *newProject) {
+    return false;
+}
+
+QVector<int> PageListEditArea::getSelectedPages() {
+    return QVector<int>();
+}
+
+QVector<int> PageListEditArea::getSortedSelectedPages() {
+    return QVector<int>();
+}
+
+void PageListEditArea::togglePageEditing() {
+    pageEditEnabled = !pageEditEnabled;
+
+    pageListEdit->setVisible(!pageEditEnabled);
+    pageListEditDone->setVisible(pageEditEnabled);
+    pageListAdd->setVisible(pageEditEnabled);
+    pageListRemove->setVisible(pageEditEnabled);
+    pageListToTop->setVisible(pageEditEnabled);
+    pageListToBottom->setVisible(pageEditEnabled);
+
+    pageList->setDragEnabled(pageEditEnabled);
+
+    if (pageEditEnabled) {
+        pageList->setSelectionMode(QAbstractItemView::ExtendedSelection);
+        pageList->setDragDropMode(QAbstractItemView::InternalMove);
+        pageList->setDefaultDropAction(Qt::MoveAction);
+    } else {
+        pageList->setSelectionMode(QAbstractItemView::SingleSelection);
+        pageList->setDragDropMode(QAbstractItemView::NoDragDrop);
+        pageList->setDefaultDropAction(Qt::IgnoreAction);
+
+        // when turning off edit, unselect all but the first selection
+        auto selection = pageList->selectionModel()->selectedIndexes();
+        if (selection.size() > 1) {
+            pageList->item(selection[0].row())->setSelected(true);
+        }
+    }
+}
+
+void PageListEditArea::disablePageEditing() {
+    pageEditEnabled = true;
+    togglePageEditing();
+}
+
+void PageListEditArea::toTop() {
+
+}
+
+void PageListEditArea::toBottom() {
+
+}
+
+void PageListEditArea::pageListReordered(const QModelIndex &parent, int start, int end, const QModelIndex &destination, int row) {
+
+}
+
+void PageListEditArea::pageListSelectionItemChanged() {
+
 }

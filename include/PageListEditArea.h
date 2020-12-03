@@ -1,5 +1,7 @@
 #pragma once
 
+#include <controller/ProjectOperator.h>
+
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -18,4 +20,24 @@ private:
 public:
     explicit PageListEditArea(QWidget *parent = nullptr);
     ~PageListEditArea() override = default;
+
+// Project and Page management
+private:
+    ProjectOperator *op;
+    bool pageEditEnabled;
+
+    bool replaceProject(Project *newProject);
+
+    QVector<int> getSelectedPages();
+    QVector<int> getSortedSelectedPages();
+
+private slots:
+    void togglePageEditing();
+    void disablePageEditing();
+
+    void toTop();
+    void toBottom();
+
+    void pageListReordered(const QModelIndex &parent, int start, int end, const QModelIndex &destination, int row);
+    void pageListSelectionItemChanged();
 };

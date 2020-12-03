@@ -41,4 +41,6 @@ signals:
     void projectReplaced();
 
     void pageSelectionUpdated(const QBitArray &selected);
+
+
 };

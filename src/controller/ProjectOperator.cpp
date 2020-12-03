@@ -56,7 +56,6 @@ bool ProjectOperator::newProject() {
     }
 
 
-
     return true;
 }
 
