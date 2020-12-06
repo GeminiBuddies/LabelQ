@@ -27,10 +27,17 @@ private slots:
     void adjustWorkAreaMargin();
     void customUiSetup();
 
-    void openProject();
+private slots:
+    // menu handlers
     void newProject();
+    void openProject();
+    void saveProject();
+    void saveProjectAs();
+    void closeProject();
 
     void showTutorial();
+
+    void exitProgram();
 
     void showAboutMessage();
     void showAboutQtMessage();

@@ -38,7 +38,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>404</width>
+          <width>1035</width>
           <height>557</height>
          </rect>
         </property>
@@ -102,6 +102,7 @@
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
+    <addaction name="actionClose"/>
     <addaction name="separator"/>
     <addaction name="actionShowTutorial"/>
     <addaction name="separator"/>
@@ -142,6 +143,11 @@
   <action name="actionShowTutorial">
    <property name="text">
     <string>mainWindow_actionShowTutorial</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="text">
+    <string>mainWindow_actionClose</string>
    </property>
   </action>
   <action name="actionExit">

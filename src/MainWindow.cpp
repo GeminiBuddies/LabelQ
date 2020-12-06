@@ -112,7 +112,11 @@ void MainWindow::customUiSetup() {
 
     QObject::connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(newProject()));
     QObject::connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(openProject()));
+    QObject::connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(saveProject()));;
+    QObject::connect(ui->actionSaveAs, SIGNAL(triggered()), this, SLOT(saveProjectAs()));;
+    QObject::connect(ui->actionClose, SIGNAL(triggered()), this, SLOT(closeProject()));
     QObject::connect(ui->actionShowTutorial, SIGNAL(triggered()), this, SLOT(showTutorial()));
+    QObject::connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(exitProgram()));
     QObject::connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(showAboutMessage()));
     QObject::connect(ui->actionAboutQt, SIGNAL(triggered()), this, SLOT(showAboutQtMessage()));
 }
@@ -125,8 +129,26 @@ void MainWindow::openProject() {
     prop->openProject();
 }
 
+void MainWindow::saveProject() {
+
+}
+
+void MainWindow::saveProjectAs() {
+
+}
+
+void MainWindow::closeProject() {
+    prop->closeProject();
+}
+
 void MainWindow::showTutorial() {
     prop->loadTutorialProject();
+}
+
+void MainWindow::exitProgram() {
+    if (prop->closeProject()) {
+        QApplication::exit(0);
+    }
 }
 
 void MainWindow::showAboutMessage() {
