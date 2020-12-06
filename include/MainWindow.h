@@ -30,37 +30,14 @@ private slots:
     void openProject();
     void newProject();
 
+    void showTutorial();
+
     void showAboutMessage();
     void showAboutQtMessage();
 
 // Project and Page management
 private:
-    Project *project;
-    int currentPageIndex;
-    Page *currentPage;
-
     DialogProvider *dp;
     ProjectOperator *prop;
     PageOperator *op;
-
-    bool pageEditEnabled;
-
-    bool replaceProject(Project *newProject);
-    void setCurrentPage(int index);
-
-    QVector<int> getSelectedPages();
-    QVector<int> getSortedSelectedPages();
-
-private slots:
-    void togglePageEditing();
-    void disablePageEditing();
-
-    void toTop();
-    void toBottom();
-
-    void pageListReordered(const QModelIndex &parent, int start, int end, const QModelIndex &destination, int row);
-    void pageListSelectionItemChanged();
-
-public slots:
-    void showTutorial();
 };

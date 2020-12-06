@@ -22,10 +22,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->setupUi(this);
     customUiSetup();
 
-    project = nullptr;
-    currentPage = nullptr;
-    currentPageIndex = -1;
-
     dp = new DialogProvider(this);
     prop = new ProjectOperator(dp);
     op = new PageOperator();
@@ -33,7 +29,27 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->translationEditArea->setPageOperator(op);
     ui->workArea->setPageOperator(op);
 
-    replaceProject(nullptr);
+    connect(prop, &ProjectOperator::pageSelectionUpdated, [this](Page *currentPage) {
+        this->op->setPage(currentPage);
+    });
+
+    connect(prop, &ProjectOperator::projectReplaced, [this]() {
+        // get the new one
+        auto project = this->prop->project();
+
+        // set menuItems
+        if (project == nullptr || !project->canSave()) {
+            ui->actionSave->setEnabled(false);
+            ui->actionSaveAs->setEnabled(false);
+        } else {
+            ui->actionSave->setEnabled(true);
+            ui->actionSaveAs->setEnabled(true);
+        }
+
+        prop->setPageSelection(0);
+    });
+
+    prop->loadEmptyProject();
 }
 
 MainWindow::~MainWindow() {
@@ -100,16 +116,6 @@ void MainWindow::customUiSetup() {
     QObject::connect(ui->actionShowTutorial, SIGNAL(triggered()), this, SLOT(showTutorial()));
     QObject::connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(showAboutMessage()));
     QObject::connect(ui->actionAboutQt, SIGNAL(triggered()), this, SLOT(showAboutQtMessage()));
-    QObject::connect(ui->pageList, SIGNAL(itemSelectionChanged()), this, SLOT(pageListSelectionItemChanged()));
-
-    QObject::connect(ui->pageListEdit, SIGNAL(clicked()), this, SLOT(togglePageEditing()));
-    QObject::connect(ui->pageListEditDone, SIGNAL(clicked()), this, SLOT(togglePageEditing()));
-    QObject::connect(ui->pageListToTop, SIGNAL(clicked()), this, SLOT(toTop()));
-    QObject::connect(ui->pageListToBottom, SIGNAL(clicked()), this, SLOT(toBottom()));
-
-    disablePageEditing();
-
-    QObject::connect(ui->pageList->model(), SIGNAL(rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)), this, SLOT(pageListReordered(const QModelIndex &, int, int, const QModelIndex &, int)));
 }
 
 void MainWindow::newProject() {
@@ -118,6 +124,10 @@ void MainWindow::newProject() {
 
 void MainWindow::openProject() {
     prop->openProject();
+}
+
+void MainWindow::showTutorial() {
+    prop->loadTutorialProject();
 }
 
 void MainWindow::showAboutMessage() {
@@ -137,190 +147,4 @@ void MainWindow::showAboutMessage() {
 
 void MainWindow::showAboutQtMessage() {
     QMessageBox::aboutQt(this);
-}
-
-bool MainWindow::replaceProject(Project *newProject) {
-    // close the old project
-    auto oldProject = project;
-    if (oldProject != nullptr) {
-        if (oldProject->canSave() && oldProject->isDirty()) {
-            auto result = QMessageBox::question(this, tr("mainWindow_confirmExitTitle"), tr("mainWindow_confirmExitContent"), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-
-            if (result == QMessageBox::Yes) {
-                oldProject->save();
-            } else if (result == QMessageBox::No) {
-                // do nothing here
-            } else {
-                return false;
-            }
-        }
-
-        int pageCount = oldProject->pageCount();
-        for (int i = pageCount - 1; i >= 0; --i) {
-            delete ui->pageList->takeItem(i);
-        }
-
-        if (oldProject->needDelete()) {
-            delete oldProject;
-        }
-    }
-
-    // get the new one
-    project = newProject;
-
-    // set menuItems
-    if (project == nullptr || !project->canSave()) {
-        ui->actionSave->setEnabled(false);
-        ui->actionSaveAs->setEnabled(false);
-    } else {
-        ui->actionSave->setEnabled(true);
-        ui->actionSaveAs->setEnabled(true);
-    }
-
-    disablePageEditing();
-    if (project == nullptr) {
-        ui->pageList->setEnabled(false);
-    } else {
-        ui->pageList->setEnabled(true);
-
-        auto pageCount = project->pageCount();
-        for (int i = 0; i < pageCount; ++i) {
-            ui->pageList->addItem(project->page(i)->name());
-        }
-    }
-
-    ui->pageListEdit->setVisible(project != nullptr && project->canReorderPages());
-    ui->pageListAdd->setEnabled(project != nullptr && project->canAddAndRemovePages());
-    ui->pageListRemove->setEnabled(project != nullptr && project->canAddAndRemovePages());
-
-    if (project != nullptr && project->pageCount() > 0) {
-        ui->pageList->item(0)->setSelected(true);
-        // this statement implicitly contains
-        //   setCurrentPage(0);
-    } else {
-        setCurrentPage(-1);
-    }
-
-    return true;
-}
-
-void MainWindow::setCurrentPage(int index) {
-    if (project == nullptr || index < 0 || index >= project->pageCount()) {
-        currentPage = nullptr;
-        currentPageIndex = -1;
-    } else {
-        currentPage = project->page(index);
-        currentPageIndex = index;
-    }
-
-    op->setPage(currentPage);
-}
-
-QVector<int> MainWindow::getSelectedPages() {
-    auto selection = ui->pageList->selectionModel()->selectedIndexes();
-    QVector<int> selectedRows;
-    for (auto &index: selection) {
-        selectedRows.append(index.row());
-    }
-
-    return selectedRows;
-}
-
-QVector<int> MainWindow::getSortedSelectedPages() {
-    auto selectedRows = getSelectedPages();
-    sort(selectedRows.begin(), selectedRows.end());
-    return selectedRows;
-}
-
-void MainWindow::togglePageEditing() {
-    pageEditEnabled = !pageEditEnabled;
-
-    ui->pageListEdit->setVisible(!pageEditEnabled);
-    ui->pageListEditDone->setVisible(pageEditEnabled);
-    ui->pageListAdd->setVisible(pageEditEnabled);
-    ui->pageListRemove->setVisible(pageEditEnabled);
-    ui->pageListToTop->setVisible(pageEditEnabled);
-    ui->pageListToBottom->setVisible(pageEditEnabled);
-
-    ui->pageList->setDragEnabled(pageEditEnabled);
-
-    if (pageEditEnabled) {
-        ui->pageList->setSelectionMode(QAbstractItemView::ExtendedSelection);
-        ui->pageList->setDragDropMode(QAbstractItemView::InternalMove);
-        ui->pageList->setDefaultDropAction(Qt::MoveAction);
-    } else {
-        ui->pageList->setSelectionMode(QAbstractItemView::SingleSelection);
-        ui->pageList->setDragDropMode(QAbstractItemView::NoDragDrop);
-        ui->pageList->setDefaultDropAction(Qt::IgnoreAction);
-
-        // when turning off edit, unselect all but the first selection
-        auto selection = ui->pageList->selectionModel()->selectedIndexes();
-        if (selection.size() > 1) {
-            ui->pageList->item(selection[0].row())->setSelected(true);
-        }
-    }
-}
-
-void MainWindow::disablePageEditing() {
-    pageEditEnabled = true;
-    togglePageEditing();
-}
-
-void MainWindow::toTop() {
-    auto moved = 0;
-    for (auto row: reversed(getSortedSelectedPages())) {
-        row += moved;
-
-        auto item = ui->pageList->takeItem(row);
-        ui->pageList->insertItem(0, item);
-        project->movePage(row, 0);
-
-        item->setSelected(true);
-
-        ++moved;
-    }
-}
-
-void MainWindow::toBottom() {
-    auto end = ui->pageList->count() - 1;
-
-    auto moved = 0;
-    for (auto row: getSortedSelectedPages()) {
-        row -= moved;
-
-        auto item = ui->pageList->takeItem(row);
-        ui->pageList->insertItem(end, item);
-        project->movePage(row, end);
-
-        item->setSelected(true);
-
-        ++moved;
-    }
-}
-
-void MainWindow::pageListReordered(const QModelIndex &parent, int start, int end, const QModelIndex &destination, int row) {
-    assert(start == end);
-    assert(start != row);
-
-    project->movePage(start, row > start ? row - 1 : row);
-}
-
-void MainWindow::pageListSelectionItemChanged() {
-    auto selection = ui->pageList->selectionModel()->selectedIndexes();
-
-    if (selection.length() != 1) {
-        setCurrentPage(-1);
-    } else {
-        auto index = selection[0].row();
-        setCurrentPage(index);
-    }
-
-    auto anySelected = selection.length() > 0;
-    ui->pageListRemove->setEnabled(anySelected && project != nullptr && project->canAddAndRemovePages());
-    ui->pageListToTop->setEnabled(anySelected);
-    ui->pageListToBottom->setEnabled(anySelected);
-}
-
-void MainWindow::showTutorial() {
-    replaceProject(Project::tutorial());
 }

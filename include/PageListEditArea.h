@@ -28,18 +28,20 @@ private:
     ProjectOperator *op;
     bool pageEditEnabled;
 
-    bool replaceProject(Project *newProject);
-
     QVector<int> getSelectedPages();
     QVector<int> getSortedSelectedPages();
 
 private slots:
+    void projectReplaced();
+
     void togglePageEditing();
     void disablePageEditing();
 
     void toTop();
     void toBottom();
 
-    void pageListReordered(const QModelIndex &parent, int start, int end, const QModelIndex &destination, int row);
     void pageListSelectionItemChanged();
+
+public:
+    void setProjectOperator(ProjectOperator *pOperator);
 };

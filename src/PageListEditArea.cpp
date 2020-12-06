@@ -2,6 +2,9 @@
 
 #include <lib/IconLoader.h>
 #include <model/Project.h>
+#include <Definitions.h>
+
+using namespace std;
 
 PageListEditArea::PageListEditArea(QWidget *parent) : QWidget(parent) {
     pageListLayout = new QVBoxLayout(this);
@@ -57,10 +60,19 @@ PageListEditArea::PageListEditArea(QWidget *parent) : QWidget(parent) {
 
     pageListLayout->addWidget(pageList);
 
+
     QObject::connect(pageListEdit, SIGNAL(clicked()), this, SLOT(togglePageEditing()));
     QObject::connect(pageListEditDone, SIGNAL(clicked()), this, SLOT(togglePageEditing()));
+    QObject::connect(pageListToTop, SIGNAL(clicked()), this, SLOT(toTop()));
+    QObject::connect(pageListToBottom, SIGNAL(clicked()), this, SLOT(toBottom()));
 
     QObject::connect(pageList, SIGNAL(itemSelectionChanged()), this, SLOT(pageListSelectionItemChanged()));
+    QObject::connect(pageList->model(), &QAbstractItemModel::rowsMoved, [this](const QModelIndex &parent, int start, int end, const QModelIndex &destination, int row) {
+        assert(start == end);
+        assert(start != row);
+
+        op->project()->movePage(start, row > start ? row - 1 : row);
+    });
 
     op = nullptr;
     disablePageEditing();
@@ -69,16 +81,45 @@ PageListEditArea::PageListEditArea(QWidget *parent) : QWidget(parent) {
     pageEditEnabled = false;
 }
 
-bool PageListEditArea::replaceProject(Project *newProject) {
-    return false;
-}
-
 QVector<int> PageListEditArea::getSelectedPages() {
-    return QVector<int>();
+    auto selection = pageList->selectionModel()->selectedIndexes();
+    QVector<int> selectedRows;
+    for (auto &index: selection) {
+        selectedRows.append(index.row());
+    }
+
+    return selectedRows;
 }
 
 QVector<int> PageListEditArea::getSortedSelectedPages() {
-    return QVector<int>();
+    auto selectedRows = getSelectedPages();
+    sort(selectedRows.begin(), selectedRows.end());
+    return selectedRows;
+}
+
+void PageListEditArea::projectReplaced() {
+    auto project = op->project();
+
+    int pageCount = pageList->count();
+    for (int i = pageCount - 1; i >= 0; --i) {
+        delete pageList->takeItem(i);
+    }
+
+    disablePageEditing();
+    if (project == nullptr) {
+        pageList->setEnabled(false);
+    } else {
+        pageList->setEnabled(true);
+
+        pageCount = project->pageCount();
+        for (int i = 0; i < pageCount; ++i) {
+            pageList->addItem(project->page(i)->name());
+        }
+    }
+
+    pageListEdit->setVisible(project != nullptr && project->canReorderPages());
+    pageListAdd->setEnabled(project != nullptr && project->canAddAndRemovePages());
+    pageListRemove->setEnabled(project != nullptr && project->canAddAndRemovePages());
 }
 
 void PageListEditArea::togglePageEditing() {
@@ -116,15 +157,37 @@ void PageListEditArea::disablePageEditing() {
 }
 
 void PageListEditArea::toTop() {
+    auto moved = 0;
+    auto project = op->project();
+    for (auto row: reversed(getSortedSelectedPages())) {
+        row += moved;
 
+        auto item = pageList->takeItem(row);
+        pageList->insertItem(0, item);
+        project->movePage(row, 0);
+
+        item->setSelected(true);
+
+        ++moved;
+    }
 }
 
 void PageListEditArea::toBottom() {
+    auto end = pageList->count() - 1;
 
-}
+    auto moved = 0;
+    auto project = op->project();
+    for (auto row: getSortedSelectedPages()) {
+        row -= moved;
 
-void PageListEditArea::pageListReordered(const QModelIndex &parent, int start, int end, const QModelIndex &destination, int row) {
+        auto item = pageList->takeItem(row);
+        pageList->insertItem(end, item);
+        project->movePage(row, end);
 
+        item->setSelected(true);
+
+        ++moved;
+    }
 }
 
 void PageListEditArea::pageListSelectionItemChanged() {
@@ -141,4 +204,10 @@ void PageListEditArea::pageListSelectionItemChanged() {
     pageListRemove->setEnabled(anySelected && op->project() != nullptr && op->project()->canAddAndRemovePages());
     pageListToTop->setEnabled(anySelected);
     pageListToBottom->setEnabled(anySelected);
+}
+
+void PageListEditArea::setProjectOperator(ProjectOperator *pOperator) {
+    this->op = pOperator;
+
+    QObject::connect(this->op, SIGNAL(projectReplaced()), this, SLOT(projectReplaced()));
 }

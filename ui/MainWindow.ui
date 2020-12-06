@@ -78,113 +78,8 @@
        <property name="handleWidth">
         <number>4</number>
        </property>
-       <widget class="QWidget" name="verticalLayoutWidget">
-        <layout class="QVBoxLayout" name="pageListLayout">
-         <item>
-          <widget class="PageListEditArea" name="widget" native="true"/>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="pageListEditorLayout">
-           <item>
-            <widget class="QToolButton" name="pageListEdit">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="icon">
-              <iconset resource="../labelq.qrc">
-               <normaloff>:/icons/setting.svg</normaloff>:/icons/setting.svg</iconset>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QToolButton" name="pageListEditDone">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="icon">
-              <iconset resource="../labelq.qrc">
-               <normaloff>:/icons/ok.svg</normaloff>:/icons/ok.svg</iconset>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QToolButton" name="pageListAdd">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="icon">
-              <iconset resource="../labelq.qrc">
-               <normaloff>:/icons/plus.svg</normaloff>:/icons/plus.svg</iconset>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QToolButton" name="pageListRemove">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="icon">
-              <iconset resource="../labelq.qrc">
-               <normaloff>:/icons/minus.svg</normaloff>:/icons/minus.svg</iconset>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QToolButton" name="pageListToTop">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="icon">
-              <iconset resource="../labelq.qrc">
-               <normaloff>:/icons/to_top.svg</normaloff>:/icons/to_top.svg</iconset>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QToolButton" name="pageListToBottom">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="icon">
-              <iconset resource="../labelq.qrc">
-               <normaloff>:/icons/to_bottom.svg</normaloff>:/icons/to_bottom.svg</iconset>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <widget class="QListWidget" name="pageList">
-           <property name="editTriggers">
-            <set>QAbstractItemView::NoEditTriggers</set>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="TranslationEditArea" name="translationEditArea" native="true">
-        <property name="text" stdset="0">
-         <string>PushButton</string>
-        </property>
-       </widget>
+       <widget class="PageListEditArea" name="pageListEditArea" native="true"/>
+       <widget class="TranslationEditArea" name="translationEditArea" native="true"/>
       </widget>
      </widget>
     </item>
@@ -295,8 +190,6 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../labelq.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

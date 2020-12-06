@@ -8,7 +8,7 @@
 #include <QObject>
 #include <QBitArray>
 
-class ProjectOperator : QObject {
+class ProjectOperator : public QObject {
     Q_OBJECT
 
 private:
@@ -21,6 +21,7 @@ public:
 
     explicit ProjectOperator(DialogProvider *dp);
 
+    bool loadEmptyProject();
     // try close the current project. return false if this action get cancelled by user.
     bool close();
     bool newProject();
@@ -42,6 +43,7 @@ signals:
     void pageSelectionUpdated(Page *currentPage);
 
 private:
+    Page *currentPage;
     int currentPageIndex;
 
 public:

@@ -5,13 +5,12 @@
 ProjectOperator::ProjectOperator(DialogProvider *dp) {
     this->dp = dp;
     this->currentProject = nullptr;
+
+    this->currentPage = nullptr;
+    this->currentPageIndex = -1;
 }
 
-bool ProjectOperator::close() {
-    if (currentProject == nullptr) {
-        return true;
-    }
-
+bool ProjectOperator::loadEmptyProject() {
     if (!ensureProjectSaved()) {
         return false;
     }
@@ -20,6 +19,14 @@ bool ProjectOperator::close() {
     emit projectReplaced();
 
     return true;
+}
+
+bool ProjectOperator::close() {
+    if (currentProject == nullptr) {
+        return true;
+    }
+
+    return loadEmptyProject();
 }
 
 bool ProjectOperator::openProject() {
@@ -64,6 +71,10 @@ bool ProjectOperator::loadTutorialProject() {
 }
 
 bool ProjectOperator::loadProject(Project *project) {
+    if (project == nullptr) {
+        return false;
+    }
+
     return false;
 }
 
@@ -88,7 +99,7 @@ bool ProjectOperator::ensureProjectSaved() {
 }
 
 void ProjectOperator::closeProject() {
-    if (currentProject->needDelete()) {
+    if (currentProject != nullptr && currentProject->needDelete()) {
         delete currentProject;
     }
 
@@ -96,13 +107,15 @@ void ProjectOperator::closeProject() {
 }
 
 void ProjectOperator::setPageSelection(int index) {
-    if (index < 0 || index >= currentProject->pageCount()) {
-        currentPageIndex = index;
-        emit pageSelectionUpdated(currentProject->page(index));
-    } else {
+    if (currentProject == nullptr || index < 0 || index >= currentProject->pageCount()) {
         currentPageIndex = -1;
-        emit pageSelectionUpdated(nullptr);
+        currentPage = nullptr;
+    } else {
+        currentPageIndex = index;
+        currentPage = currentProject->page(index);
     }
+
+    emit pageSelectionUpdated(currentPage);
 }
 
 Project *ProjectOperator::project() {
