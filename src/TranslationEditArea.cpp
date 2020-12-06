@@ -78,6 +78,8 @@ void TranslationEditArea::setPageOperator(PageOperator *op) {
 }
 
 void TranslationEditArea::onNewPage() {
+    suppressUIEvents = true;
+
     auto newPage = op->page();
 
     auto expectedR = newPage == nullptr ? 0 : newPage->labelCount();
@@ -113,6 +115,8 @@ void TranslationEditArea::onNewPage() {
     }
 
     translationTable->clearSelection();
+
+    suppressUIEvents = false;
 }
 
 void TranslationEditArea::configTextEdit() {
@@ -147,8 +151,6 @@ void TranslationEditArea::deleteLabel(const QBitArray &deleted, bool notify) {
         }
     }
 
-    translationTable->clearSelection();
-
     suppressUIEvents = false;
 
     // actually unnecessary but ...
@@ -159,6 +161,8 @@ void TranslationEditArea::deleteLabel(const QBitArray &deleted, bool notify) {
         op->deleteLabel(deleted);
         suppressExternalSignal = false;
     }
+
+    onLabelSelectionUpdated(QBitArray(oldCount - deletedCount, false));
 }
 
 void TranslationEditArea::tableSelectionChanged() {
