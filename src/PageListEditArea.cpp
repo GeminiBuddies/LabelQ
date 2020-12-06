@@ -120,6 +120,10 @@ void PageListEditArea::projectReplaced() {
     pageListEdit->setVisible(project != nullptr && project->canReorderPages());
     pageListAdd->setEnabled(project != nullptr && project->canAddAndRemovePages());
     pageListRemove->setEnabled(project != nullptr && project->canAddAndRemovePages());
+
+    if (project != nullptr && project->pageCount() > 0) {
+        pageList->item(0)->setSelected(true);
+    }
 }
 
 void PageListEditArea::togglePageEditing() {

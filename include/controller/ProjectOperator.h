@@ -21,22 +21,22 @@ public:
 
     explicit ProjectOperator(DialogProvider *dp);
 
+    // these functions are public apis
     bool loadEmptyProject();
-    // try close the current project. return false if this action get cancelled by user.
-    bool close();
-    bool newProject();
-    bool openProject();
     bool loadTutorialProject();
 
+    bool closeProject();
+    bool newProject();
+    bool openProject();
+
 private:
-    bool loadProject(Project *project);
+    bool replaceProject(Project *project);
 
     // return true if
     //   a) the current project has been saved. or
     //   b) all changes have been discarded. or
     //   c) no project open
     bool ensureProjectSaved();
-    void closeProject();
 
 signals:
     void projectReplaced();

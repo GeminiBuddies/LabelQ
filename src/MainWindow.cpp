@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     prop = new ProjectOperator(dp);
     op = new PageOperator();
 
+    ui->pageListEditArea->setProjectOperator(prop);
     ui->translationEditArea->setPageOperator(op);
     ui->workArea->setPageOperator(op);
 
@@ -45,8 +46,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             ui->actionSave->setEnabled(true);
             ui->actionSaveAs->setEnabled(true);
         }
-
-        prop->setPageSelection(0);
     });
 
     prop->loadEmptyProject();

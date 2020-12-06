@@ -15,17 +15,19 @@ bool ProjectOperator::loadEmptyProject() {
         return false;
     }
 
-    closeProject();
-    emit projectReplaced();
-
-    return true;
+    return replaceProject(nullptr);
 }
 
-bool ProjectOperator::close() {
-    if (currentProject == nullptr) {
-        return true;
+bool ProjectOperator::loadTutorialProject() {
+    if (!ensureProjectSaved()) {
+        return false;
     }
 
+    return replaceProject(Project::tutorial());
+}
+
+// just an alias
+bool ProjectOperator::closeProject() {
     return loadEmptyProject();
 }
 
@@ -66,16 +68,22 @@ bool ProjectOperator::newProject() {
     return true;
 }
 
-bool ProjectOperator::loadTutorialProject() {
-    return loadProject(Project::tutorial());
-}
-
-bool ProjectOperator::loadProject(Project *project) {
-    if (project == nullptr) {
-        return false;
+bool ProjectOperator::replaceProject(Project *project) {
+    if (currentProject != nullptr && currentProject->needDelete()) {
+        delete currentProject;
     }
 
-    return false;
+    currentProject = nullptr;
+    currentPageIndex = -1;
+    currentPage = nullptr;
+
+    emit pageSelectionUpdated(currentPage);
+
+    currentProject = project;
+
+    emit projectReplaced();
+
+    return true;
 }
 
 bool ProjectOperator::ensureProjectSaved() {
@@ -96,14 +104,6 @@ bool ProjectOperator::ensureProjectSaved() {
     }
 
     return true;
-}
-
-void ProjectOperator::closeProject() {
-    if (currentProject != nullptr && currentProject->needDelete()) {
-        delete currentProject;
-    }
-
-    currentProject = nullptr;
 }
 
 void ProjectOperator::setPageSelection(int index) {
