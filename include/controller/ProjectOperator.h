@@ -29,6 +29,8 @@ public:
     bool newProject();
     bool openProject();
 
+    void addPage();
+
 private:
     bool replaceProject(Project *project);
 
@@ -37,6 +39,8 @@ private:
     //   b) all changes have been discarded. or
     //   c) no project open
     bool ensureProjectSaved();
+
+    void addPagesFromFiles(const QStringList &files);
 
 signals:
     void projectReplaced();

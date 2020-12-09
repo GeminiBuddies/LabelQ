@@ -43,8 +43,17 @@ bool ProjectOperator::openProject() {
     }
 
     auto proj = Project::fromFile(projPath);
+    if (proj == nullptr) {
+        return false;
+    }
+
+    replaceProject(proj);
 
     return true;
+}
+
+void ProjectOperator::addPage() {
+
 }
 
 bool ProjectOperator::newProject() {
