@@ -1,6 +1,8 @@
 #include <controller/ProjectOperator.h>
 
 #include <model/Project.h>
+#include <model/builtin/RealProject.h>
+#include <model/builtin/RealPage.h>
 
 ProjectOperator::ProjectOperator(DialogProvider *dp) {
     this->dp = dp;
@@ -73,6 +75,14 @@ bool ProjectOperator::newProject() {
         return false;
     }
 
+    auto proj = Project::createNew();
+    assert(proj->canAddAndRemovePages());
+
+    for (auto &image: images) {
+        proj->addPage(new RealPage(image));
+    }
+
+    replaceProject(proj);
 
     return true;
 }

@@ -50,7 +50,7 @@ void Project::movePage(int from, int to) {
 }
 
 bool Project::canAddAndRemovePages() {
-    return false;
+    return true;
 }
 
 void Project::addPage(Page *page) {
@@ -72,6 +72,9 @@ Project *Project::tutorial() {
 }
 
 Project *Project::createNew() {
-    static Project emptyProject;
-    return &emptyProject;
+    return new RealProject();
+}
+
+void Project::dispose(Project *proj) {
+    delete proj;
 }

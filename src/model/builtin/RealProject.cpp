@@ -6,6 +6,12 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
+RealProject::~RealProject() {
+    for (auto page: pages) {
+        delete page;
+    }
+}
+
 bool RealProject::canSave() {
     return true;
 }

@@ -7,7 +7,16 @@ PageOperator::PageOperator() {
 }
 
 void PageOperator::setPage(Page *page) {
+    if (currentPage != nullptr) {
+        currentPage->postHidden();
+    }
+
     currentPage = page;
+
+    if (currentPage != nullptr) {
+        currentPage->preDisplay();
+    }
+
     emit newPageSet();
 }
 

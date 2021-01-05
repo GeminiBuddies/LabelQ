@@ -37,4 +37,5 @@ public:
     static Project* fromFile(const QString &path);
     static Project* tutorial();
     static Project* createNew();
+    static void dispose(Project *proj);
 };
