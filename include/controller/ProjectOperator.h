@@ -34,11 +34,14 @@ public:
 private:
     bool replaceProject(Project *project);
 
+    // ensure the current project is saved or changes are explicitly discarded
     // return true if
     //   a) the current project has been saved. or
     //   b) all changes have been discarded. or
     //   c) no project open
     bool ensureProjectSaved();
+    // save the current project
+    bool saveProject();
 
     void addPagesFromFiles(const QStringList &files);
 

@@ -16,7 +16,11 @@ public:
     virtual bool isDirty();
     virtual bool canSave();
     virtual void save();
-    virtual bool needDelete();
+    virtual bool needDispose();
+    virtual QString workDir();
+    virtual void setWorkDir(const QString &dir);
+    virtual QString filename();
+    virtual void setFilename(const QString &filename);
 
     // page management
     // - get

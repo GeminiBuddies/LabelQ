@@ -13,11 +13,17 @@ protected:
     RealProject() = default;
 
 public:
-    ~RealProject();
+    ~RealProject() override;
+
+    bool isDirty() override;
 
     bool canSave() override;
     void save() override;
-    bool needDelete() override;
+    bool needDispose() override;
+    QString workDir() override;
+    void setWorkDir(const QString &dir) override;
+    QString filename() override;
+    void setFilename(const QString &filename) override;
 
     static RealProject* fromFile(const QString &path);
     static void toFile(const QString &path, RealProject *proj);

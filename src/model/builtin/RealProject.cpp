@@ -12,6 +12,14 @@ RealProject::~RealProject() {
     }
 }
 
+bool RealProject::isDirty() {
+    if (projFilePath.isEmpty()) {
+        return true;
+    }
+
+    return Project::isDirty();
+}
+
 bool RealProject::canSave() {
     return true;
 }
@@ -20,8 +28,24 @@ void RealProject::save() {
     RealProject::toFile(projFilePath, this);
 }
 
-bool RealProject::needDelete() {
+bool RealProject::needDispose() {
     return true;
+}
+
+QString RealProject::workDir() {
+    return projDir;
+}
+
+void RealProject::setWorkDir(const QString &dir) {
+    projDir = dir;
+}
+
+QString RealProject::filename() {
+    return projFilePath;
+}
+
+void RealProject::setFilename(const QString &filename) {
+    projFilePath = filename;
 }
 
 RealProject *RealProject::fromFile(const QString &path) {
@@ -49,6 +73,8 @@ RealProject *RealProject::fromFile(const QString &path) {
     if (!pages.isArray()) {
         return nullptr;
     }
+
+    assert(false); // todo: implement
 }
 
 void RealProject::toFile(const QString &path, RealProject *proj) {

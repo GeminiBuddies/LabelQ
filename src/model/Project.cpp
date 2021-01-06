@@ -25,9 +25,21 @@ void Project::save() {
 
 }
 
-bool Project::needDelete() {
+bool Project::needDispose() {
     return false;
 }
+
+QString Project::workDir() {
+    return QString();
+}
+
+void Project::setWorkDir(const QString &) {}
+
+QString Project::filename() {
+    return QString();
+}
+
+void Project::setFilename(const QString &) {}
 
 Page *Project::page(int at) {
     return pages.at(at);

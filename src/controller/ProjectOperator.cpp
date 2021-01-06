@@ -55,7 +55,15 @@ bool ProjectOperator::openProject() {
 }
 
 void ProjectOperator::addPage() {
+    assert(currentProject != nullptr && currentProject->canAddAndRemovePages());
 
+    auto images = dp->openFiles(tr("mainWindow_imageFilterDesc") + " " + ImageFilter);
+
+    if (images.length() <= 0) {
+        return;
+    }
+
+    assert(false); // todo: implement
 }
 
 bool ProjectOperator::newProject() {
@@ -71,12 +79,14 @@ bool ProjectOperator::newProject() {
 
     auto projDir = QFileInfo(images[0]).absoluteDir();
     if (std::any_of(images.begin(), images.end(), [projDir](QString &p){ return QFileInfo(p).absoluteDir() != projDir; })) {
-        dp->warning(tr("mainWindow_LabelQ"), tr("mainWindow_imagesMustBeInTheSameDir"));
+        dp->warning(tr("mainWindow_LabelQ"), tr("mainWindow_imagesAndProjectMustBeInTheSameDir"));
         return false;
     }
 
     auto proj = Project::createNew();
     assert(proj->canAddAndRemovePages());
+
+    proj->setWorkDir(projDir.absolutePath());
 
     for (auto &image: images) {
         proj->addPage(new RealPage(image));
@@ -88,8 +98,8 @@ bool ProjectOperator::newProject() {
 }
 
 bool ProjectOperator::replaceProject(Project *project) {
-    if (currentProject != nullptr && currentProject->needDelete()) {
-        delete currentProject;
+    if (currentProject != nullptr && currentProject->needDispose()) {
+        Project::dispose(currentProject);
     }
 
     currentProject = nullptr;
@@ -114,7 +124,7 @@ bool ProjectOperator::ensureProjectSaved() {
         auto result = dp->askYesNoCancel(tr("mainWindow_saveChangesTitle"), tr("mainWindow_saveChanges"));
 
         if (result == QMessageBox::Yes) {
-            currentProject->save();
+            return saveProject();
         } else if (result == QMessageBox::No) {
             // do nothing here
         } else {
@@ -122,6 +132,27 @@ bool ProjectOperator::ensureProjectSaved() {
         }
     }
 
+    return true;
+}
+
+bool ProjectOperator::saveProject() {
+    if (currentProject->filename().isEmpty()) {
+        auto projDir = currentProject->workDir();
+        auto projPath = dp->saveFile(tr("mainWindow_projectFilterDesc") + " " + ProjectFilter, tr("mainWindow_saveProject"), projDir);
+
+        if (projPath.isEmpty()) {
+            return false;
+        }
+
+        if (QFileInfo(projPath).absoluteDir() != projDir) {
+            dp->warning(tr("mainWindow_LabelQ"), tr("mainWindow_imagesAndProjectMustBeInTheSameDir"));
+            return saveProject();
+        }
+
+        currentProject->setFilename(projPath);
+    }
+
+    currentProject->save();
     return true;
 }
 
@@ -140,3 +171,4 @@ void ProjectOperator::setPageSelection(int index) {
 Project *ProjectOperator::project() {
     return currentProject;
 }
+
