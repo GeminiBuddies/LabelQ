@@ -6,6 +6,7 @@
 #include <QBitArray>
 #include <QString>
 #include <QPixmap>
+#include <QJsonObject>
 
 class Page {
 private:
@@ -34,4 +35,7 @@ public:
     virtual void updateLabelContent(int at, const QString &content);
 
     virtual Label& operator[](int at);
+
+public:
+    static Page* fromJson(const QJsonObject &json, const QString &baseDir);
 };

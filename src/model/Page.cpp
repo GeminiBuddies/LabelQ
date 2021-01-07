@@ -36,3 +36,7 @@ void Page::updateLabelContent(int at, const QString &content) {
 Label &Page::operator[](int at) {
     return labels[at];
 }
+
+Page *Page::fromJson(const QJsonObject &json, const QString &baseDir) {
+    return nullptr;
+}

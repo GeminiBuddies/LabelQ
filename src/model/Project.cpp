@@ -2,6 +2,7 @@
 
 #include <model/builtin/TutorialProject.h>
 #include <model/builtin/RealProject.h>
+#include <Definitions.h>
 
 Project::~Project() {
     for (auto p: pages) {
@@ -22,7 +23,7 @@ bool Project::canSave() {
 }
 
 void Project::save() {
-
+    never();
 }
 
 bool Project::needDispose() {
@@ -33,13 +34,17 @@ QString Project::workDir() {
     return QString();
 }
 
-void Project::setWorkDir(const QString &) {}
+void Project::setWorkDir(const QString &) {
+    never();
+}
 
 QString Project::filename() {
     return QString();
 }
 
-void Project::setFilename(const QString &) {}
+void Project::setFilename(const QString &) {
+    never();
+}
 
 Page *Project::page(int at) {
     return pages.at(at);

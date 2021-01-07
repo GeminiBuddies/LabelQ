@@ -1,10 +1,13 @@
 #include <model/builtin/RealProject.h>
 
+#include <Definitions.h>
+
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 
 RealProject::~RealProject() {
     for (auto page: pages) {
@@ -74,9 +77,24 @@ RealProject *RealProject::fromFile(const QString &path) {
         return nullptr;
     }
 
-    assert(false); // todo: implement
+    auto pageArray = pages.toArray();
+    for (const auto &item: pageArray) {
+        if (!item.isObject()) {
+            continue;
+        }
+
+        auto page = Page::fromJson(item.toObject(), proj->projDir);
+
+        if (page == nullptr) {
+            continue;
+        }
+
+        proj->addPage(page);
+    }
+
+    return proj;
 }
 
 void RealProject::toFile(const QString &path, RealProject *proj) {
-
+    not_implemented();
 }

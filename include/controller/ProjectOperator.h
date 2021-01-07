@@ -43,8 +43,6 @@ private:
     // save the current project
     bool saveProject();
 
-    void addPagesFromFiles(const QStringList &files);
-
 signals:
     void projectReplaced();
     void pageSelectionUpdated(Page *currentPage);

@@ -21,3 +21,6 @@ public:
     inline auto begin() { return _obj.rbegin(); }
     inline auto end() { return _obj.rend(); }
 };
+
+#define never() assert(false)
+#define not_implemented() assert(false)
