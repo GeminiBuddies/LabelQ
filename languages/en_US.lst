@@ -16,3 +16,10 @@ mainWindow_actionFeedback &Feedback...
 mainWindow_textTable_textHeader Translation
 mainWindow_aboutTitle About
 mainWindow_aboutContent <br/>LabelQ %1<br/><br/>Copyright © %2 - %3 GeminiLab<br/>This software is open-source under <a href="https://github.com/GeminiLab/LabelQ/blob/dev/LICENSE">MIT LICENSE</a>.<br/><br/><a href="https://github.com/GeminiLab">GeminiLab on GitHub</a><br/><a href="https://github.com/GeminiLab/LabelQ">LabelQ on GitHub</a>
+    Dialogs
+mainWindow_projectFilterDesc LabelQ Project
+mainWindow_imageFilterDesc images
+mainWindow_LabelQ LabelQ
+mainWindow_imagesAndProjectMustBeInTheSameDir Project file and all its image file must be in the same directory.
+mainWindow_saveChangesTitle Saving Changes
+mainWindow_saveChanges There are unsaved changes in current project, would you like to save them?

@@ -17,3 +17,10 @@ mainWindow_actionFeedback
 mainWindow_textTable_textHeader
 mainWindow_aboutTitle
 mainWindow_aboutContent
+    Dialogs
+mainWindow_projectFilterDesc
+mainWindow_imageFilterDesc
+mainWindow_LabelQ
+mainWindow_imagesAndProjectMustBeInTheSameDir
+mainWindow_saveChangesTitle
+mainWindow_saveChanges

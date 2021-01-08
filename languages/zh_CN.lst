@@ -16,3 +16,10 @@ mainWindow_actionFeedback 反馈(&F)...
 mainWindow_textTable_textHeader 翻译
 mainWindow_aboutTitle 关于
 mainWindow_aboutContent <br/>LabelQ %1<br/><br/>版权所有 © %2 - %3 GeminiLab<br/>本软件以<a href="https://github.com/GeminiLab/LabelQ/blob/dev/LICENSE">MIT许可证</a>开源。<br/><br/><a href="https://github.com/GeminiLab">Github上的GeminiLab</a><br/><a href="https://github.com/GeminiLab/LabelQ">Github上的LabelQ</a>
+    Dialogs
+mainWindow_projectFilterDesc LabelQ项目
+mainWindow_imageFilterDesc 图片
+mainWindow_LabelQ LabelQ
+mainWindow_imagesAndProjectMustBeInTheSameDir 项目和项目下的所有图片必须位于同一目录下。
+mainWindow_saveChangesTitle 保存更改
+mainWindow_saveChanges 项目有未保存的更改，是否保存？
