@@ -4,18 +4,18 @@
 #include <model/builtin/RealProject.h>
 #include <Definitions.h>
 
-Project::~Project() {
-    for (auto p: pages) {
-        delete p;
-    }
-}
-
 bool Project::isDirty() {
     for (auto p: pages) {
         if (p->isDirty()) return true;
     }
 
     return false;
+}
+
+void Project::markSaved() {
+    for (auto p: pages) {
+        p->markSaved();
+    }
 }
 
 bool Project::canSave() {

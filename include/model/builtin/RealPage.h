@@ -11,6 +11,7 @@ private:
 
 public:
     RealPage(const QString &path);
+    ~RealPage() override = default;
 
     QString name() override;
     QPixmap pixmap() override;

@@ -2,6 +2,7 @@
 #include <Definitions.h>
 
 #include <QJsonArray>
+#include <QDir>
 
 RealPage::RealPage(const QString &path) : imageFile(path) { }
 
@@ -22,24 +23,59 @@ void RealPage::postHidden() {
 }
 
 RealPage *RealPage::fromJsonObject(const QJsonObject &json, const QString &baseDir) {
-    not_implemented();
+    if (!json.contains(LABELQ_PROJ_KEY_FILE) || !json.contains(LABELQ_PROJ_KEY_LABELS)) {
+        return nullptr;
+    }
+
+    auto filename = json[LABELQ_PROJ_KEY_FILE];
+    auto labels = json[LABELQ_PROJ_KEY_LABELS];
+
+    if (!filename.isString() || !labels.isArray()) {
+        return nullptr;
+    }
+
+    auto page = new RealPage(QDir(baseDir).filePath(filename.toString()));
+
+    for (const auto &l: labels.toArray()) {
+        if (!l.isObject()) {
+            continue;
+        }
+
+        auto label = l.toObject();
+
+        if (!label.contains(LABELQ_PROJ_KEY_X) || !label.contains(LABELQ_PROJ_KEY_Y) || !label.contains(LABELQ_PROJ_KEY_T)) {
+            continue;
+        }
+
+        auto x = label[LABELQ_PROJ_KEY_X];
+        auto y = label[LABELQ_PROJ_KEY_Y];
+        auto t = label[LABELQ_PROJ_KEY_T];
+
+        if (!x.isDouble() || !y.isDouble() || !t.isString()) {
+            continue;
+        }
+
+        page->addLabel(Label(QPoint(x.toInt(), y.toInt()), t.toString()));
+    }
+
+    return page;
 }
 
 QJsonObject RealPage::toJsonObject() {
     QJsonObject obj;
     QJsonArray labelsArr;
 
-    obj["file"] = imageFile.fileName();
+    obj[LABELQ_PROJ_KEY_FILE] = imageFile.fileName();
 
     for (const auto &label: labels) {
         labelsArr.append(QJsonObject{
-            { "x", label.position.x() },
-            { "y", label.position.y() },
-            { "t", label.translation }
+            { LABELQ_PROJ_KEY_X, label.position.x() },
+            { LABELQ_PROJ_KEY_Y, label.position.y() },
+            { LABELQ_PROJ_KEY_T, label.translation }
         });
     }
 
-    obj["labels"] = labelsArr;
+    obj[LABELQ_PROJ_KEY_LABELS] = labelsArr;
 
     return obj;
 }

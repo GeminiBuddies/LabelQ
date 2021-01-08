@@ -10,10 +10,11 @@ protected:
     QVector<Page*> pages;
 
 public:
-    virtual ~Project();
+    virtual ~Project() = default;
 
     // project life-cycle management
     virtual bool isDirty();
+    virtual void markSaved();
     virtual bool canSave();
     virtual void save();
     virtual bool needDispose();

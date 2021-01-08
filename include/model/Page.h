@@ -26,6 +26,7 @@ public:
     virtual void postHidden() = 0;
 
     virtual bool isDirty();
+    virtual void markSaved();
     virtual QJsonObject toJsonObject();
 
     virtual void addLabel(Label &&label);
@@ -34,8 +35,6 @@ public:
     virtual void removeLabel(int at);
     virtual int labelCount();
     virtual void updateLabelContent(int at, const QString &content);
-
-    virtual Label& operator[](int at);
 
 public:
     static Page* fromJson(const QJsonObject &json, const QString &baseDir);

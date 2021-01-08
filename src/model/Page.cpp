@@ -6,6 +6,10 @@ bool Page::isDirty() {
     return dirty;
 }
 
+void Page::markSaved() {
+    dirty = false;
+}
+
 QJsonObject Page::toJsonObject() {
     never();
 }
@@ -21,7 +25,6 @@ void Page::addLabel(const Label &label) {
 }
 
 Label Page::label(int at) {
-    dirty = true;
     return labels.at(at);
 }
 
@@ -37,10 +40,6 @@ int Page::labelCount() {
 void Page::updateLabelContent(int at, const QString &content) {
     dirty = true;
     labels[at].translation = content;
-}
-
-Label &Page::operator[](int at) {
-    return labels[at];
 }
 
 Page *Page::fromJson(const QJsonObject &json, const QString &baseDir) {

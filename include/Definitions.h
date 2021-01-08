@@ -24,3 +24,10 @@ public:
 
 #define never() assert(false)
 #define not_implemented() assert(false)
+
+#define LABELQ_PROJ_KEY_PAGES "pages"
+#define LABELQ_PROJ_KEY_FILE "file"
+#define LABELQ_PROJ_KEY_X "x"
+#define LABELQ_PROJ_KEY_Y "y"
+#define LABELQ_PROJ_KEY_T "t"
+#define LABELQ_PROJ_KEY_LABELS "labels"

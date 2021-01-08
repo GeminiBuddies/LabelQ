@@ -29,6 +29,7 @@ bool RealProject::canSave() {
 
 void RealProject::save() {
     RealProject::toFile(projFilePath, this);
+    markSaved();
 }
 
 bool RealProject::needDispose() {
@@ -63,16 +64,17 @@ RealProject *RealProject::fromFile(const QString &path) {
 
     QJsonParseError parseError{};
     auto doc = QJsonDocument::fromJson(projFile.readAll(), &parseError);
+    projFile.close();
     if (parseError.error != QJsonParseError::NoError || !doc.isObject()) {
         return nullptr;
     }
 
     auto obj = doc.object();
-    if (!obj.contains("pages")) {
+    if (!obj.contains(LABELQ_PROJ_KEY_PAGES)) {
         return nullptr;
     }
 
-    auto pages = obj["pages"];
+    auto pages = obj[LABELQ_PROJ_KEY_PAGES];
     if (!pages.isArray()) {
         return nullptr;
     }
@@ -92,6 +94,8 @@ RealProject *RealProject::fromFile(const QString &path) {
         proj->addPage(page);
     }
 
+    proj->markSaved();
+
     return proj;
 }
 
@@ -103,10 +107,14 @@ void RealProject::toFile(const QString &path, RealProject *proj) {
         pagesArr.append(page->toJsonObject());
     }
 
-    projObj["pages"] = pagesArr;
+    projObj[LABELQ_PROJ_KEY_PAGES] = pagesArr;
 
     QJsonDocument doc(projObj);
-    qDebug() << doc;
-
-
+    QFile projFile(path);
+    if (projFile.open(QIODevice::WriteOnly)) {
+        projFile.write(doc.toJson());
+        projFile.close();
+    } else {
+        not_implemented();
+    }
 }

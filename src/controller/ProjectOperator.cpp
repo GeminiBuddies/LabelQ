@@ -98,9 +98,7 @@ bool ProjectOperator::newProject() {
 }
 
 bool ProjectOperator::replaceProject(Project *project) {
-    if (currentProject != nullptr && currentProject->needDispose()) {
-        Project::dispose(currentProject);
-    }
+    auto oldProject = currentProject;
 
     currentProject = nullptr;
     currentPageIndex = -1;
@@ -111,6 +109,10 @@ bool ProjectOperator::replaceProject(Project *project) {
     currentProject = project;
 
     emit projectReplaced();
+
+    if (oldProject != nullptr && oldProject->needDispose()) {
+        Project::dispose(oldProject);
+    }
 
     return true;
 }
