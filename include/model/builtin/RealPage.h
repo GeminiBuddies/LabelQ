@@ -17,4 +17,7 @@ public:
 
     void preDisplay() override;
     void postHidden() override;
+
+    static RealPage* fromJsonObject(const QJsonObject &json, const QString &baseDir);
+    QJsonObject toJsonObject() override;
 };

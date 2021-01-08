@@ -130,7 +130,7 @@ void MainWindow::openProject() {
 }
 
 void MainWindow::saveProject() {
-
+    prop->saveProject();
 }
 
 void MainWindow::saveProjectAs() {

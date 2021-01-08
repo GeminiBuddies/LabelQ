@@ -96,5 +96,17 @@ RealProject *RealProject::fromFile(const QString &path) {
 }
 
 void RealProject::toFile(const QString &path, RealProject *proj) {
-    not_implemented();
+    QJsonObject projObj;
+    QJsonArray pagesArr;
+
+    for (const auto &page: proj->pages) {
+        pagesArr.append(page->toJsonObject());
+    }
+
+    projObj["pages"] = pagesArr;
+
+    QJsonDocument doc(projObj);
+    qDebug() << doc;
+
+
 }

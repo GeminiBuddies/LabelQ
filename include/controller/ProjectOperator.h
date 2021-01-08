@@ -28,6 +28,7 @@ public:
     bool closeProject();
     bool newProject();
     bool openProject();
+    bool saveProject();
 
     void addPage();
 
@@ -40,8 +41,6 @@ private:
     //   b) all changes have been discarded. or
     //   c) no project open
     bool ensureProjectSaved();
-    // save the current project
-    bool saveProject();
 
 signals:
     void projectReplaced();

@@ -1,7 +1,13 @@
 #include <model/Page.h>
+#include <model/builtin/RealPage.h>
+#include <Definitions.h>
 
 bool Page::isDirty() {
     return dirty;
+}
+
+QJsonObject Page::toJsonObject() {
+    never();
 }
 
 void Page::addLabel(Label &&label) {
@@ -38,5 +44,5 @@ Label &Page::operator[](int at) {
 }
 
 Page *Page::fromJson(const QJsonObject &json, const QString &baseDir) {
-    return nullptr;
+    return RealPage::fromJsonObject(json, baseDir);
 }

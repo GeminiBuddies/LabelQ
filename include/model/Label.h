@@ -10,5 +10,9 @@ struct Label {
     QString translation;
 
     Label() = default;
+    Label(const Label &) = default;
+    Label(Label &&label) noexcept;
     Label(const QPoint &position, const QString &translation);
+
+    Label& operator=(const Label &) = default;
 };

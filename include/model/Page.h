@@ -26,6 +26,7 @@ public:
     virtual void postHidden() = 0;
 
     virtual bool isDirty();
+    virtual QJsonObject toJsonObject();
 
     virtual void addLabel(Label &&label);
     virtual void addLabel(const Label &label);
