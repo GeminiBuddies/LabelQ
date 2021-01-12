@@ -3,6 +3,7 @@
 #include <QScrollArea>
 #include <QWheelEvent>
 
+// TODO: rename this class to WorkAreaContainer, or something else...
 class ZoomScrollArea : public QScrollArea {
     Q_OBJECT
 
@@ -18,4 +19,7 @@ protected:
 signals:
     void zoom(bool in);
     void zoomReset();
+
+    void prev();
+    void next();
 };

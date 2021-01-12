@@ -98,6 +98,8 @@ void MainWindow::customUiSetup() {
     QObject::connect(ui->mainSplitter, SIGNAL(splitterMoved(int, int)), this, SLOT(adjustWorkAreaMargin()));
     QObject::connect(ui->scrollArea, SIGNAL(zoom(bool)), ui->workArea, SLOT(zoom(bool)));
     QObject::connect(ui->scrollArea, SIGNAL(zoomReset()), ui->workArea, SLOT(zoomReset()));
+    QObject::connect(ui->scrollArea, SIGNAL(prev()), this, SLOT(selectPrevPage()));
+    QObject::connect(ui->scrollArea, SIGNAL(next()), this, SLOT(selectNextPage()));
     QObject::connect(ui->workArea, SIGNAL(sizeChanged()), this, SLOT(adjustWorkAreaMargin()));
 
     QScroller::grabGesture(ui->scrollArea, QScroller::RightMouseButtonGesture);
@@ -119,6 +121,14 @@ void MainWindow::customUiSetup() {
     QObject::connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(exitProgram()));
     QObject::connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(showAboutMessage()));
     QObject::connect(ui->actionAboutQt, SIGNAL(triggered()), this, SLOT(showAboutQtMessage()));
+}
+
+void MainWindow::selectPrevPage() {
+    prop->selectPrevPage();
+}
+
+void MainWindow::selectNextPage() {
+    prop->selectNextPage();
 }
 
 void MainWindow::newProject() {

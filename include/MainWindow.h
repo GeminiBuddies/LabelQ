@@ -27,6 +27,9 @@ private slots:
     void adjustWorkAreaMargin();
     void customUiSetup();
 
+    void selectPrevPage();
+    void selectNextPage();
+
 private slots:
     // menu handlers
     void newProject();

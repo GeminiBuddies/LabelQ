@@ -51,6 +51,8 @@ private:
     int currentPageIndex;
 
 public:
+    void selectPrevPage();
+    void selectNextPage();
     void setPageSelection(int index);
 
 public:
