@@ -159,7 +159,7 @@ bool ProjectOperator::saveProject() {
 }
 
 void ProjectOperator::selectPrevPage() {
-    if (currentProject != nullptr) {
+    if (currentProject == nullptr) {
         return;
     }
 
@@ -169,7 +169,7 @@ void ProjectOperator::selectPrevPage() {
 }
 
 void ProjectOperator::selectNextPage() {
-    if (currentProject != nullptr) {
+    if (currentProject == nullptr) {
         return;
     }
 
