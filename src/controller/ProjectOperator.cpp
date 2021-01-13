@@ -159,13 +159,21 @@ bool ProjectOperator::saveProject() {
 }
 
 void ProjectOperator::selectPrevPage() {
-    if (currentProject != nullptr && currentPageIndex > 0) {
+    if (currentProject != nullptr) {
+        return;
+    }
+
+    if (currentPageIndex > 0 && currentPageIndex <= currentProject->pageCount() - 1) {
         setPageSelection(currentPageIndex - 1);
     }
 }
 
 void ProjectOperator::selectNextPage() {
-    if (currentProject != nullptr && currentPageIndex < currentProject->pageCount() - 1) {
+    if (currentProject != nullptr) {
+        return;
+    }
+
+    if (currentPageIndex >= 0 && currentPageIndex < currentProject->pageCount() - 1) {
         setPageSelection(currentPageIndex + 1);
     }
 }
