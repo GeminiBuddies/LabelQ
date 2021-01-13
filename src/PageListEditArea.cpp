@@ -77,6 +77,7 @@ PageListEditArea::PageListEditArea(QWidget *parent) : QWidget(parent) {
     op = nullptr;
     disablePageEditing();
 
+    suppressExternalSignal = false;
     // useless, just to suppress linter warning
     pageEditEnabled = false;
 }
@@ -197,12 +198,14 @@ void PageListEditArea::toBottom() {
 void PageListEditArea::pageListSelectionItemChanged() {
     auto selection = pageList->selectionModel()->selectedIndexes();
 
+    suppressExternalSignal = true;
     if (selection.length() != 1) {
         op->setPageSelection(-1);
     } else {
         auto index = selection[0].row();
         op->setPageSelection(index);
     }
+    suppressExternalSignal = false;
 
     auto anySelected = selection.length() > 0;
     pageListRemove->setEnabled(anySelected && op->project() != nullptr && op->project()->canAddAndRemovePages());
@@ -210,8 +213,20 @@ void PageListEditArea::pageListSelectionItemChanged() {
     pageListToBottom->setEnabled(anySelected);
 }
 
+void PageListEditArea::pageSelectionChanged() {
+    if (suppressExternalSignal) {
+        return;
+    }
+
+    int index = op->pageIndex();
+    if (index >= 0) {
+        pageList->item(index)->setSelected(true);
+    }
+}
+
 void PageListEditArea::setProjectOperator(ProjectOperator *pOperator) {
     this->op = pOperator;
 
     QObject::connect(this->op, SIGNAL(projectReplaced()), this, SLOT(projectReplaced()));
+    QObject::connect(this->op, SIGNAL(pageSelectionUpdated(Page*)), this, SLOT(pageSelectionChanged()));
 }

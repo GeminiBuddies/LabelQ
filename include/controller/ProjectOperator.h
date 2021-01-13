@@ -56,5 +56,7 @@ public:
     void setPageSelection(int index);
 
 public:
-    Project *project();
+    Project* project();
+    Page* page();
+    int pageIndex();
 };

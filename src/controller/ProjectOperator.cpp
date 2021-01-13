@@ -186,3 +186,10 @@ Project *ProjectOperator::project() {
     return currentProject;
 }
 
+Page *ProjectOperator::page() {
+    return currentPage;
+}
+
+int ProjectOperator::pageIndex() {
+    return currentPageIndex;
+}

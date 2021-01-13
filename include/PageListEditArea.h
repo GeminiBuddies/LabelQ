@@ -27,6 +27,7 @@ public:
 private:
     ProjectOperator *op;
     bool pageEditEnabled;
+    bool suppressExternalSignal;
 
     QVector<int> getSelectedPages();
     QVector<int> getSortedSelectedPages();
@@ -41,6 +42,7 @@ private slots:
     void toBottom();
 
     void pageListSelectionItemChanged();
+    void pageSelectionChanged();
 
 public:
     void setProjectOperator(ProjectOperator *pOperator);
