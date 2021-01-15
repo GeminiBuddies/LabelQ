@@ -14,6 +14,10 @@ TutorialProject::TutorialProject() {
 
 TutorialProject::~TutorialProject() { }
 
+bool TutorialProject::canAddAndRemovePages() {
+    return false;
+}
+
 void TutorialProject::clear() {
     pages = originalPages;
 

@@ -9,5 +9,7 @@ public:
     TutorialProject();
     ~TutorialProject() override;
 
+    bool canAddAndRemovePages() override;
+
     void clear();
 };
