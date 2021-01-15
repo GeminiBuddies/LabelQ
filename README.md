@@ -2,7 +2,7 @@
 
 > Yet another manga translation utility.
 
-> Fast, simple, cross-platform
+> Fast, Simple, Cross-platform
 
 ## Acknowledgment
 
