@@ -3,6 +3,7 @@
 #include <model/Project.h>
 #include <model/builtin/RealProject.h>
 #include <model/builtin/RealPage.h>
+#include <Definitions.h>
 
 ProjectOperator::ProjectOperator(DialogProvider *dp) {
     this->dp = dp;
@@ -52,18 +53,6 @@ bool ProjectOperator::openProject() {
     replaceProject(proj);
 
     return true;
-}
-
-void ProjectOperator::addPage() {
-    assert(currentProject != nullptr && currentProject->canAddAndRemovePages());
-
-    auto images = dp->openFiles(tr("mainWindow_imageFilterDesc") + " " + ImageFilter);
-
-    if (images.length() <= 0) {
-        return;
-    }
-
-    assert(false); // todo: implement
 }
 
 bool ProjectOperator::newProject() {
@@ -188,6 +177,43 @@ void ProjectOperator::setPageSelection(int index) {
     }
 
     emit pageSelectionUpdated(currentPage);
+}
+
+void ProjectOperator::movePage(int from, int to) {
+    assert(currentProject != nullptr);
+
+    currentProject->movePage(from, to);
+
+    emit pageListUpdated();
+}
+
+void ProjectOperator::addPage() {
+    assert(currentProject != nullptr && currentProject->canAddAndRemovePages());
+
+    auto projDir = currentProject->workDir();
+    auto images = dp->openFiles(tr("mainWindow_imageFilterDesc") + " " + ImageFilter, QString(), projDir);
+
+    if (images.length() <= 0) {
+        return;
+    }
+    if (std::any_of(images.begin(), images.end(), [projDir](QString &p){ return QFileInfo(p).absoluteDir() != projDir; })) {
+        dp->warning(tr("mainWindow_LabelQ"), tr("mainWindow_imagesAndProjectMustBeInTheSameDir"));
+        return;
+    }
+
+    for (auto &image: images) {
+        currentProject->addPage(new RealPage(image));
+    }
+
+    emit pageListUpdated();
+}
+
+void ProjectOperator::removePage(const QBitArray &removed) {
+    assert(currentProject != nullptr && currentProject->canAddAndRemovePages());
+
+    currentProject->removePage(removed);
+
+    emit pageListUpdated();
 }
 
 Project *ProjectOperator::project() {

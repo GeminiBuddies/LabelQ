@@ -75,7 +75,11 @@ void Project::addPage(Page *page) {
 }
 
 void Project::removePage(const QBitArray &removed) {
-
+    for (int i = pages.count() - 1; i >= 0; --i) {
+        if (removed.testBit(i)) {
+            pages.remove(i);
+        }
+    }
 }
 
 Project *Project::fromFile(const QString &path) {

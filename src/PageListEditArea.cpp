@@ -63,6 +63,8 @@ PageListEditArea::PageListEditArea(QWidget *parent) : QWidget(parent) {
 
     QObject::connect(pageListEdit, SIGNAL(clicked()), this, SLOT(togglePageEditing()));
     QObject::connect(pageListEditDone, SIGNAL(clicked()), this, SLOT(togglePageEditing()));
+    QObject::connect(pageListAdd, SIGNAL(clicked()), this, SLOT(addPage()));
+    QObject::connect(pageListRemove, SIGNAL(clicked()), this, SLOT(removePage()));
     QObject::connect(pageListToTop, SIGNAL(clicked()), this, SLOT(toTop()));
     QObject::connect(pageListToBottom, SIGNAL(clicked()), this, SLOT(toBottom()));
 
@@ -71,7 +73,9 @@ PageListEditArea::PageListEditArea(QWidget *parent) : QWidget(parent) {
         assert(start == end);
         assert(start != row);
 
-        op->project()->movePage(start, row > start ? row - 1 : row);
+        suppressExternalSignal = true;
+        op->movePage(start, row > start ? row - 1 : row);
+        suppressExternalSignal = false;
     });
 
     op = nullptr;
@@ -161,38 +165,54 @@ void PageListEditArea::disablePageEditing() {
     togglePageEditing();
 }
 
+void PageListEditArea::addPage() {
+    op->addPage();
+}
+
+void PageListEditArea::removePage() {
+    QBitArray removed(op->project()->pageCount());
+
+    for (auto page: getSortedSelectedPages()) {
+        removed.setBit(page);
+    }
+
+    op->removePage(removed);
+}
+
 void PageListEditArea::toTop() {
     auto moved = 0;
-    auto project = op->project();
+    suppressExternalSignal = true;
     for (auto row: reversed(getSortedSelectedPages())) {
         row += moved;
 
         auto item = pageList->takeItem(row);
         pageList->insertItem(0, item);
-        project->movePage(row, 0);
+        op->movePage(row, 0);
 
         item->setSelected(true);
 
         ++moved;
     }
+    suppressExternalSignal = false;
 }
 
 void PageListEditArea::toBottom() {
     auto end = pageList->count() - 1;
 
     auto moved = 0;
-    auto project = op->project();
+    suppressExternalSignal = true;
     for (auto row: getSortedSelectedPages()) {
         row -= moved;
 
         auto item = pageList->takeItem(row);
         pageList->insertItem(end, item);
-        project->movePage(row, end);
+        op->movePage(row, end);
 
         item->setSelected(true);
 
         ++moved;
     }
+    suppressExternalSignal = false;
 }
 
 void PageListEditArea::pageListSelectionItemChanged() {

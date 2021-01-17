@@ -30,8 +30,6 @@ public:
     bool openProject();
     bool saveProject();
 
-    void addPage();
-
 private:
     bool replaceProject(Project *project);
 
@@ -45,6 +43,7 @@ private:
 signals:
     void projectReplaced();
     void pageSelectionUpdated(Page *currentPage);
+    void pageListUpdated();
 
 private:
     Page *currentPage;
@@ -54,6 +53,10 @@ public:
     void selectPrevPage();
     void selectNextPage();
     void setPageSelection(int index);
+
+    void movePage(int from, int to);
+    void addPage();
+    void removePage(const QBitArray &removed);
 
 public:
     Project* project();

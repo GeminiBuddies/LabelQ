@@ -38,6 +38,8 @@ private slots:
     void togglePageEditing();
     void disablePageEditing();
 
+    void addPage();
+    void removePage();
     void toTop();
     void toBottom();
 
