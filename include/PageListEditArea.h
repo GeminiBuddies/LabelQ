@@ -32,6 +32,8 @@ private:
     QVector<int> getSelectedPages();
     QVector<int> getSortedSelectedPages();
 
+    void updatePageList();
+
 private slots:
     void projectReplaced();
 
@@ -45,6 +47,7 @@ private slots:
 
     void pageListSelectionItemChanged();
     void pageSelectionChanged();
+    void pageListUpdated();
 
 public:
     void setProjectOperator(ProjectOperator *pOperator);

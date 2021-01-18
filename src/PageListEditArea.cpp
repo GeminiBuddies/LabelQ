@@ -102,7 +102,7 @@ QVector<int> PageListEditArea::getSortedSelectedPages() {
     return selectedRows;
 }
 
-void PageListEditArea::projectReplaced() {
+void PageListEditArea::updatePageList() {
     auto project = op->project();
 
     int pageCount = pageList->count();
@@ -110,7 +110,6 @@ void PageListEditArea::projectReplaced() {
         delete pageList->takeItem(i);
     }
 
-    disablePageEditing();
     if (project == nullptr) {
         pageList->setEnabled(false);
     } else {
@@ -121,6 +120,14 @@ void PageListEditArea::projectReplaced() {
             pageList->addItem(project->page(i)->name());
         }
     }
+}
+
+void PageListEditArea::projectReplaced() {
+    disablePageEditing();
+
+    updatePageList();
+
+    auto project = op->project();
 
     pageListEdit->setVisible(project != nullptr && project->canReorderPages());
     pageListAdd->setEnabled(project != nullptr && project->canAddAndRemovePages());
@@ -244,9 +251,18 @@ void PageListEditArea::pageSelectionChanged() {
     }
 }
 
+void PageListEditArea::pageListUpdated() {
+    if (suppressExternalSignal) {
+        return;
+    }
+
+    updatePageList();
+}
+
 void PageListEditArea::setProjectOperator(ProjectOperator *pOperator) {
     this->op = pOperator;
 
     QObject::connect(this->op, SIGNAL(projectReplaced()), this, SLOT(projectReplaced()));
     QObject::connect(this->op, SIGNAL(pageSelectionUpdated(Page*)), this, SLOT(pageSelectionChanged()));
+    QObject::connect(this->op, SIGNAL(pageListUpdated()), this, SLOT(pageListUpdated()));
 }
