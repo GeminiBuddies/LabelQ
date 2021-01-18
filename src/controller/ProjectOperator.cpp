@@ -184,6 +184,21 @@ void ProjectOperator::movePage(int from, int to) {
 
     currentProject->movePage(from, to);
 
+    if (currentPageIndex == from) {
+        currentPageIndex = to;
+    } else {
+        auto l = std::min(from, to);
+        auto u = std::max(from, to);
+
+        if (l <= currentPageIndex && currentPageIndex <= u) {
+            if (from <= to) {
+                currentPageIndex--;
+            } else {
+                currentPageIndex++;
+            }
+        }
+    }
+
     emit pageListUpdated();
 }
 
@@ -196,6 +211,7 @@ void ProjectOperator::addPage() {
     if (images.length() <= 0) {
         return;
     }
+
     if (std::any_of(images.begin(), images.end(), [projDir](QString &p){ return QFileInfo(p).absoluteDir() != projDir; })) {
         dp->warning(tr("mainWindow_LabelQ"), tr("mainWindow_imagesAndProjectMustBeInTheSameDir"));
         return;
@@ -205,6 +221,9 @@ void ProjectOperator::addPage() {
         currentProject->addPage(new RealPage(image));
     }
 
+    // TODO: replace it with a better choice
+    setPageSelection(-1);
+
     emit pageListUpdated();
 }
 
@@ -212,6 +231,9 @@ void ProjectOperator::removePage(const QBitArray &removed) {
     assert(currentProject != nullptr && currentProject->canAddAndRemovePages());
 
     currentProject->removePage(removed);
+
+    // TODO: replace it with a better choice
+    setPageSelection(-1);
 
     emit pageListUpdated();
 }

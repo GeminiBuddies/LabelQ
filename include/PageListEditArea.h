@@ -28,6 +28,7 @@ private:
     ProjectOperator *op;
     bool pageEditEnabled;
     bool suppressExternalSignal;
+    bool suppressUIEvents;
 
     QVector<int> getSelectedPages();
     QVector<int> getSortedSelectedPages();

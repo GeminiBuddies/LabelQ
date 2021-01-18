@@ -50,9 +50,9 @@ void ZoomScrollArea::keyPressEvent(QKeyEvent *ev) {
 
     while (ev->modifiers() == Qt::ShiftModifier) {
         if (key == Qt::Key_Left) {
-            emit next();
-        } else if (key == Qt::Key_Right) {
             emit prev();
+        } else if (key == Qt::Key_Right) {
+            emit next();
         } else {
             break;
         }

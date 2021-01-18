@@ -72,6 +72,7 @@ PageListEditArea::PageListEditArea(QWidget *parent) : QWidget(parent) {
     QObject::connect(pageList->model(), &QAbstractItemModel::rowsMoved, [this](const QModelIndex &parent, int start, int end, const QModelIndex &destination, int row) {
         assert(start == end);
         assert(start != row);
+        assert(!suppressUIEvents);
 
         suppressExternalSignal = true;
         op->movePage(start, row > start ? row - 1 : row);
@@ -82,6 +83,7 @@ PageListEditArea::PageListEditArea(QWidget *parent) : QWidget(parent) {
     disablePageEditing();
 
     suppressExternalSignal = false;
+    suppressUIEvents = false;
     // useless, just to suppress linter warning
     pageEditEnabled = false;
 }
@@ -189,6 +191,7 @@ void PageListEditArea::removePage() {
 void PageListEditArea::toTop() {
     auto moved = 0;
     suppressExternalSignal = true;
+    suppressUIEvents = true;
     for (auto row: reversed(getSortedSelectedPages())) {
         row += moved;
 
@@ -200,6 +203,7 @@ void PageListEditArea::toTop() {
 
         ++moved;
     }
+    suppressUIEvents = false;
     suppressExternalSignal = false;
 }
 
@@ -208,6 +212,7 @@ void PageListEditArea::toBottom() {
 
     auto moved = 0;
     suppressExternalSignal = true;
+    suppressUIEvents = true;
     for (auto row: getSortedSelectedPages()) {
         row -= moved;
 
@@ -219,10 +224,15 @@ void PageListEditArea::toBottom() {
 
         ++moved;
     }
+    suppressUIEvents = false;
     suppressExternalSignal = false;
 }
 
 void PageListEditArea::pageListSelectionItemChanged() {
+    if (suppressUIEvents) {
+        return;
+    }
+
     auto selection = pageList->selectionModel()->selectedIndexes();
 
     suppressExternalSignal = true;
@@ -245,10 +255,15 @@ void PageListEditArea::pageSelectionChanged() {
         return;
     }
 
+    suppressUIEvents = true;
     int index = op->pageIndex();
     if (index >= 0) {
+        pageList->clearSelection();
         pageList->item(index)->setSelected(true);
+    } else {
+        pageList->clearSelection();
     }
+    suppressUIEvents = false;
 }
 
 void PageListEditArea::pageListUpdated() {
