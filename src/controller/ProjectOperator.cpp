@@ -217,14 +217,15 @@ void ProjectOperator::addPage() {
         return;
     }
 
+    auto oldPageCount = currentProject->pageCount();
+
     for (auto &image: images) {
         currentProject->addPage(new RealPage(image));
     }
 
-    // TODO: replace it with a better choice
-    setPageSelection(-1);
-
     emit pageListUpdated();
+
+    setPageSelection(oldPageCount);
 }
 
 void ProjectOperator::removePage(const QBitArray &removed) {
