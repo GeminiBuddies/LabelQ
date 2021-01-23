@@ -112,7 +112,7 @@ void RealProject::toFile(const QString &path, RealProject *proj) {
     QJsonDocument doc(projObj);
     QFile projFile(path);
     if (projFile.open(QIODevice::WriteOnly)) {
-        projFile.write(doc.toJson());
+        projFile.write(doc.toJson(QJsonDocument::Compact));
         projFile.close();
     } else {
         not_implemented();
