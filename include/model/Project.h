@@ -17,6 +17,7 @@ public:
     virtual void markSaved();
     virtual bool canSave();
     virtual void save();
+    virtual void exportProject(const QString &path);
     virtual bool needDispose();
     virtual QString workDir();
     virtual void setWorkDir(const QString &dir);

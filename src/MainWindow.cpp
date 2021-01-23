@@ -42,9 +42,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         if (project == nullptr || !project->canSave()) {
             ui->actionSave->setEnabled(false);
             ui->actionSaveAs->setEnabled(false);
+            ui->menuExport->setEnabled(false); // TODO: maybe a separate switch?
         } else {
             ui->actionSave->setEnabled(true);
             ui->actionSaveAs->setEnabled(true);
+            ui->menuExport->setEnabled(true);
         }
     });
 
@@ -116,6 +118,7 @@ void MainWindow::customUiSetup() {
     QObject::connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(openProject()));
     QObject::connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(saveProject()));;
     QObject::connect(ui->actionSaveAs, SIGNAL(triggered()), this, SLOT(saveProjectAs()));;
+    QObject::connect(ui->actionExportLabelPlus, SIGNAL(triggered()), this, SLOT(exportLabelPlus()));
     QObject::connect(ui->actionClose, SIGNAL(triggered()), this, SLOT(closeProject()));
     QObject::connect(ui->actionShowTutorial, SIGNAL(triggered()), this, SLOT(showTutorial()));
     QObject::connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(exitProgram()));
@@ -145,6 +148,10 @@ void MainWindow::saveProject() {
 
 void MainWindow::saveProjectAs() {
 
+}
+
+void MainWindow::exportLabelPlus() {
+    prop->exportLabelPlusProject();
 }
 
 void MainWindow::closeProject() {

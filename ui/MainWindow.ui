@@ -98,10 +98,17 @@
     <property name="title">
      <string>mainWindow_menuProject</string>
     </property>
+    <widget class="QMenu" name="menuExport">
+     <property name="title">
+      <string>mainWindow_menuExport</string>
+     </property>
+     <addaction name="actionExportLabelPlus"/>
+    </widget>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
+    <addaction name="menuExport"/>
     <addaction name="actionClose"/>
     <addaction name="separator"/>
     <addaction name="actionShowTutorial"/>
@@ -168,6 +175,11 @@
   <action name="actionAboutQt">
    <property name="text">
     <string>mainWindow_actionAboutQt</string>
+   </property>
+  </action>
+  <action name="actionExportLabelPlus">
+   <property name="text">
+    <string>mainWindow_actionExportLabelPlus</string>
    </property>
   </action>
  </widget>

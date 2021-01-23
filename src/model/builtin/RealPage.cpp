@@ -4,6 +4,12 @@
 #include <QJsonArray>
 #include <QDir>
 
+
+void RealPage::calcPicSize() {
+    preDisplay();
+    postHidden();
+}
+
 RealPage::RealPage(const QString &path) : imageFile(path) { }
 
 QString RealPage::name() {
@@ -16,6 +22,9 @@ QPixmap RealPage::pixmap() {
 
 void RealPage::preDisplay() {
     image.load(imageFile.absoluteFilePath());
+
+    picWidth = image.width();
+    picHeight = image.height();
 }
 
 void RealPage::postHidden() {

@@ -16,11 +16,17 @@ protected:
     QVector<Label> labels;
     bool dirty = false;
 
+    int picWidth = -1, picHeight = -1;
+    virtual void calcPicSize();
+
 public:
     virtual ~Page() = default;
 
     virtual QString name() = 0;
     virtual QPixmap pixmap() = 0;
+
+    virtual int width();
+    virtual int height();
 
     virtual void preDisplay() = 0;
     virtual void postHidden() = 0;

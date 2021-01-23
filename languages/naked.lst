@@ -7,6 +7,8 @@ mainWindow_actionNew
 mainWindow_actionOpen
 mainWindow_actionSave
 mainWindow_actionSaveAs
+mainWindow_menuExport
+mainWindow_actionExportLabelPlus
 mainWindow_actionShowTutorial
 mainWindow_actionExit
 mainWindow_menuHelp

@@ -9,8 +9,11 @@ private:
     QFileInfo imageFile;
     QPixmap image;
 
+protected:
+    void calcPicSize() override;
+
 public:
-    RealPage(const QString &path);
+    explicit RealPage(const QString &path);
     ~RealPage() override = default;
 
     QString name() override;

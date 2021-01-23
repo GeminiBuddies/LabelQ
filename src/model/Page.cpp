@@ -2,6 +2,32 @@
 #include <model/builtin/RealPage.h>
 #include <Definitions.h>
 
+void Page::calcPicSize() {
+    if (picWidth >= 0 && picHeight >= 0) {
+        return;
+    }
+
+    auto pic = pixmap();
+    picWidth = pic.width();
+    picHeight = pic.height();
+}
+
+int Page::width() {
+    if (picWidth < 0) {
+        calcPicSize();
+    }
+
+    return picWidth;
+}
+
+int Page::height() {
+    if (picHeight < 0) {
+        calcPicSize();
+    }
+
+    return picHeight;
+}
+
 bool Page::isDirty() {
     return dirty;
 }

@@ -1,6 +1,7 @@
 #include <model/builtin/RealProject.h>
 
 #include <Definitions.h>
+#include <model/builtin/RealPage.h>
 
 #include <QDir>
 #include <QFile>
@@ -8,6 +9,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <cmath>
 
 RealProject::~RealProject() {
     for (auto page: pages) {
@@ -30,6 +32,10 @@ bool RealProject::canSave() {
 void RealProject::save() {
     RealProject::toFile(projFilePath, this);
     markSaved();
+}
+
+void RealProject::exportProject(const QString &path) {
+    toLabelPlus(path, this);
 }
 
 bool RealProject::needDispose() {
@@ -117,4 +123,57 @@ void RealProject::toFile(const QString &path, RealProject *proj) {
     } else {
         not_implemented();
     }
+}
+
+void RealProject::toLabelPlus(const QString &path, RealProject *proj) {
+    const QString pageHeader(">>>>>>>>[%1]<<<<<<<<\n");
+    const QString labelHeader("----------------[%1]----------------[0.%2,0.%3,1]\n");
+
+    QFile exportFile(path);
+    if (!exportFile.open(QIODevice::WriteOnly)) {
+        not_implemented();
+    }
+
+    // write headers
+    exportFile.write("1,0\n");
+    exportFile.write("-\n");
+    exportFile.write("LabelQ\n");
+    exportFile.write("-\n");
+    exportFile.write("Exported from LabelQ\n");
+    exportFile.write("\n");
+    exportFile.write("\n");
+
+    for (auto page: proj->pages) {
+        exportFile.write(pageHeader.arg(page->name()).toUtf8());
+
+        int w = page->width();
+        int h = page->height();
+
+        auto labelCount = page->labelCount();
+        for (int l = 0; l < labelCount; ++l) {
+            auto label = page->label(l);
+
+            int x = label.position.x();
+            int y = label.position.y();
+
+            x = (int)lround(x * 1000.0 / w);
+            y = (int)lround(y * 1000.0 / h);
+
+            if (x >= 1000) {
+                x = 999;
+            }
+
+            if (y >= 1000) {
+                y = 999;
+            }
+
+            exportFile.write(labelHeader.arg(l + 1).arg(x, 3, 10, QChar('0')).arg(y, 3, 10, QChar('0')).toUtf8());
+            exportFile.write(label.translation.toUtf8());
+            exportFile.write("\n\n");
+        }
+
+        exportFile.write("\n");
+    }
+
+    exportFile.close();
 }

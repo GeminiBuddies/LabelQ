@@ -19,6 +19,7 @@ public:
 
     bool canSave() override;
     void save() override;
+    void exportProject(const QString &path) override;
     bool needDispose() override;
     QString workDir() override;
     void setWorkDir(const QString &dir) override;
@@ -27,4 +28,5 @@ public:
 
     static RealProject* fromFile(const QString &path);
     static void toFile(const QString &path, RealProject *proj);
+    static void toLabelPlus(const QString &path, RealProject *proj);
 };

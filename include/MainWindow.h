@@ -36,6 +36,7 @@ private slots:
     void openProject();
     void saveProject();
     void saveProjectAs();
+    void exportLabelPlus();
     void closeProject();
 
     void showTutorial();

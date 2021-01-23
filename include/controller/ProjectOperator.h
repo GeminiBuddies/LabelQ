@@ -17,6 +17,7 @@ private:
 
 public:
     const QString ProjectFilter = "(*.lbq)";
+    const QString LabelPlusProjectFilter = "(*.txt)";
     const QString ImageFilter = "(*.png *.xpm *.jpg)";
 
     explicit ProjectOperator(DialogProvider *dp);
@@ -29,6 +30,7 @@ public:
     bool newProject();
     bool openProject();
     bool saveProject();
+    bool exportLabelPlusProject();
 
 private:
     bool replaceProject(Project *project);

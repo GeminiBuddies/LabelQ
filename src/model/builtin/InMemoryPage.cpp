@@ -1,6 +1,11 @@
 #include <model/builtin/InMemoryPage.h>
 
 
+void InMemoryPage::calcPicSize() {
+    picWidth = pic.width();
+    picHeight = pic.height();
+}
+
 InMemoryPage::InMemoryPage(const QString &name, const QPixmap &pixmap) {
     this->nameStr = name;
     this->pic = pixmap;

@@ -7,6 +7,9 @@ private:
     QString nameStr;
     QPixmap pic;
 
+protected:
+    void calcPicSize() override;
+
 public:
     InMemoryPage(const QString &name, const QPixmap &pixmap);
 

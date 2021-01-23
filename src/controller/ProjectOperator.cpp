@@ -147,6 +147,22 @@ bool ProjectOperator::saveProject() {
     return true;
 }
 
+bool ProjectOperator::exportLabelPlusProject() {
+    assert(currentProject != nullptr && currentProject->canSave());
+
+    auto projDir = currentProject->workDir();
+    auto exportPath = dp->saveFile(tr("mainWindow_labelPlusProjectFilterDesc") + " " + LabelPlusProjectFilter, tr("mainWindow_exportProject"), projDir);
+
+    if (QFileInfo(exportPath).absoluteDir() != projDir) {
+        // TODO: replace it with a better warning message
+        dp->warning(tr("mainWindow_LabelQ"), tr("mainWindow_imagesAndProjectMustBeInTheSameDir"));
+        return false;
+    }
+
+    currentProject->exportProject(exportPath);
+    return true;
+}
+
 void ProjectOperator::selectPrevPage() {
     if (currentProject == nullptr) {
         return;

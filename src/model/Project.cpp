@@ -26,6 +26,10 @@ void Project::save() {
     never();
 }
 
+void Project::exportProject(const QString &path) {
+    never();
+}
+
 bool Project::needDispose() {
     return false;
 }
