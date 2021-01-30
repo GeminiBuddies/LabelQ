@@ -17,7 +17,7 @@
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
-    this->setWindowIcon(loadIconFromFile(":/icons/setting.svg"));
+    this->setWindowIcon(loadIconFromFile(":/icons/icon.svg"));
 
     ui->setupUi(this);
     customUiSetup();

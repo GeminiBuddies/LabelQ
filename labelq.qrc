@@ -9,5 +9,6 @@
         <file alias="to_bottom.svg">resource/icon/essential-regular-36-download.svg</file>
         <file alias="to_top.svg">resource/icon/essential-regular-37-upload.svg</file>
         <file alias="setting.svg">resource/icon/essential-regular-65-cogwheel.svg</file>
+        <file alias="icon.svg">resource/icon/essential-regular-52-photo.svg</file>
     </qresource>
 </RCC>
