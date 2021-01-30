@@ -27,7 +27,7 @@ TranslationEditArea::TranslationEditArea(QWidget *parent) : QWidget(parent) {
     translationTable = new QTableWidgetWithKeySignal(splitter);
 
     translationTable->setColumnCount(2);
-    translationTable->setHorizontalHeaderItem(0, new QTableWidgetItem(tr("ui_main_textTable_header")));
+    translationTable->setHorizontalHeaderItem(0, new QTableWidgetItem(""));
     translationTable->setHorizontalHeaderItem(1, new QTableWidgetItem(""));
     translationTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
     translationTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
@@ -47,6 +47,8 @@ TranslationEditArea::TranslationEditArea(QWidget *parent) : QWidget(parent) {
     splitter->addWidget(translationText);
 
     verticalLayout->addWidget(splitter);
+
+    retranslateUi();
 
     QObject::connect(translationTable, SIGNAL(itemSelectionChanged()), this, SLOT(tableSelectionChanged()));
     QObject::connect(translationTable, SIGNAL(deleteKeyPressed()), this, SLOT(deleteKeyPressed()));
@@ -75,6 +77,10 @@ void TranslationEditArea::setPageOperator(PageOperator *op) {
     QObject::connect(op, SIGNAL(labelContentUpdated(int)), this, SLOT(onLabelContentUpdated(int)));
     QObject::connect(op, SIGNAL(labelSelectionUpdated(QBitArray)), this, SLOT(onLabelSelectionUpdated(QBitArray)));
     QObject::connect(op, SIGNAL(labelDoubleClicked(int)), this, SLOT(onLabelDoubleClicked(int)));
+}
+
+void TranslationEditArea::retranslateUi() {
+    translationTable->horizontalHeaderItem(0)->setText(tr("ui_main_textTable_header"));
 }
 
 void TranslationEditArea::onNewPage() {

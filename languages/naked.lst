@@ -12,6 +12,7 @@ ui_main_menu_project_export_labelPlus
 ui_main_menu_project_close
 ui_main_menu_project_showTutorial
 ui_main_menu_project_exit
+ui_main_menu_languages
 ui_main_menu_help
 ui_main_menu_help_about
 ui_main_menu_help_aboutQt

@@ -51,4 +51,11 @@ private:
     DialogProvider *dp;
     ProjectOperator *prop;
     PageOperator *op;
+
+// Languages
+private:
+    void changeLanguage(const QString &language);
+
+public:
+    void setLanguages(const QStringList &languages);
 };

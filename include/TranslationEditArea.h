@@ -42,6 +42,7 @@ public:
     ~TranslationEditArea() override;
 
     void setPageOperator(PageOperator *op);
+    void retranslateUi();
 
 private:
     bool suppressUIEvents;

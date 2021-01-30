@@ -4,15 +4,11 @@
 #include <Definitions.h>
 #include <model/Project.h>
 #include <lib/IconLoader.h>
-#include <controller/ProjectOperator.h>
+#include <lib/Translator.h>
 #include <controller/PageOperator.h>
 
 #include <QMessageBox>
-#include <QtCore/QTranslator>
 #include <QScroller>
-#include <QDate>
-
-#include <cassert>
 
 using namespace std;
 
@@ -185,4 +181,44 @@ void MainWindow::showAboutMessage() {
 
 void MainWindow::showAboutQtMessage() {
     QMessageBox::aboutQt(this);
+}
+
+void MainWindow::changeLanguage(const QString &language) {
+    loadLanguage(language);
+    ui->retranslateUi(this);
+    ui->translationEditArea->retranslateUi();
+}
+
+void MainWindow::setLanguages(const QStringList &languages) {
+    if (languages.length() <= 0) {
+        ui->menuLanguages->setEnabled(false);
+        return;
+    }
+
+    bool first = true;
+    for (auto &l: languages) {
+        auto parts = l.split(':', Qt::SkipEmptyParts);
+
+        if (parts.length() < 2) {
+            qWarning() << "skipping invalid language specification item: " << l;
+            continue;
+        }
+
+        auto &code = parts.at(0);
+        auto &desc = parts.at(1);
+
+        auto action = new QAction(ui->menuLanguages);
+        action->setObjectName(QString("action") + code);
+        ui->menuLanguages->addAction(action);
+
+        action->setText(desc);
+        QObject::connect(action, &QAction::triggered, [this, code](){
+            changeLanguage(code);
+        });
+
+        if (first) {
+            changeLanguage(code);
+            first = false;
+        }
+    }
 }

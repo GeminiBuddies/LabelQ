@@ -1,19 +1,32 @@
 #include <MainWindow.h>
+#include <Definitions.h>
+#include <lib/Translator.h>
 
+#include <QDebug>
 #include <QApplication>
-#include <QtCore/QTranslator>
+
+#ifdef LANGUAGES
+# define LANGUAGES_STR STR(LANGUAGES)
+#else
+# define LANGUAGES_STR ""
+#endif
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
-    QTranslator translator;
-    translator.load(QString("labelq_") + "en_US");
-    // translator.load(QString("labelq_") + "zh_CN");
+    QString languagesStr(LANGUAGES_STR);
+    auto languages = languagesStr.split('|', Qt::SkipEmptyParts);
 
-    QApplication::installTranslator(&translator);
+    if (languages.length() > 0) {
+        qDebug() << QString("%1 languages found").arg(languages.length());
+        qDebug() << languages;
+    } else {
+        qDebug() << "No language found";
+    }
 
     MainWindow w;
+    w.setLanguages(languages);
     w.show();
 
-    return a.exec();
+    return QApplication::exec();
 }

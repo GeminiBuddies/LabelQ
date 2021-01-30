@@ -115,6 +115,11 @@
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
+   <widget class="QMenu" name="menuLanguages">
+    <property name="title">
+     <string>ui_main_menu_languages</string>
+    </property>
+   </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>ui_main_menu_help</string>
@@ -125,6 +130,7 @@
     <addaction name="actionFeedback"/>
    </widget>
    <addaction name="menuProject"/>
+   <addaction name="menuLanguages"/>
    <addaction name="menuHelp"/>
   </widget>
   <action name="actionNew">
