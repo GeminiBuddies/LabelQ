@@ -175,12 +175,12 @@ void MainWindow::showAboutMessage() {
     // %2: endYear
 
     auto content =
-            tr("mainWindow_aboutContent")
+            tr("ui_dialog_about_content")
             .arg(LABELQ_VERSION)
             .arg(2020)
             .arg(QDate::currentDate().year())
             ;
-    QMessageBox::about(this, tr("mainWindow_aboutTitle"), content);
+    QMessageBox::about(this, tr("ui_dialog_about_title"), content);
 }
 
 void MainWindow::showAboutQtMessage() {

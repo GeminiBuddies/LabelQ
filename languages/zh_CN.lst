@@ -1,27 +1,28 @@
-    Menu
-entry_window_title 主窗口
-mainWindow_menuProject 项目(&P)
-mainWindow_actionNew 新建(&N)...
-mainWindow_actionOpen 打开(&O)...
-mainWindow_actionSave 保存(&S)
-mainWindow_actionSaveAs 另存为(&A)...
-mainWindow_menuExport 导出(&E)
-mainWindow_actionExportLabelPlus &LabelPlus...
-mainWindow_actionClose 关闭(&C)
-mainWindow_actionShowTutorial 显示教程(&T)
-mainWindow_actionExit 退出(&X)
-mainWindow_menuHelp 帮助(&H)
-mainWindow_actionAbout 关于(&A)...
-mainWindow_actionAboutQt 关于Qt(&Q)...
-mainWindow_actionFeedback 反馈(&F)...
-    Entry window widgets
-mainWindow_textTable_textHeader 翻译
-mainWindow_aboutTitle 关于
-mainWindow_aboutContent <br/>LabelQ %1<br/><br/>版权所有 © %2 - %3 GeminiLab<br/>本软件以<a href="https://github.com/GeminiLab/LabelQ/blob/dev/LICENSE">MIT许可证</a>开源。<br/><br/><a href="https://github.com/GeminiLab">Github上的GeminiLab</a><br/><a href="https://github.com/GeminiLab/LabelQ">Github上的LabelQ</a>
+    MainWindow
+ui_main_title 主窗口
+ui_main_menu_project 项目(&P)
+ui_main_menu_project_new 新建(&N)...
+ui_main_menu_project_open 打开(&O)...
+ui_main_menu_project_save 保存(&S)
+ui_main_menu_project_saveAs 另存为(&A)...
+ui_main_menu_project_export 导出(&E)
+ui_main_menu_project_export_labelPlus &LabelPlus...
+ui_main_menu_project_close 关闭(&C)
+ui_main_menu_project_showTutorial 显示教程(&T)
+ui_main_menu_project_exit 退出(&X)
+ui_main_menu_help 帮助(&H)
+ui_main_menu_help_about 关于(&A)...
+ui_main_menu_help_aboutQt 关于Qt(&Q)...
+ui_main_menu_help_feedback 反馈(&F)...
+    Main window widgets
+ui_main_textTable_header 翻译
     Dialogs
-mainWindow_projectFilterDesc LabelQ项目
-mainWindow_imageFilterDesc 图片
-mainWindow_LabelQ LabelQ
-mainWindow_imagesAndProjectMustBeInTheSameDir 项目和项目下的所有图片必须位于同一目录下。
-mainWindow_saveChangesTitle 保存更改
-mainWindow_saveChanges 项目有未保存的更改，是否保存？
+ui_dialog_common_title LabelQ
+ui_dialog_common_filterDesc_projectFile LabelQ项目
+ui_dialog_common_filterDesc_imageFile 图片
+ui_dialog_about_title 关于
+ui_dialog_about_content <br/>LabelQ %1<br/><br/>版权所有 © %2 - %3 GeminiLab<br/>本软件以<a href="https://github.com/GeminiLab/LabelQ/blob/dev/LICENSE">MIT许可证</a>开源。<br/><br/><a href="https://github.com/GeminiLab">Github上的GeminiLab</a><br/><a href="https://github.com/GeminiLab/LabelQ">Github上的LabelQ</a>
+ui_dialog_saveChanges_title 保存更改
+ui_dialog_saveChanges_content 有未保存的更改，是否保存？
+    Alarms
+ui_alarm_imagesAndProjectMustBeInTheSameDir 项目和项目下的所有图片必须位于同一目录下。

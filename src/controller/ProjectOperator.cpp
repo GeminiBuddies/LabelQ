@@ -39,7 +39,7 @@ bool ProjectOperator::openProject() {
         return false;
     }
 
-    auto projPath = dp->openFile(tr("mainWindow_projectFilterDesc") + " " + ProjectFilter);
+    auto projPath = dp->openFile(tr("ui_dialog_common_filterDesc_projectFile") + " " + ProjectFilter);
 
     if (projPath.length() <= 0) {
         return false;
@@ -60,7 +60,7 @@ bool ProjectOperator::newProject() {
         return false;
     }
 
-    auto images = dp->openFiles(tr("mainWindow_imageFilterDesc") + " " + ImageFilter);
+    auto images = dp->openFiles(tr("ui_dialog_common_filterDesc_imageFile") + " " + ImageFilter);
 
     if (images.length() <= 0) {
         return false;
@@ -68,7 +68,7 @@ bool ProjectOperator::newProject() {
 
     auto projDir = QFileInfo(images[0]).absoluteDir();
     if (std::any_of(images.begin(), images.end(), [projDir](QString &p){ return QFileInfo(p).absoluteDir() != projDir; })) {
-        dp->warning(tr("mainWindow_LabelQ"), tr("mainWindow_imagesAndProjectMustBeInTheSameDir"));
+        dp->warning(tr("ui_dialog_common_title"), tr("ui_alarm_imagesAndProjectMustBeInTheSameDir"));
         return false;
     }
 
@@ -112,7 +112,7 @@ bool ProjectOperator::ensureProjectSaved() {
     }
 
     if (currentProject->canSave() && currentProject->isDirty()) {
-        auto result = dp->askYesNoCancel(tr("mainWindow_saveChangesTitle"), tr("mainWindow_saveChanges"));
+        auto result = dp->askYesNoCancel(tr("ui_dialog_saveChanges_title"), tr("ui_dialog_saveChanges_content"));
 
         if (result == QMessageBox::Yes) {
             return saveProject();
@@ -129,14 +129,14 @@ bool ProjectOperator::ensureProjectSaved() {
 bool ProjectOperator::saveProject() {
     if (currentProject->filename().isEmpty()) {
         auto projDir = currentProject->workDir();
-        auto projPath = dp->saveFile(tr("mainWindow_projectFilterDesc") + " " + ProjectFilter, tr("mainWindow_saveProject"), projDir);
+        auto projPath = dp->saveFile(tr("ui_dialog_common_filterDesc_projectFile") + " " + ProjectFilter, tr("mainWindow_saveProject"), projDir);
 
         if (projPath.isEmpty()) {
             return false;
         }
 
         if (QFileInfo(projPath).absoluteDir() != projDir) {
-            dp->warning(tr("mainWindow_LabelQ"), tr("mainWindow_imagesAndProjectMustBeInTheSameDir"));
+            dp->warning(tr("ui_dialog_common_title"), tr("ui_alarm_imagesAndProjectMustBeInTheSameDir"));
             return saveProject();
         }
 
@@ -155,7 +155,7 @@ bool ProjectOperator::exportLabelPlusProject() {
 
     if (QFileInfo(exportPath).absoluteDir() != projDir) {
         // TODO: replace it with a better warning message
-        dp->warning(tr("mainWindow_LabelQ"), tr("mainWindow_imagesAndProjectMustBeInTheSameDir"));
+        dp->warning(tr("ui_dialog_common_title"), tr("ui_alarm_imagesAndProjectMustBeInTheSameDir"));
         return false;
     }
 
@@ -222,14 +222,14 @@ void ProjectOperator::addPage() {
     assert(currentProject != nullptr && currentProject->canAddAndRemovePages());
 
     auto projDir = currentProject->workDir();
-    auto images = dp->openFiles(tr("mainWindow_imageFilterDesc") + " " + ImageFilter, QString(), projDir);
+    auto images = dp->openFiles(tr("ui_dialog_common_filterDesc_imageFile") + " " + ImageFilter, QString(), projDir);
 
     if (images.length() <= 0) {
         return;
     }
 
     if (std::any_of(images.begin(), images.end(), [projDir](QString &p){ return QFileInfo(p).absoluteDir() != projDir; })) {
-        dp->warning(tr("mainWindow_LabelQ"), tr("mainWindow_imagesAndProjectMustBeInTheSameDir"));
+        dp->warning(tr("ui_dialog_common_title"), tr("ui_alarm_imagesAndProjectMustBeInTheSameDir"));
         return;
     }
 

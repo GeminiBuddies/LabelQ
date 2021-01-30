@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>entry_window_title</string>
+   <string>ui_main_title</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -96,11 +96,11 @@
    </property>
    <widget class="QMenu" name="menuProject">
     <property name="title">
-     <string>mainWindow_menuProject</string>
+     <string>ui_main_menu_project</string>
     </property>
     <widget class="QMenu" name="menuExport">
      <property name="title">
-      <string>mainWindow_menuExport</string>
+      <string>ui_main_menu_project_export</string>
      </property>
      <addaction name="actionExportLabelPlus"/>
     </widget>
@@ -117,7 +117,7 @@
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
-     <string>mainWindow_menuHelp</string>
+     <string>ui_main_menu_help</string>
     </property>
     <addaction name="actionAbout"/>
     <addaction name="actionAboutQt"/>
@@ -129,57 +129,57 @@
   </widget>
   <action name="actionNew">
    <property name="text">
-    <string>mainWindow_actionNew</string>
+    <string>ui_main_menu_project_new</string>
    </property>
   </action>
   <action name="actionOpen">
    <property name="text">
-    <string>mainWindow_actionOpen</string>
+    <string>ui_main_menu_project_open</string>
    </property>
   </action>
   <action name="actionSave">
    <property name="text">
-    <string>mainWindow_actionSave</string>
+    <string>ui_main_menu_project_save</string>
    </property>
   </action>
   <action name="actionSaveAs">
    <property name="text">
-    <string>mainWindow_actionSaveAs</string>
+    <string>ui_main_menu_project_saveAs</string>
    </property>
   </action>
   <action name="actionShowTutorial">
    <property name="text">
-    <string>mainWindow_actionShowTutorial</string>
+    <string>ui_main_menu_project_showTutorial</string>
    </property>
   </action>
   <action name="actionClose">
    <property name="text">
-    <string>mainWindow_actionClose</string>
+    <string>ui_main_menu_project_close</string>
    </property>
   </action>
   <action name="actionExit">
    <property name="text">
-    <string>mainWindow_actionExit</string>
+    <string>ui_main_menu_project_exit</string>
    </property>
   </action>
   <action name="actionAbout">
    <property name="text">
-    <string>mainWindow_actionAbout</string>
+    <string>ui_main_menu_help_about</string>
    </property>
   </action>
   <action name="actionFeedback">
    <property name="text">
-    <string>mainWindow_actionFeedback</string>
+    <string>ui_main_menu_help_feedback</string>
    </property>
   </action>
   <action name="actionAboutQt">
    <property name="text">
-    <string>mainWindow_actionAboutQt</string>
+    <string>ui_main_menu_help_aboutQt</string>
    </property>
   </action>
   <action name="actionExportLabelPlus">
    <property name="text">
-    <string>mainWindow_actionExportLabelPlus</string>
+    <string>ui_main_menu_project_export_labelPlus</string>
    </property>
   </action>
  </widget>

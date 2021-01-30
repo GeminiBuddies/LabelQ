@@ -1,28 +1,30 @@
     This file contains a complete list of keys localizable strings
 
-    Menu
-entry_window_title
-mainWindow_menuProject
-mainWindow_actionNew
-mainWindow_actionOpen
-mainWindow_actionSave
-mainWindow_actionSaveAs
-mainWindow_menuExport
-mainWindow_actionExportLabelPlus
-mainWindow_actionShowTutorial
-mainWindow_actionExit
-mainWindow_menuHelp
-mainWindow_actionAbout
-mainWindow_actionAboutQt
-mainWindow_actionFeedback
-    Entry window widgets
-mainWindow_textTable_textHeader
-mainWindow_aboutTitle
-mainWindow_aboutContent
+    MainWindow
+ui_main_title
+ui_main_menu_project
+ui_main_menu_project_new
+ui_main_menu_project_open
+ui_main_menu_project_save
+ui_main_menu_project_saveAs
+ui_main_menu_project_export
+ui_main_menu_project_export_labelPlus
+ui_main_menu_project_close
+ui_main_menu_project_showTutorial
+ui_main_menu_project_exit
+ui_main_menu_help
+ui_main_menu_help_about
+ui_main_menu_help_aboutQt
+ui_main_menu_help_feedback
+    Main window widgets
+ui_main_textTable_header
     Dialogs
-mainWindow_projectFilterDesc
-mainWindow_imageFilterDesc
-mainWindow_LabelQ
-mainWindow_imagesAndProjectMustBeInTheSameDir
-mainWindow_saveChangesTitle
-mainWindow_saveChanges
+ui_dialog_common_title
+ui_dialog_common_filterDesc_projectFile
+ui_dialog_common_filterDesc_imageFile
+ui_dialog_about_title
+ui_dialog_about_content
+ui_dialog_saveChanges_title
+ui_dialog_saveChanges_content
+    Alarms
+ui_alarm_imagesAndProjectMustBeInTheSameDir
