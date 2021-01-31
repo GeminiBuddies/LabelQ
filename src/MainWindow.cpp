@@ -143,7 +143,7 @@ void MainWindow::saveProject() {
 }
 
 void MainWindow::saveProjectAs() {
-
+    prop->saveProjectAs();
 }
 
 void MainWindow::exportLabelPlus() {

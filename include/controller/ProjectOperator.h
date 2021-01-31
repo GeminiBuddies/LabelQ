@@ -36,6 +36,7 @@ public:
     bool newProject();
     bool openProject();
     bool saveProject();
+    bool saveProjectAs();
     bool exportLabelPlusProject();
 
 private:

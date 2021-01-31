@@ -144,21 +144,27 @@ bool ProjectOperator::ensureProjectSaved() {
 
 bool ProjectOperator::saveProject() {
     if (currentProject->filename().isEmpty()) {
-        auto projDir = currentProject->workDir();
-        auto projPath = dp->saveFile(tr("ui_dialog_common_filterDesc_projectFile") + " " + ProjectFilter, tr("mainWindow_saveProject"), projDir);
-
-        if (projPath.isEmpty()) {
-            return false;
-        }
-
-        if (QFileInfo(projPath).absoluteDir() != projDir) {
-            dp->warning(tr("ui_dialog_common_title"), tr("ui_alarm_imagesAndProjectMustBeInTheSameDir"));
-            return saveProject();
-        }
-
-        currentProject->setFilename(projPath);
+        return saveProjectAs();
     }
 
+    currentProject->save();
+    return true;
+}
+
+bool ProjectOperator::saveProjectAs() {
+    auto projDir = currentProject->workDir();
+    auto projPath = dialogSaveProject(projDir);
+
+    if (projPath.isEmpty()) {
+        return false;
+    }
+
+    if (QFileInfo(projPath).absoluteDir() != projDir) {
+        alarmSameDirectory();
+        return false;
+    }
+
+    currentProject->setFilename(projPath);
     currentProject->save();
     return true;
 }
