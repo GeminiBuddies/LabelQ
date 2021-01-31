@@ -23,7 +23,10 @@ ui_dialog_common_filterDesc_projectFile LabelQ Project
 ui_dialog_common_filterDesc_imageFile Images
 ui_dialog_about_title About
 ui_dialog_about_content <br/>LabelQ %1<br/><br/>Copyright © %2 - %3 GeminiLab<br/>This software is open-source under <a href="https://github.com/GeminiLab/LabelQ/blob/dev/LICENSE">MIT LICENSE</a>.<br/><br/><a href="https://github.com/GeminiLab">GeminiLab on GitHub</a><br/><a href="https://github.com/GeminiLab/LabelQ">LabelQ on GitHub</a>
-ui_dialog_saveChanges_title Saving Changes
+ui_dialog_saveChanges_title Save Changes
 ui_dialog_saveChanges_content There are unsaved changes, would you like to save them?
+ui_dialog_selectImages_title Select Images
+ui_dialog_openProject_title Open Project
+ui_dialog_saveProject_title Save Project
     Alarms
 ui_alarm_imagesAndProjectMustBeInTheSameDir Project file and all its image files must be in the same directory.

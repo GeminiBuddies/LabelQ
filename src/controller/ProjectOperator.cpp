@@ -5,6 +5,22 @@
 #include <model/builtin/RealPage.h>
 #include <Definitions.h>
 
+QStringList ProjectOperator::dialogSelectImages(const QString &dir) {
+    return dp->openFiles(tr("ui_dialog_common_filterDesc_imageFile") + " " + ImageFilter, tr("ui_dialog_selectImages_title"), dir);
+}
+
+QString ProjectOperator::dialogOpenProject(const QString &dir) {
+    return dp->openFile(tr("ui_dialog_common_filterDesc_projectFile") + " " + ProjectFilter, tr("ui_dialog_openProject_title"), dir);
+}
+
+QString ProjectOperator::dialogSaveProject(const QString &dir) {
+    return dp->saveFile(tr("ui_dialog_common_filterDesc_projectFile") + " " + ProjectFilter, tr("ui_dialog_saveProject_title"), dir);
+}
+
+void ProjectOperator::alarmSameDirectory() {
+    dp->warning(tr("ui_dialog_common_title"), tr("ui_alarm_imagesAndProjectMustBeInTheSameDir"));
+}
+
 ProjectOperator::ProjectOperator(DialogProvider *dp) {
     this->dp = dp;
     this->currentProject = nullptr;
@@ -39,7 +55,7 @@ bool ProjectOperator::openProject() {
         return false;
     }
 
-    auto projPath = dp->openFile(tr("ui_dialog_common_filterDesc_projectFile") + " " + ProjectFilter);
+    auto projPath = dialogOpenProject();
 
     if (projPath.length() <= 0) {
         return false;
@@ -60,7 +76,7 @@ bool ProjectOperator::newProject() {
         return false;
     }
 
-    auto images = dp->openFiles(tr("ui_dialog_common_filterDesc_imageFile") + " " + ImageFilter);
+    auto images = dialogSelectImages();
 
     if (images.length() <= 0) {
         return false;
@@ -68,7 +84,7 @@ bool ProjectOperator::newProject() {
 
     auto projDir = QFileInfo(images[0]).absoluteDir();
     if (std::any_of(images.begin(), images.end(), [projDir](QString &p){ return QFileInfo(p).absoluteDir() != projDir; })) {
-        dp->warning(tr("ui_dialog_common_title"), tr("ui_alarm_imagesAndProjectMustBeInTheSameDir"));
+        alarmSameDirectory();
         return false;
     }
 
@@ -155,7 +171,7 @@ bool ProjectOperator::exportLabelPlusProject() {
 
     if (QFileInfo(exportPath).absoluteDir() != projDir) {
         // TODO: replace it with a better warning message
-        dp->warning(tr("ui_dialog_common_title"), tr("ui_alarm_imagesAndProjectMustBeInTheSameDir"));
+        alarmSameDirectory();
         return false;
     }
 
@@ -222,14 +238,14 @@ void ProjectOperator::addPage() {
     assert(currentProject != nullptr && currentProject->canAddAndRemovePages());
 
     auto projDir = currentProject->workDir();
-    auto images = dp->openFiles(tr("ui_dialog_common_filterDesc_imageFile") + " " + ImageFilter, QString(), projDir);
+    auto images = dialogSelectImages(projDir);
 
     if (images.length() <= 0) {
         return;
     }
 
     if (std::any_of(images.begin(), images.end(), [projDir](QString &p){ return QFileInfo(p).absoluteDir() != projDir; })) {
-        dp->warning(tr("ui_dialog_common_title"), tr("ui_alarm_imagesAndProjectMustBeInTheSameDir"));
+        alarmSameDirectory();
         return;
     }
 

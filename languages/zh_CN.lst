@@ -25,5 +25,8 @@ ui_dialog_about_title 关于
 ui_dialog_about_content <br/>LabelQ %1<br/><br/>版权所有 © %2 - %3 GeminiLab<br/>本软件以<a href="https://github.com/GeminiLab/LabelQ/blob/dev/LICENSE">MIT许可证</a>开源。<br/><br/><a href="https://github.com/GeminiLab">Github上的GeminiLab</a><br/><a href="https://github.com/GeminiLab/LabelQ">Github上的LabelQ</a>
 ui_dialog_saveChanges_title 保存更改
 ui_dialog_saveChanges_content 有未保存的更改，是否保存？
+ui_dialog_selectImages_title 选择图片
+ui_dialog_openProject_title 打开项目
+ui_dialog_saveProject_title 保存项目
     Alarms
 ui_alarm_imagesAndProjectMustBeInTheSameDir 项目和项目下的所有图片必须位于同一目录下。

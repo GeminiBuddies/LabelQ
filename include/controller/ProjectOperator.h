@@ -15,6 +15,12 @@ private:
     DialogProvider *dp;
     Project *currentProject;
 
+    QStringList dialogSelectImages(const QString &dir = QString());
+    QString dialogOpenProject(const QString &dir = QString());
+    QString dialogSaveProject(const QString &dir = QString());
+
+    void alarmSameDirectory();
+
 public:
     const QString ProjectFilter = "(*.lbq)";
     const QString LabelPlusProjectFilter = "(*.txt)";
