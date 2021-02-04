@@ -2,6 +2,7 @@
 
 #include <model/Page.h>
 #include <controller/Controller.h>
+#include <lib/DialogProvider.h>
 
 #include <QLabel>
 #include <QPushButton>
@@ -22,12 +23,14 @@ private:
 
 private:
     QWidget *containerWidget;
+    DialogProvider *dp;
 
 public:
     explicit WorkArea(QWidget *parent = nullptr);
     ~WorkArea() override = default;
 
     void setContainerWidget(QWidget *widget);
+    void setDialogProvider(DialogProvider *dp);
 
     // zoom management
 private:
@@ -73,7 +76,7 @@ private:
     static void markLabelWidgetAsSelected(QPushButton *widget);
     static void markLabelWidgetAsUnselected(QPushButton *widget);
     QPushButton* getFreeLabelWidget();
-    QPushButton* addLabelWidget(const QPoint &position);
+    QPushButton* addLabelWidget(const QPoint &position, const QString &content = QString());
 
     void deleteLabel(const QBitArray &deleted, bool notify = true);
 

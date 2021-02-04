@@ -7,7 +7,9 @@ QString DialogProvider::specifiedOrDefault(const QString &dir) {
     return dir.length() > 0 ? dir : QStandardPaths::writableLocation(QStandardPaths::HomeLocation) ;
 }
 
-DialogProvider::DialogProvider(QWidget *parent) : parent(parent) {}
+DialogProvider::DialogProvider(QWidget *parent) : parent(parent) {
+    q = new QuickInput(parent);
+}
 
 QString DialogProvider::openFolder(const QString &title, const QString &dir) {
     return QFileDialog::getExistingDirectory(parent, title, specifiedOrDefault(dir));
@@ -31,4 +33,11 @@ QMessageBox::StandardButton DialogProvider::askYesNoCancel(const QString &title,
 
 void DialogProvider::warning(const QString &title, const QString& text) {
     QMessageBox::warning(parent, title, text);
+}
+
+QString DialogProvider::quickInput(const QPoint &pos) {
+    q->move(pos);
+    q->exec();
+
+    return "<test>";
 }

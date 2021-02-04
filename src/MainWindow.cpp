@@ -15,12 +15,12 @@ using namespace std;
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     this->setWindowIcon(loadIconFromFile(":/icons/icon.svg"));
 
-    ui->setupUi(this);
-    customUiSetup();
-
     dp = new DialogProvider(this);
     prop = new ProjectOperator(dp);
     op = new PageOperator();
+
+    ui->setupUi(this);
+    customUiSetup();
 
     ui->pageListEditArea->setProjectOperator(prop);
     ui->translationEditArea->setPageOperator(op);
@@ -109,6 +109,7 @@ void MainWindow::customUiSetup() {
     scroller->setScrollerProperties(props);
 
     ui->workArea->setContainerWidget(ui->scrollArea);
+    ui->workArea->setDialogProvider(dp);
 
     QObject::connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(newProject()));
     QObject::connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(openProject()));

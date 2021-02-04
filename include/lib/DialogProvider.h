@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QuickInput.h>
+
 #include <QWidget>
 #include <QString>
 #include <QFileDialog>
@@ -7,6 +9,7 @@
 
 class DialogProvider {
     QWidget *parent;
+    QuickInput *q;
 
     static QString specifiedOrDefault(const QString &dir);
 
@@ -20,4 +23,6 @@ public:
 
     QMessageBox::StandardButton askYesNoCancel(const QString& title = QString(), const QString& text = QString());
     void warning(const QString& title = QString(), const QString& text = QString());
+
+    QString quickInput(const QPoint &pos);
 };

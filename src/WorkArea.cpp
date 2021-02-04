@@ -1,6 +1,7 @@
 #include <WorkArea.h>
 
 #include <controller/PageOperator.h>
+#include <QuickInput.h>
 
 #include <QEvent>
 #include <QMessageBox>
@@ -19,6 +20,10 @@ WorkArea::WorkArea(QWidget *parent) : QLabel(parent), labelFont("DejaVu Sans Mon
 
 void WorkArea::setContainerWidget(QWidget *widget) {
     containerWidget = widget;
+}
+
+void WorkArea::setDialogProvider(DialogProvider *dp) {
+    this->dp = dp;
 }
 
 double WorkArea::currentZoomLevel() const {
@@ -122,7 +127,7 @@ QPushButton* WorkArea::getFreeLabelWidget() {
     return rv;
 }
 
-QPushButton* WorkArea::addLabelWidget(const QPoint &position) {
+QPushButton* WorkArea::addLabelWidget(const QPoint &position, const QString &content) {
     auto realPosition = position / currentZoomLevel();
 
     labelSelection.resize(labelSelection.count() + 1);
@@ -137,6 +142,9 @@ QPushButton* WorkArea::addLabelWidget(const QPoint &position) {
     rv->move(position);
     rv->setText(QString::number(labelWidgets.count()));
     rv->show();
+
+    // do not suppress external signal here
+    op->setLabelContent(labelSelection.size() - 1, content);
 
     return rv;
 }
@@ -249,6 +257,13 @@ void WorkArea::mousePressEvent(QMouseEvent *ev) {
     if (ev->button() == Qt::LeftButton && ev->modifiers() == Qt::NoModifier) {
         clearSelection();
         addLabelWidget(ev->pos() - QPoint(currentLabelWidgetSize / 2, currentLabelWidgetSize / 2));
+    } else if (ev->button() == Qt::LeftButton && ev->modifiers() == Qt::AltModifier) {
+        clearSelection();
+        auto content = dp->quickInput(ev->globalPos());
+
+        if (!content.isEmpty()) {
+            addLabelWidget(ev->pos() - QPoint(currentLabelWidgetSize / 2, currentLabelWidgetSize / 2), content);
+        }
     } else {
         QLabel::mousePressEvent(ev);
     }
