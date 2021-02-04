@@ -74,13 +74,27 @@ QSize QuickInputLayout::doLayout(const QRect &rect, bool calcOnly) const {
 }
 
 
+static QVector<QString>& ords() {
+    static QVector<QString> v = {
+            "⑴", "⑵", "⑶", "⑷", "⑸", "⑹", "⑺", "⑻",
+            "⑼", "⒬", "⒲", "⒠", "⒭", "⒯", "⒴", "⒰",
+            "⒤", "⒪", "⒫", "⒜", "⒮", "⒟", "⒡", "⒢",
+            "⒣", "⒥", "⒦", "⒧", "⒵", "⒳", "⒞", "⒱",
+            "⒝", "⒩", "⒨",
+    };
+
+    return v;
+}
+
 QuickInput::QuickInput(QWidget *parent) : QDialog(parent) {
     setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
 
+    auto maxWords = ords().size();
+
     auto l = new QuickInputLayout(this, w);
 
-    l->addWidget(new QLabel("1111"));
-    l->addWidget(new QLabel("22222222"));
+    l->addWidget(new QLabel("<font color='red'>⑴ </font>1111"));
+    l->addWidget(new QLabel("⑵22222222"));
     l->addWidget(new QLabel("333333333333"));
     l->addWidget(new QLabel("4444444444444444"));
     l->addWidget(new QLabel("55555555555555555555"));
