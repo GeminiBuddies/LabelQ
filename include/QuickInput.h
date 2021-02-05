@@ -31,8 +31,20 @@ class QuickInput : public QDialog {
 
 private:
     const int w = 300;
+    QStringList words;
+    int wordCount;
 
 public:
-    explicit QuickInput(QWidget *parent = nullptr);
+    explicit QuickInput(QWidget *parent = nullptr, const QStringList &words = QStringList());
     ~QuickInput() override = default;
+
+protected:
+    void keyPressEvent(QKeyEvent *myEvent) override;
+
+private:
+    int selected = -1;
+    QString emptyStr = QString();
+
+public:
+    const QString& popup(const QPoint &pos);
 };

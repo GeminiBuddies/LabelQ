@@ -8,7 +8,22 @@ QString DialogProvider::specifiedOrDefault(const QString &dir) {
 }
 
 DialogProvider::DialogProvider(QWidget *parent) : parent(parent) {
-    q = new QuickInput(parent);
+    q = new QuickInput(parent, QStringList {
+        "啊",
+        "咿",
+        "唔",
+        "❤",
+        "♥",
+        "♡",
+        "★",
+        "☆",
+        "﹃",
+        "﹄",
+        "﹁",
+        "﹂",
+        "•",
+        "￮",
+    });
 }
 
 QString DialogProvider::openFolder(const QString &title, const QString &dir) {
@@ -36,8 +51,5 @@ void DialogProvider::warning(const QString &title, const QString& text) {
 }
 
 QString DialogProvider::quickInput(const QPoint &pos) {
-    q->move(pos);
-    q->exec();
-
-    return "<test>";
+    return q->popup(pos);
 }

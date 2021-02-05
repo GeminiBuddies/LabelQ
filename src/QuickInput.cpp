@@ -1,6 +1,8 @@
 #include <QuickInput.h>
 
-#include <QLabel>
+#include <ClickableQLabel.h>
+
+#include <QKeyEvent>
 #include <QDebug>
 
 QuickInputLayout::QuickInputLayout(QWidget *parent, int w) : QLayout(parent), w(w) {
@@ -74,39 +76,84 @@ QSize QuickInputLayout::doLayout(const QRect &rect, bool calcOnly) const {
 }
 
 
-static QVector<QString>& ords() {
-    static QVector<QString> v = {
-            "⑴", "⑵", "⑶", "⑷", "⑸", "⑹", "⑺", "⑻",
-            "⑼", "⒬", "⒲", "⒠", "⒭", "⒯", "⒴", "⒰",
-            "⒤", "⒪", "⒫", "⒜", "⒮", "⒟", "⒡", "⒢",
-            "⒣", "⒥", "⒦", "⒧", "⒵", "⒳", "⒞", "⒱",
-            "⒝", "⒩", "⒨",
+static const QVector<QString>& ords() {
+    static QVector<QString> o = {
+            "(1)", "(2)", "(3)", "(4)", "(5)", "(6)", "(7)", "(8)",
+            "(9)", "(0)", "(q)", "(w)", "(e)", "(r)", "(t)", "(y)",
+            "(u)", "(i)", "(o)", "(p)", "(a)", "(s)", "(d)", "(f)",
+            "(g)", "(h)", "(j)", "(k)", "(l)", "(z)", "(x)", "(c)",
+            "(v)", "(b)", "(n)", "(m)",
     };
 
-    return v;
+    return o;
 }
 
-QuickInput::QuickInput(QWidget *parent) : QDialog(parent) {
+static const QVector<Qt::Key>& keys() {
+    static QVector<Qt::Key> k = {
+            Qt::Key_1, Qt::Key_2, Qt::Key_3, Qt::Key_4, Qt::Key_5, Qt::Key_6, Qt::Key_7, Qt::Key_8,
+            Qt::Key_9, Qt::Key_0, Qt::Key_Q, Qt::Key_W, Qt::Key_E, Qt::Key_R, Qt::Key_T, Qt::Key_Y,
+            Qt::Key_U, Qt::Key_I, Qt::Key_O, Qt::Key_P, Qt::Key_A, Qt::Key_S, Qt::Key_D, Qt::Key_F,
+            Qt::Key_G, Qt::Key_H, Qt::Key_J, Qt::Key_K, Qt::Key_L, Qt::Key_Z, Qt::Key_X, Qt::Key_C,
+            Qt::Key_V, Qt::Key_B, Qt::Key_N, Qt::Key_M,
+    };
+
+    return k;
+};
+
+QuickInput::QuickInput(QWidget *parent, const QStringList &words) : QDialog(parent) {
     setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
 
-    auto maxWords = ords().size();
+    this->words = words;
+
+    auto maxWordCount = ords().size();
+    wordCount = words.size();
+
+    if (wordCount > maxWordCount) {
+        qWarning() << wordCount << " word(s) provided to QuickInput, but QuickInput can only handle " << maxWordCount << " word(s)";
+        wordCount = maxWordCount;
+    }
 
     auto l = new QuickInputLayout(this, w);
 
-    l->addWidget(new QLabel("<font color='red'>⑴ </font>1111"));
-    l->addWidget(new QLabel("⑵22222222"));
-    l->addWidget(new QLabel("333333333333"));
-    l->addWidget(new QLabel("4444444444444444"));
-    l->addWidget(new QLabel("55555555555555555555"));
-    l->addWidget(new QLabel("666666666666666666666666"));
-    l->addWidget(new QLabel("7777777777777777777777777777"));
-    l->addWidget(new QLabel("88888888888888888888888888888888"));
-    l->addWidget(new QLabel("999999999999999999999999999999999999"));
+    for (int i = 0; i < wordCount; ++i) {
+        auto label = new ClickableQLabel(QString("<span style=\"color: 'red'\">") + ords().at(i) + " </span>" + words.at(i));
+
+        QObject::connect(label, &ClickableQLabel::clicked, [this, i](){
+            selected = i;
+            close();
+        });
+
+        l->addWidget(label);
+    }
 
     auto size = l->sizeHint();
-    qDebug() << size;
+    qDebug() << "QuickInput popup size: " << size;
 
     resize(size);
 
     this->setLayout(l);
+}
+
+void QuickInput::keyPressEvent(QKeyEvent *myEvent) {
+    if (myEvent->modifiers() == Qt::NoModifier) {
+        auto key = myEvent->key();
+        auto index = keys().indexOf((Qt::Key)key);
+
+        if (index >= 0 && index < wordCount) {
+            selected = index;
+            close();
+            return;
+        }
+    }
+
+    QDialog::keyPressEvent(myEvent);
+}
+
+const QString &QuickInput::popup(const QPoint &pos) {
+    selected = -1;
+
+    this->move(pos);
+    this->exec();
+
+    return selected >= 0 && selected < wordCount ? words.at(selected) : emptyStr;
 }
